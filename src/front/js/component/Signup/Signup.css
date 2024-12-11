@@ -13,20 +13,7 @@
     height: auto;
   }
   
-  .iconoSignup {
-    max-width: 100px; /* Ajusta el tamaño del ícono */
-    height: auto;
-    cursor: pointer; /* Cambia el cursor a un puntero al pasar el mouse */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 50%; /* Hace que los bordes sean completamente redondeados */
-  }
   
-  .iconoSignup:hover {
-    transform: scale(1.1); /* Aumenta ligeramente el tamaño del ícono */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Agrega una sombra para resaltar */
-  }
-  
-
   .loginForm {
     width: 100%;
     max-width: 400px;
@@ -57,19 +44,5 @@
     animation: fadeIn 1s ease-out;
   }
   
-  @keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-  }
-  
-  .animate__pulse {
-    animation: pulse 1s ease-in-out infinite;
-  }
+
   

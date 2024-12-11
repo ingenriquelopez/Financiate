@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LogoFinanciaUrl from "../../../img/LogoFinancia.png";
-
 import './Login.css';
+
+const iconoSignup ="https://png.pngtree.com/png-clipart/20230918/original/pngtree-flat-style-sign-up-icon-with-finger-cursor-on-white-vector-png-image_12377125.png";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -23,7 +24,8 @@ const Login = () => {
         <div className="loginForm p-5 shadow-lg animate__animated animate__zoomIn bg-white">
            {/* Contenedor para el logo dentro del formulario */}
            <div className="text-center mb-4">
-            <img src={LogoFinanciaUrl} className="logoF" alt="Logo Financia" />
+            <img src="/img/LogoFinancia.png" alt="Logo Financia" />
+
           </div>
           <h2 className="text-center mb-5">{isSignup ? 'Sign Up' : 'Login'}</h2>
 
@@ -64,9 +66,15 @@ const Login = () => {
           </Form>
 
           <div className="text-center mt-4">
-            <Button variant="link" onClick={() => setIsSignup(!isSignup)}>
-              {isSignup ? 'Ya tienes cuenta ? Login' : 'Aun NO tienes cuenta ? Sign Up'}
-            </Button>
+            ¿ Aun NO Ya tienes una cuenta ?
+            <NavLink to="/signup" className="btn btn-link">
+               {/* Sign Up */}
+                   {/* Contenedor para el logo dentro del formulario */}
+           <div className="text-center mb-4">
+            <img src={iconoSignup} className="iconoSignup" alt="Signup" />
+          </div>
+            </NavLink>
+
           </div>
         </div>
       </Container>
@@ -75,3 +83,4 @@ const Login = () => {
 };
 
 export default Login;
+
