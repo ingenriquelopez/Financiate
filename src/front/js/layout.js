@@ -1,6 +1,6 @@
 // import { Demo } from "./pages/demo";
 // import { Single } from "./pages/single";
-// import { Navbar } from "./component/navbar";
+import { Sidebar } from "./component/Sidebar"
 
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
