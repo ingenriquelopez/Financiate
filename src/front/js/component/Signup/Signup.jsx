@@ -33,6 +33,7 @@ const Signup = () => {
   return (
     <div className="bgGradient">
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
+  
 
         <div className="loginForm p-5 shadow-lg bg-white">
           <div className="text-center mb-4">
