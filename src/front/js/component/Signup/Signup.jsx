@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'; // Importar NavLink
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import LogoFinanciaUrl from "img/LogoFinancia.png";
+import logoFinanciaUrl from "../../../img/LogoFinancia.png";
 import './Signup.css';
 
 const Signup = () => {
@@ -51,13 +51,15 @@ const Signup = () => {
   return (
     <div className="bgGradient">
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
-  
-
         <div className="loginForm p-5 shadow-lg bg-white">
-          <div className="text-center mb-4">
-            {/* <img src={LogoFinanciaUrl} className="logoF" alt="Logo Financia" /> */}
-            {/* <img src="/img/LogoFinancia.png" alt="Logo Financia" /> */}
-          </div>
+            <div className="text-center mb-4 logoContainer">
+              <img 
+                src={logoFinanciaUrl} 
+                alt="Logo Financia" 
+                className="img-fluid"
+                style={{ maxHeight: '50px', width: '100%' }} 
+              />
+            </div>
           <h2 className="text-center mb-5">Sign Up</h2>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicUsername" className="mb-4">

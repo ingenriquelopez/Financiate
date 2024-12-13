@@ -5,6 +5,7 @@ import { Context } from '../../store/appContext';
 import { Button, Form, Container, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
+import logoFinanciaUrl from "../../../img/LogoFinancia.png";
 
 const iconoSignup =
   "https://png.pngtree.com/png-clipart/20230918/original/pngtree-flat-style-sign-up-icon-with-finger-cursor-on-white-vector-png-image_12377125.png";
@@ -23,7 +24,6 @@ const monedas = [
 ];
 
 const Login = () => {
-  const [isSignup, setIsSignup] = useState(false);
   const [id, setId] = useState('');
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -78,7 +78,6 @@ const Login = () => {
 
   const handleModalSubmit = async () => {
     // Enviar los valores de capital y moneda al backend
-    console.log(process.env.BACKEND_URL)
     const response = await fetch(process.env.BACKEND_URL + "/api/usuarios", {
       method: "PUT",
       headers: {
@@ -88,14 +87,11 @@ const Login = () => {
       body: JSON.stringify({ id, correo, capital_inicial, moneda })
     });
 
-    console.log(response)
     const data = await response.json();
-    console.log(data)
 
     if (response.ok) {
-      // actions.setToken(data.token, correo);  // Actualiza el token si es necesario
       if (isMounted.current) {
-        navigate("/Home");  // Redirige a la página privada
+        navigate("/Home");  // Redirige a la página Home
       }
     } else {
       alert("Error al actualizar los datos financieros");
@@ -110,8 +106,17 @@ const Login = () => {
     <div className="bgGradient">
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="loginForm p-5 shadow-lg animate__animated animate__zoomIn bg-white">
-          <h2 className="text-center mb-5">{isSignup ? 'Sign Up' : 'Login'}</h2>
-
+             {/* Imagen de logo arriba del formulario */}
+             <div className="text-center mb-4 logoContainer">
+              <img 
+                src={logoFinanciaUrl} 
+                alt="Logo Financia" 
+                className="img-fluid"
+                style={{ maxHeight: '50px', width: '100%' }} 
+              />
+            </div>
+          <h2 className="text-center mb-5">Login</h2>
+          
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicEmail" className="mb-4">
               <Form.Label>Email</Form.Label>
@@ -133,18 +138,7 @@ const Login = () => {
               />
             </Form.Group>
 
-            {isSignup && (
-              <Form.Group controlId="formConfirmPassword" className="mb-4">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Confirma tu Contraseña"
-                />
-              </Form.Group>
-            )}
-
-            <Button variant="primary" type="submit" className="w-100 animate__animated animate__pulse">
-              {isSignup ? 'Sign Up' : 'Login'}
+            <Button variant="primary" type="submit" className="w-100 animate__animated animate__pulse">Login
             </Button>
           </Form>
 

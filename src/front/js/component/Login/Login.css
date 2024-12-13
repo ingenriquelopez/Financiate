@@ -19,13 +19,19 @@
   border: 1px solid #ddd;
 }
 
-/* Asegurar que los botones tengan un espaciado adecuado */
-button {
-  border-radius: 10px;
+.logoContainer {
+  background-color: rgba(0, 64, 255, 0.8);  /* Fondo gris claro y translúcido */
+  border-radius: 8px;  /* Bordes redondeados para suavizar el fondo */
+  padding: 10px;
+  display: inline-block; /* Asegura que el fondo se ajuste solo al logo */
 }
 
 
 
+/* Asegurar que los botones tengan un espaciado adecuado */
+button {
+  border-radius: 10px;
+}
   
   /* LogoF */
   .logoF {
