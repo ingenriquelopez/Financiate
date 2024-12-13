@@ -1,6 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			token: localStorage.getItem("token") || undefined, // Recupera el token del localStorage al cargar la app
 			message: null,
 			demo: [
 				{
@@ -46,7 +47,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+			setToken: (token,correo) => {
+				console.log(token)
+				localStorage.setItem("tokenFinanciaE", token); // Guarda el token en localStorage
+				setStore({ token,correo }); // Guarda el token en el store global
+			  },
+
+			logout: () => {
+				localStorage.removeItem("tokenFinanciaE"); // Elimina el token del localStorage
+				setStore({ token: null, correo: null }); // Limpia el token y el email en el store global
+			},
 		}
 	};
 };

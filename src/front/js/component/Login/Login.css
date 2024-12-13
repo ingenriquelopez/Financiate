@@ -6,6 +6,26 @@
     background-position: center;
     height: 100vh;
   }
+
+/* Estilos para el modal */
+.elevated-modal .modal-content {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+}
+
+/* Bordes suaves en los inputs */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Asegurar que los botones tengan un espaciado adecuado */
+button {
+  border-radius: 10px;
+}
+
+
+
   
   /* LogoF */
   .logoF {
