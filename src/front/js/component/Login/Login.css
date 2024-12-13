@@ -1,12 +1,31 @@
 
 .bgGradient {
-    background: linear-gradient(135deg, rgba(108, 99, 255, 0.8), rgba(0, 188, 212, 0.8)), 
-                url('https://media.istockphoto.com/id/955408648/es/foto/fondo-de-gr%C3%A1ficos-financieros.jpg?s=612x612&w=0&k=20&c=sH1n1LFlcKQHWhgLFt0TxkjdGC5eqWzGQfQBeI82j9c=');
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.8), rgba(0, 188, 212, 0.8));
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     height: 100vh;
   }
+
+/* Estilos para el modal */
+.elevated-modal .modal-content {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+}
+
+/* Bordes suaves en los inputs */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Asegurar que los botones tengan un espaciado adecuado */
+button {
+  border-radius: 10px;
+}
+
+
+
   
   /* LogoF */
   .logoF {
@@ -14,7 +33,20 @@
     height: auto;
   }
   
+  .iconoSignup {
+    max-width: 100px; /* Ajusta el tamaño del ícono */
+    height: auto;
+    cursor: pointer; /* Cambia el cursor a un puntero al pasar el mouse */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 50%; /* Hace que los bordes sean completamente redondeados */
+  }
   
+  .iconoSignup:hover {
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño del ícono */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Agrega una sombra para resaltar */
+  }
+  
+
   .loginForm {
     width: 100%;
     max-width: 400px;
