@@ -30,6 +30,8 @@ def signup():
 
     return jsonify({'msg': 'Usuario creado exitosamente'}), 201
 
+
+#--------------------------------------------------------------------
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -63,10 +65,8 @@ def obtener_usuarios():
 
 #-----------------------------------------
 @api.route('/usuarios', methods=['PUT'])
-@jwt_required()
 def actualizar_usuario():
     data = request.get_json()
-    print("_______________")
     usuario = Usuario.query.get_or_404(data['id'])
 
 

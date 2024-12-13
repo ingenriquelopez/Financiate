@@ -78,6 +78,7 @@ const Login = () => {
 
   const handleModalSubmit = async () => {
     // Enviar los valores de capital y moneda al backend
+    console.log(process.env.BACKEND_URL)
     const response = await fetch(process.env.BACKEND_URL + "/api/usuarios", {
       method: "PUT",
       headers: {
@@ -87,7 +88,9 @@ const Login = () => {
       body: JSON.stringify({ id, correo, capital_inicial, moneda })
     });
 
+    console.log(response)
     const data = await response.json();
+    console.log(data)
 
     if (response.ok) {
       // actions.setToken(data.token, correo);  // Actualiza el token si es necesario
