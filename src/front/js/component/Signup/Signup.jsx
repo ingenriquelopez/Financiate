@@ -1,45 +1,65 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom'; // Importar NavLink
+import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import LogoFinanciaUrl from "img/LogoFinancia.png";
+import logoFinanciaUrl from "../../../img/LogoFinancia.png";
 import './Signup.css';
 
 const Signup = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [nombre_usuario, setNombre_usuario] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const errors = {};
-    if (password.length < 8) {
-      errors.password = 'La contraseña debe tener al menos 8 caracteres.';
+    if (contrasena.length < 8) {
+      errors.contrasena = 'La contraseña debe tener al menos 8 caracteres.';
     }
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+     const validationErrors = validateForm();
+     if (Object.keys(validationErrors).length > 0) {
+       setErrors(validationErrors);
+       return;
+     }
     // Lógica para el registro
-    console.log('Registro exitoso:', { username, email, password });
+    
+    const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nombre_usuario, correo, contrasena }),
+
+    });
+    const data = await response.json()
+  
+
+    if (response.ok) {
+      navigate("/login"); // Redirigir a la página de inicio de sesión
+    } else {
+        alert("Error al registrarse");
+    }
+    
+    console.log('Registro exitoso:', { nombre_usuario, correo, contrasena });
   };
 
   return (
     <div className="bgGradient">
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
-  
-
         <div className="loginForm p-5 shadow-lg bg-white">
-          <div className="text-center mb-4">
-            {/* <img src={LogoFinanciaUrl} className="logoF" alt="Logo Financia" /> */}
-            {/* <img src="/img/LogoFinancia.png" alt="Logo Financia" /> */}
-          </div>
+            <div className="text-center mb-4 logoContainer">
+              <img 
+                src={logoFinanciaUrl} 
+                alt="Logo Financia" 
+                className="img-fluid"
+                style={{ maxHeight: '50px', width: '100%' }} 
+              />
+            </div>
           <h2 className="text-center mb-5">Sign Up</h2>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicUsername" className="mb-4">
@@ -47,8 +67,8 @@ const Signup = () => {
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu nombre de usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={nombre_usuario}
+                onChange={(e) => setNombre_usuario(e.target.value)}
               />
             </Form.Group>
 
@@ -57,8 +77,8 @@ const Signup = () => {
               <Form.Control
                 type="email"
                 placeholder="Ingresa tu email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
               />
             </Form.Group>
 
@@ -67,11 +87,11 @@ const Signup = () => {
               <Form.Control
                 type="password"
                 placeholder="contraseña (maximo 8 caracteres)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
               />
-              {errors.password && (
-                <Form.Text className="text-danger">{errors.password}</Form.Text>
+              {errors.contrasena && (
+                <Form.Text className="text-danger">{errors.contrasena}</Form.Text>
               )}
             </Form.Group>
 
