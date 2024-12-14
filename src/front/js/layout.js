@@ -11,6 +11,7 @@ import { Footer } from "./component/footer";
 import Login from './component/Login/Login.jsx';
 import Signup from "./component/Signup/Signup.jsx";
 import Egresos from "./component/Egresos/Egresos.jsx";
+import Ingresos from "./component/Ingresos/Ingresos.jsx";
 //-----------------------------------------------------
 
 //create your first component
@@ -33,7 +34,8 @@ const Layout = () => {
                         {/* <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" /> */}
                         <Route element={<h1>Not found!</h1>} />
-                        <Route element={<Egresos/>} path="/egresos" /> 
+                        <Route element={<Egresos/>} path="/egresos" />
+                        <Route element={<Ingresos/>} path="/Ingresos" /> 
                     </Routes>
                     <Footer />
                 </ScrollToTop>
