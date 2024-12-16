@@ -45,12 +45,12 @@ function Ingresos() {
 
   return (
     <div>
-      <button className='fw-bold' onClick={() => setIsModalOpen(true)}>INGRESO</button>
+      <button className='modal-b fw-bold' onClick={() => setIsModalOpen(true)}>INGRESO</button>
 
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2 className="fw-bold modal-title">INGRESOS</h2>
+        <div className="modal-ingreso">
+          <div className="modal-contenido">
+            <h2 className="fw-bold modal-titulo">INGRESOS</h2>
             <form onSubmit={handleRegistrar} className="account-form">
               <div className="form-field">
                 <label htmlFor="accountMoney">Monto:</label>
@@ -64,7 +64,7 @@ function Ingresos() {
                 />
               </div>
 
-              <div className="form-container">
+              <div className="form-contenedor">
                 <div className="left-column">
                   <div className="form-field">
                     <label htmlFor="category">Categoría:</label>
@@ -154,7 +154,7 @@ function Ingresos() {
               <div className="form-field">
                 <button
                   type="submit"
-                  className="fw-bold registrar-button"
+                  className="modal-b fw-bold registrar-button"
                 >
                   REGISTRAR
                 </button>

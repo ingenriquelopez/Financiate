@@ -65,6 +65,7 @@ const Login = () => {
       if (data.usuario.capital_inicial === null || data.usuario.moneda === null) {
         // Si son null, muestra el modal para ingresar los datos
         if (isMounted.current) {
+          console.log(data)
           setShowModal(true);
         }
       } else {
