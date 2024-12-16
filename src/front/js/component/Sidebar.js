@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from "react";
 import { Link, useLocation } from 'react-router-dom';  // Importa useLocation
+import { Context } from "../store/appContext";
 import '../../styles/Sidebar.css';  
 import Logo from '../../img/LogoFinancia.png';
 
 const Sidebar = () => {
+  const { store, actions } = useContext(Context);
   const location = useLocation();  // Usamos useLocation para obtener la ruta actual
   const handleLogout = () => {
     // Aquí se maneja el cierre de sesión, redirigiendo a la página de login
@@ -35,7 +37,7 @@ const Sidebar = () => {
       </div>
       <div className="sidebar-footer">
         <div className="user-info">
-          <span><i className="fa-solid fa-user"></i> Usuario</span>
+          <span><i className="fa-solid fa-user"></i> {store.nombreUsuario}</span>
           <button onClick={handleLogout} className="btn btn-outline-danger">Sign Out</button>
         </div>
       </div>

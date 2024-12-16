@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Ingresos.css';  
+// import './Ingresos.css';  
 
 function Ingresos() {
   const [accountMoney, setAccountMoney] = useState('');
