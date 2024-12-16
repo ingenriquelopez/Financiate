@@ -1,0 +1,81 @@
+/* Estilos para Dashboard */
+.dashboard-container {
+    background-color: #f4f7fc;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.main-title {
+    font-size: 2rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.chart-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #4e4e4e;
+    margin-bottom: 15px;
+}
+
+.dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.row {
+    width: 100%;
+    margin: 0;
+}
+
+.col-md-6 {
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.progress-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 50px;
+    height: 15px;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 50px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 50px;
+    background-color: #56ab2f;
+}
+
+.progress-text {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .col-md-6 {
+        margin-bottom: 20px;
+    }
+}

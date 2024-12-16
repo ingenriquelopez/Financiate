@@ -55,10 +55,17 @@ const Login = () => {
     });
 
     const data = await response.json();
+    console.log("TOKEN")
+    console.log(data.token)
+    console.log("----------------------");
+    console.log("NOMBRE DE USUARUI");
+    console.log(data.usuario.nombre_usuario)
 
     // Verifica si el componente sigue montado antes de actualizar el estado
     if (response.ok && data.token) {
-      actions.setToken(data.token, correo);
+      actions.setToken(data.token);
+      actions.setCorreo(correo);
+      actions.setNombreUsuario(data.usuario.nombre_usuario);
       setId(data.usuario.id);
 
       // Verifica si los valores de capital_inicial o moneda son null
