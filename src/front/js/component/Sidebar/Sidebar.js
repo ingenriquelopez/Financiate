@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Link, useLocation } from 'react-router-dom';  // Importa useLocation
-import { Context } from "../store/appContext";
-import '../../styles/Sidebar.css';  
-import Logo from '../../img/LogoFinancia.png';
+import { Context } from "../../store/appContext";
+import './Sidebar.css';
+import Logo from '../../../img/LogoFinancia.png';
 
 const Sidebar = () => {
   const { store, actions } = useContext(Context);

@@ -7,7 +7,7 @@ import injectContext from "./store/appContext";
 import { Footer } from "./component/footer";
 
 // Importa el componente Sidebar
-import Sidebar from './component/Sidebar';
+import Sidebar from '../js/component/Sidebar/Sidebar.js';
 
 import Login from './component/Login/Login.jsx';
 import Signup from "./component/Signup/Signup.jsx";
