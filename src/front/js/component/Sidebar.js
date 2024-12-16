@@ -1,19 +1,46 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';  // Importa useLocation
+import '../../styles/Sidebar.css';  
+import Logo from '../../img/LogoFinancia.png';
 
-export const Sidebar = () => {
-	return (
-		<nav className="navbar navbar-light bg-light">
-			<div className="container">
-				<Link to="/">
-					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
-				</Link>
-				<div className="ml-auto">
-					<Link to="/demo">
-						<button className="btn btn-primary">Check the Context in action</button>
-					</Link>
-				</div>
-			</div>
-		</nav>
-	);
+const Sidebar = () => {
+  const location = useLocation();  // Usamos useLocation para obtener la ruta actual
+  const handleLogout = () => {
+    // Aquí se maneja el cierre de sesión, redirigiendo a la página de login
+    window.location.href = '/login';
+  };
+
+  // Condicionamos el renderizado del sidebar para que no aparezca en /login, /signup o en la ruta raíz /
+  if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup') {
+    return null;  // No renderiza el sidebar si estamos en la ruta raíz, login o signup
+  }
+
+  return (
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <img src={Logo} alt="Logo Financia" />
+      </div>
+      <div className="sidebar-body">
+        <nav className="nav flex-column">
+          <Link className="nav-link" to="/Home">
+            <i className="fa-solid fa-gauge-high"></i> Dashboard
+          </Link>
+          <Link className="nav-link" to="/Ingresos">
+            <i className="fa-solid fa-plus"></i> Ingresos
+          </Link>
+          <Link className="nav-link" to="/egresos">
+            <i className="fa-solid fa-minus"></i> Egresos
+          </Link>
+        </nav>
+      </div>
+      <div className="sidebar-footer">
+        <div className="user-info">
+          <span><i className="fa-solid fa-user"></i> Usuario</span>
+          <button onClick={handleLogout} className="btn btn-outline-danger">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  );
 };
+
+export default Sidebar;
