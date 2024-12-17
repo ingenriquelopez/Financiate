@@ -15,17 +15,19 @@ function Egresos() {
     fecha: "",
   });
 
+  const [categorias, setCategorias] = useState([]);
+
   const handleChange = (event) => {
     setEgreso({ ...egreso, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const monto = egreso.amount;
     const descripcion = egreso.description;
     const categoria_id = 1;
-    const usuario_id = store.usuariqo_id;
+    const usuario_id = store.usuario_id;
     console.log(usuario_id);
 
     const response = await fetch(process.env.BACKEND_URL + "/api/egreso", {
@@ -35,14 +37,14 @@ function Egresos() {
 
     });
     const data = await response.json()
-  
+
 
     if (response.ok) {
       navigate("/Home"); // Redirige al Home
     } else {
-        alert("Error");
+      alert("Error");
     }
-    
+
     console.log('Registro exitoso:', { nombre_usuario, correo, contrasena });
   };
 
@@ -71,7 +73,7 @@ function Egresos() {
                   type="number"
                   name="amount"
                   value={egreso.amount}
-                  onChange={handleChange} 
+                  onChange={handleChange}
                   placeholder="Ej. 500"
                 />
               </Form.Group>

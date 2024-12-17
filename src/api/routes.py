@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta
+from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta, CategoriaEgreso
 from flask_jwt_extended import jwt_required, create_access_token
 
 # Crear el Blueprint
@@ -167,6 +167,14 @@ def crear_egreso():
     db.session.add(nuevo_egreso)
     db.session.commit()
     return jsonify({'msg': 'Egreso creado exitosamente'}), 201
+
+@api.route('/categorias', methods=['GET'])
+def listar_categorias():
+    categorias = CategoriaEgreso.query.all()
+    return jsonify([{
+        'id': e.id,
+        'nombre': e.nombre
+    } for e in categorias]), 200
 
 # CRUD para PlanAhorro
 @api.route('/planes_ahorro', methods=['GET'])
