@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta
+from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta, CategoriaEgreso
 from flask_jwt_extended import jwt_required, create_access_token
 
 # Crear el Blueprint
@@ -154,6 +154,7 @@ def obtener_egresos():
 #@jwt_required()
 def crear_egreso():
     data = request.get_json()
+    print(data)
     if not data or not all(k in data for k in ('monto', 'descripcion', 'usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
 
@@ -166,6 +167,14 @@ def crear_egreso():
     db.session.add(nuevo_egreso)
     db.session.commit()
     return jsonify({'msg': 'Egreso creado exitosamente'}), 201
+
+@api.route('/categorias', methods=['GET'])
+def listar_categorias():
+    categorias = CategoriaEgreso.query.all()
+    return jsonify([{
+        'id': e.id,
+        'nombre': e.nombre
+    } for e in categorias]), 200
 
 # CRUD para PlanAhorro
 @api.route('/planes_ahorro', methods=['GET'])
@@ -194,7 +203,7 @@ def obtener_fondos_emergencia():
     } for f in fondos]), 200
 
 # CRUD para Suscripciones
-@api.route('/suscripciones', methods=['GET'])
+@api.route('/suscripciones', methods=['GET']) 
 @jwt_required()
 def obtener_suscripciones():
     suscripciones = Suscripcion.query.all()
