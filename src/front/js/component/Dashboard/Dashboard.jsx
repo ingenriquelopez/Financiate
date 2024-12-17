@@ -7,8 +7,8 @@ const chartHeight = 200;
 
 const Dashboard = () => {
     const incomeExpenseData = [
-        { name: "Ingresos", value: 4000 },
-        { name: "Egresos", value: 3000 },
+        { name: "Ingresos", value: 2000 },
+        { name: "Egresos", value: 6000 },
     ];
 
     const incomeExpenseColors = ["#82ca9d", "#8884d8"];
@@ -40,7 +40,7 @@ const Dashboard = () => {
                                     nameKey="name"
                                     cx="50%"
                                     cy="50%"
-                                    outerRadius={100}
+                                    outerRadius={75}
                                     fill="#8884d8"
                                     label
                                 >
@@ -56,7 +56,7 @@ const Dashboard = () => {
                     <div className="col-md-6 mb-4">
                         <h4 className="chart-title">Evolución Mensual de Ingresos y Egresos</h4>
                         <ResponsiveContainer width={chartWidth} height={chartHeight}>
-                            <LineChart data={monthlyData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <LineChart data={monthlyData} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" />
                                 <YAxis />
@@ -72,11 +72,11 @@ const Dashboard = () => {
                 {/* Barra de progreso */}
                 <div className="progress-container">
                     <h4 className="chart-title">Progreso de Meta</h4>
-                    <div className="progress-bar-container">
+                    <div className="progress-bar-container" style={{ width: "100%" }}>
                         <div
                             className="progress-bar"
                             style={{
-                                background: "linear-gradient(to right, #a8e063, #56ab2f)",
+                                background: "linear-gradient(to right,hsl(88, 41.40%, 80.60%),rgb(42, 121, 6))",
                             }}
                         >
                             <div
