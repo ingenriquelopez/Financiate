@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			token: localStorage.getItem("token") || undefined, // Recupera el token del localStorage al cargar la app
 			nombreUsuario:null,
 			correo:null,
+			usuario_id:null,
 			message: null,
 		},
 		actions: {
@@ -14,6 +15,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  setCorreo: (correo) => {
 				localStorage.setItem("correo", correo); // Guarda el correo en localStorage
 				setStore({ correo }); // Guarda el correo en el store global
+			  },
+			  setUsuarioId: (usuario_id) => {
+				localStorage.setItem("usuario_id", usuario_id); // Guarda el usuario_id
+				setStore({ usuario_id }); //Guarda el id de usuario en el store Global
 			  },
 			  setNombreUsuario: (nombreUsuario) => {
 				console.log(nombreUsuario)

@@ -151,9 +151,10 @@ def obtener_egresos():
     } for e in egresos]), 200
 
 @api.route('/egreso', methods=['POST'])
-@jwt_required()
+#@jwt_required()
 def crear_egreso():
     data = request.get_json()
+    print(data)
     if not data or not all(k in data for k in ('monto', 'descripcion', 'usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
 
@@ -194,7 +195,7 @@ def obtener_fondos_emergencia():
     } for f in fondos]), 200
 
 # CRUD para Suscripciones
-@api.route('/suscripciones', methods=['GET'])
+@api.route('/suscripciones', methods=['GET']) 
 @jwt_required()
 def obtener_suscripciones():
     suscripciones = Suscripcion.query.all()

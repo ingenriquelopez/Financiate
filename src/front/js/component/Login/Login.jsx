@@ -65,6 +65,7 @@ const Login = () => {
     if (response.ok && data.token) {
       actions.setToken(data.token);
       actions.setCorreo(correo);
+      actions.setUsuarioId(data.usuario.id);
       actions.setNombreUsuario(data.usuario.nombre_usuario);
       setId(data.usuario.id);
 
