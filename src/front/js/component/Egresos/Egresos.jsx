@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Egresos.css";
@@ -8,6 +8,7 @@ import { Context } from '../../store/appContext';
 function Egresos() {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
+
   const [egreso, setEgreso] = useState({
     description: "",
     category: "",
@@ -17,6 +18,23 @@ function Egresos() {
 
   const [categorias, setCategorias] = useState([]);
 
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await fetch(process.env.BACKEND_URL + "/api/categorias");
+        if (!response.ok) {
+          throw new Error("Error al obtener las categorías");
+        }
+        const data = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
+
   const handleChange = (event) => {
     setEgreso({ ...egreso, [event.target.name]: event.target.value });
   };
@@ -24,28 +42,29 @@ function Egresos() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const monto = egreso.amount;
-    const descripcion = egreso.description;
-    const categoria_id = 1;
+    const { amount, description, category } = egreso;
     const usuario_id = store.usuario_id;
-    console.log(usuario_id);
 
-    const response = await fetch(process.env.BACKEND_URL + "/api/egreso", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ monto, descripcion, usuario_id, categoria_id }),
+    try {
+      const response = await fetch(process.env.BACKEND_URL + "/api/egreso", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          monto: amount,
+          descripcion: description,
+          usuario_id,
+          categoria_id: category
+        }),
+      });
 
-    });
-    const data = await response.json()
-
-
-    if (response.ok) {
-      navigate("/Home"); // Redirige al Home
-    } else {
-      alert("Error");
+      if (response.ok) {
+        navigate("/Home");
+      } else {
+        alert("Error al registrar el egreso");
+      }
+    } catch (error) {
+      console.error("Error al enviar el egreso:", error);
     }
-
-    console.log('Registro exitoso:', { nombre_usuario, correo, contrasena });
   };
 
   return (
@@ -90,9 +109,11 @@ function Egresos() {
                   onChange={handleChange}
                 >
                   <option value="">Selecciona una categoría</option>
-                  <option value="comida">Comida</option>
-                  <option value="transporte">Transporte</option>
-                  <option value="recreacion">Recreación</option>
+                  {categorias.map((categoria) => (
+                    <option key={categoria.id} value={categoria.id}>
+                      {categoria.nombre}
+                    </option>
+                  ))}
                 </Form.Control>
               </Form.Group>
             </Col>
