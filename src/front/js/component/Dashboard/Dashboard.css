@@ -41,27 +41,32 @@
 .progress-container {
     margin-top: 30px;
     text-align: center;
+    width: 100%; /* Asegúrate de que ocupe todo el ancho disponible */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente */
 }
+
 
 .progress-bar-container {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 50px;
-    height: 15px;
-    position: relative;
+    width: 80%; /* Puedes ajustar este valor según el diseño deseado */
+    max-width: 500px; /* Opcional: define un límite máximo */
+    margin: 0 auto; /* Centra el contenedor dentro de su sección */
 }
 
+
 .progress-bar {
-    height: 100%;
-    border-radius: 50px;
-    transition: width 0.3s ease;
+    height: 20px; /* Ajusta la altura de la barra */
+    border-radius: 10px; /* Opcional: Bordes redondeados */
+    overflow: hidden; /* Evita desbordamientos */
 }
 
 .progress-fill {
-    height: 100%;
-    border-radius: 50px;
-    background-color: #56ab2f;
+    height: 100%; /* Asegura que la barra de progreso llena use todo el alto */
+    background: linear-gradient(to right, #a8e063, #56ab2f); /* Color dinámico */
+    transition: width 0.5s ease-in-out; /* Animación suave */
 }
+
 
 .progress-text {
     margin-top: 10px;
