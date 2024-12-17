@@ -1,5 +1,6 @@
 import React from "react";
 
+<<<<<<< HEAD
 const Reportes = () => {
   return (
     <div style={{ padding: "20px" }}>
@@ -10,3 +11,14 @@ const Reportes = () => {
 };
 
 export default Reportes;
+=======
+const Reportes=()=> {
+    return (
+        <div className ="containerReportes">
+            <h1>Holi , estoy en Reportes</h1>
+        </div>
+    )
+}
+
+export default Reportes;
+>>>>>>> refs/remotes/origin/development
