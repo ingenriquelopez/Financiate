@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-// import './Ingresos.css';  
+import React, { useState, useEffect } from 'react';
+import './Ingresos.css';
+import { useLocation } from 'react-router-dom'; // Importamos useLocation
 
 function Ingresos() {
   const [accountMoney, setAccountMoney] = useState('');
@@ -10,6 +11,17 @@ function Ingresos() {
   const [estado, setEstado] = useState('');
   const [locacion, setLocacion] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const location = useLocation(); // Usamos el hook useLocation
+
+  // Este efecto se ejecutará cada vez que la ruta cambie
+  useEffect(() => {
+    if (location.pathname === '/Ingresos') {  // Si la ruta es /Ingresos, abrir el modal
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
+    }
+  }, [location]);
 
   // Categorias select input
   const categories = [
@@ -23,7 +35,6 @@ function Ingresos() {
     'Tecnología y conexión',
     'Salud',
     'Salario'
-    
   ];
 
   const estados = ['Recibido', 'Por recibir'];
@@ -40,13 +51,10 @@ function Ingresos() {
       estado,
       locacion,
     });
-    
   };
 
   return (
     <div>
-      <button className='modal-b fw-bold' onClick={() => setIsModalOpen(true)}>INGRESO</button>
-
       {isModalOpen && (
         <div className="modal-ingreso">
           <div className="modal-contenido">
