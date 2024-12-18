@@ -5,7 +5,7 @@ import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
 
 const Sidebar = () => {
-  const { store, actions } = useContext(Context);
+  const { store } = useContext(Context);
   const location = useLocation();
 
   const handleLogout = () => {
@@ -33,10 +33,13 @@ const Sidebar = () => {
             <i className="fa-solid fa-minus"></i> Egresos
           </Link>
           <Link className="nav-link" to="/categorias">
-            <i className="fa-solid fa-layer-group"></i> Categorías
+            <i className="fa-solid fa-tags"></i> Categorías
           </Link>
           <Link className="nav-link" to="/reportes">
             <i className="fa-solid fa-chart-line"></i> Reportes
+          </Link>
+          <Link className="nav-link" to="/Suscripciones">
+            <i className="fa-solid fa-list"></i> Suscripciones
           </Link>
         </nav>
       </div>
