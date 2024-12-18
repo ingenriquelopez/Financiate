@@ -13,6 +13,7 @@ import {
     Legend,
     ResponsiveContainer,
 } from "recharts";
+
 import './Dashboard.css'; // Importar los estilos
 
 const chartWidth = "80%";
@@ -27,13 +28,13 @@ const Dashboard = (props) => {
     const userId = props.userId || null; // Reemplazar por la fuente real
     const userEmail = props.userEmail || null; // Reemplazar por la fuente real
 
-    const incomeExpenseColors = ["#82ca9d", "#8884d8"];
+    const ingresosEgresos = ["#82ca9d", "#8884d8"];
 
-    const monthlyData = [
-        { month: "Enero", ingresos: 3000, egresos: 2000 },
-        { month: "Febrero", ingresos: 4000, egresos: 2500 },
-        { month: "Marzo", ingresos: 3500, egresos: 3000 },
-        { month: "Abril", ingresos: 4500, egresos: 3200 },
+    const datosMensuales = [
+        { mes: "Enero", ingresos: 3000, egresos: 2000 },
+        { mes: "Febrero", ingresos: 4000, egresos: 2500 },
+        { mes: "Marzo", ingresos: 3500, egresos: 3000 },
+        { mes: "Abril", ingresos: 4500, egresos: 3200 },
     ];
 
     const progressValue = 55;
@@ -82,6 +83,7 @@ const Dashboard = (props) => {
             ) : (
                 <div className="dashboard">
                     <div className="row justify-content-center mb-4">
+
                         {/* Gráfico de dona */}
                         <div className="col-md-6 mb-4 dona" >
                             <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4> 
@@ -117,7 +119,7 @@ const Dashboard = (props) => {
                                         {totales.map((entry, index) => (
                                             <Cell
                                                 key={`cell-${index}`}
-                                                fill={incomeExpenseColors[index % incomeExpenseColors.length]}
+                                                fill={ingresosEgresos[index % ingresosEgresos.length]}
                                             />
                                         ))}
                                     </Pie>
@@ -130,11 +132,11 @@ const Dashboard = (props) => {
                             <h4 className="chart-title">Evolución Mensual de Ingresos y Egresos</h4>
                             <ResponsiveContainer width={chartWidth} height={chartHeight}>
                                 <LineChart
-                                    data={monthlyData}
+                                    data={datosMensuales}
                                     margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                                 >
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="month" />
+                                    <XAxis dataKey="mes" />
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
