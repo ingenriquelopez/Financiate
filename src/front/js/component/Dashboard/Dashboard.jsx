@@ -36,7 +36,7 @@ const Dashboard = (props) => {
         { month: "Abril", ingresos: 4500, egresos: 3200 },
     ];
 
-    const progressValue = 75;
+    const progressValue = 55;
 
     useEffect(() => {
         const fetchTotales = async () => {
@@ -47,7 +47,7 @@ const Dashboard = (props) => {
                     throw new Error("ID  del usuario requerido");
                 }
 
-                const response = await fetch(process.env.BACKEND_URL + `/api/usuarios/totales?usuario_id=${store.usuario_id}`);
+                const response = await fetch(process.env.BACKEND_URL + `/api/usuario/totales?usuario_id=${store.usuario_id}`);
                 console.log(response)
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -83,9 +83,10 @@ const Dashboard = (props) => {
                 <div className="dashboard">
                     <div className="row justify-content-center mb-4">
                         {/* Gráfico de dona */}
-                        <div className="col-md-6 mb-4">
-                            <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4>
-                            <ResponsiveContainer width={chartWidth} height={chartHeight}>
+                        <div className="col-md-6 mb-4 dona" >
+                            <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4> 
+                            <ResponsiveContainer width={chartWidth} height={chartHeight} className="mt-2 respo">
+                                
                                 <PieChart>
                                     <Pie
                                         data={totales}
@@ -95,8 +96,24 @@ const Dashboard = (props) => {
                                         cy="50%"
                                         outerRadius={75}
                                         fill="#8884d8"
-                                        label
-                                    >
+                                        labelLine={true} // Desactiva la línea del label
+                                        label={({ x, y, name, value }) => (
+                                            <text
+                                            x={x}
+                                            y={y}
+                                            textAnchor="middle"
+                                            dominantBaseline="middle"
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                fill: "#333",
+                                                marginTop: "10px",  // Ajusta el margin-top aquí
+                                            }}
+                                            >
+                                            {name}: {value}
+                                            </text>
+                                        )}
+                                                                            >
                                         {totales.map((entry, index) => (
                                             <Cell
                                                 key={`cell-${index}`}
@@ -129,7 +146,7 @@ const Dashboard = (props) => {
                     </div>
 
                     {/* Barra de progreso */}
-                    <div className="progress-container">
+                     <div className="progress-container">
                         <h4 className="chart-title">Progreso de Meta</h4>
                         <div className="progress-bar-container" style={{ width: "100%" }}>
                             <div
@@ -148,7 +165,7 @@ const Dashboard = (props) => {
                             </div>
                             <p className="progress-text">{progressValue}%</p>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             )}
         </div>
