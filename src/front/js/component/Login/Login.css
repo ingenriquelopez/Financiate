@@ -27,6 +27,38 @@
 }
 
 
+/* CSS para el modal */
+/* Asegurando que el modal tenga un ancho específico */
+.modal-dialog {
+  width: 600px; /* Ajusta este valor según tus necesidades */
+  max-width: 90%; /* Esto asegura que no se exceda el 90% del ancho de la pantalla en pantallas pequeñas */
+}
+
+/* Asegurando que el contenido dentro del modal tenga el ancho correcto */
+.modal-content {
+  width: 100% !important;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* También aseguramos que el modal se ajuste a la pantalla si es necesario */
+.modal.fade.show {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.fade.show {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.fade.show {
+  display: flex !important;
+  align-items: center;
+}
+
 
 /* Asegurar que los botones tengan un espaciado adecuado */
 button {
