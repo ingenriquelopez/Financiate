@@ -10,8 +10,7 @@ import Login from './component/Login/Login.jsx';
 import Signup from "./component/Signup/Signup.jsx";
 import Egresos from "./component/Egresos/Egresos.jsx";
 import Ingresos from "./component/Ingresos/Ingresos.jsx";
-import Categorias from "./component/Categorias/Categorias.jsx";
-import Reportes from "./component/Reportes/Reportes.jsx";
+import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
 
 const Layout = () => {
   const basename = process.env.BASENAME || "";
@@ -50,9 +49,7 @@ const LayoutContent = () => {
           <Route element={<Home />} path="/Home" />
           <Route element={<Egresos />} path="/egresos" />
           <Route element={<Ingresos />} path="/Ingresos" />
-          <Route element={<Categorias />} path="/Categorias" />
-          <Route element={<Reportes />} path="/Reportes" />
-          
+          <Route element={<Suscripciones />} path="/Suscripciones" />
           <Route element={<h1>Not found!</h1>} />
         </Routes>
       </div>
