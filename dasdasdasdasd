@@ -1,0 +1,8 @@
+ id | nombre_usuario |      correo       |                         contrasena_hash                          |         creado_en          | capital_inicial | moneda 
+----+----------------+-------------------+------------------------------------------------------------------+----------------------------+-----------------+--------
+  1 | Vadhir         | vadhir@gmail.com  | 0caa1edc7d87d8cd7802efa900dd2308113e01cb402ce40251c387af177ce3d4 | 2024-12-14 02:09:34.203041 |                 | 
+  2 | Jordan         | jordan@gmail.com  | d8e857ab0d08df708a2f1d12f2221232ae9b93bfe7f1dd4fbb0774413a3d9257 | 2024-12-14 02:19:16.374756 |                 | 
+  3 | Juanito        | juanito@gmail.com | bb9bb98fd33ba0b8da5c6448068a95bcdeed75354e224d6253e37441b40f31ae | 2024-12-16 20:10:48.806157 |            8000 | MXN
+  4 | Jaime          | jaimito@gmail.com | caf5628729af2695d14c41676515c68718880e243f2ad6960f7463a8c3f7859a | 2024-12-16 22:35:17.272284 |           40000 | MXN
+(4 rows)
+
