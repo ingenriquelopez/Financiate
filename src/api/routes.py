@@ -107,7 +107,7 @@ def eliminar_usuario(id):
 
 # CRUD para Ingreso
 @api.route('/ingresos', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def obtener_ingresos():
     ingresos = Ingreso.query.all()
     return jsonify([{
@@ -120,9 +120,10 @@ def obtener_ingresos():
     } for i in ingresos]), 200
 
 @api.route('/ingreso', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def crear_ingreso():
     data = request.get_json()
+    print(data)
     if not data or not all(k in data for k in ('monto', 'descripcion', 'usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
 
@@ -134,7 +135,7 @@ def crear_ingreso():
     )
     db.session.add(nuevo_ingreso)
     db.session.commit()
-    return jsonify({'msg': 'Ingreso creado exitosamente'}), 201
+    return jsonify({'msg': 'ingreso creado exitosamente'}), 201
 
 # CRUD para Egreso
 @api.route('/egresos', methods=['GET'])
