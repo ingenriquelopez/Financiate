@@ -29,8 +29,6 @@ class Usuario(db.Model):
         sha256_hash = hashlib.sha256(contrasena.encode('utf-8')).hexdigest()  # Hash de 64 caracteres
         self.contrasena_hash = sha256_hash[:80]  # Asegurarnos de que no sobrepase los 80 caracteres
 
-        
-
     def verificar_contrasena(self, contrasena):
         #Verifica si la contraseña ingresada es correcta comparándola con la encriptada."""
         # Genera el hash de la contraseña ingresada

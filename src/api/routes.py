@@ -228,6 +228,40 @@ def obtener_alertas():
         'usuario_id': a.usuario_id
     } for a in alertas]), 200
 
+#-----------------------------
+# Ruta para obtener los totales de un usuario por ID o correo
+@api.route('/usuario/totales', methods=['GET'])
+def obtener_totales_usuario():
+    # Obtén el ID o correo del usuario desde los parámetros de la solicitud
+#    usuario_id = request.args.get('usuario_id')
+    print('kkkk')
+
+    # Busca el usuario según el ID o correo
+ #   if usuario_id:
+  #      usuario = Usuario.query.filter_by(id=usuario_id).first()
+  #  else:
+   #     return jsonify({'error': 'Se requiere un ID o un correo'}), 400
+
+    # Verifica si el usuario existe
+   # if not usuario:
+    #    return jsonify({'error': 'Usuario no encontrado'}), 404
+
+    # Calcula los totales usando la función del modelo
+    #totales = usuario.calcular_totales()
+
+    # Retorna los totales como JSON
+    return jsonify({'total':5000}),200
+    # return jsonify({
+    #     'total_ingresos': totales['total_ingresos'],
+    #     'total_egresos': totales['total_egresos'],
+    #     'capital_actual': totales['capital_actual']
+    # })
+
+
+
+
+
+
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
