@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Ingresos.css';
-import { useLocation } from 'react-router-dom'; // Importamos useLocation
+import { useLocation, useNavigate } from 'react-router-dom'; // Importar useNavigate
 
 function Ingresos() {
   const [accountMoney, setAccountMoney] = useState('');
@@ -12,11 +12,12 @@ function Ingresos() {
   const [locacion, setLocacion] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const location = useLocation(); // Usamos el hook useLocation
+  const location = useLocation();
+  const navigate = useNavigate();  // Usamos useNavigate
 
   // Este efecto se ejecutará cada vez que la ruta cambie
   useEffect(() => {
-    if (location.pathname === '/Ingresos') {  // Si la ruta es /Ingresos, abrir el modal
+    if (location.pathname === '/Ingresos') {
       setIsModalOpen(true);
     } else {
       setIsModalOpen(false);
@@ -53,6 +54,12 @@ function Ingresos() {
     });
   };
 
+  // Función para cerrar el modal y redirigir al Home
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Cierra el modal
+    navigate('/Home'); // Redirige a la ruta /Home
+  };
+
   return (
     <div>
       {isModalOpen && (
@@ -61,19 +68,32 @@ function Ingresos() {
             <h2 className="fw-bold modal-titulo">INGRESOS</h2>
             <form onSubmit={handleRegistrar} className="account-form">
               <div className="form-field">
-                <label htmlFor="accountMoney">Monto:</label>
+                <label htmlFor="notas">Notas:</label>
                 <input
-                  type="number"
-                  id="accountMoney"
-                  value={accountMoney}
-                  onChange={(e) => setAccountMoney(e.target.value)}
-                  placeholder="Ingresa monto en bolívares"
+                  type="text"
+                  id="notas"
+                  value={notas}
+                  onChange={(e) => setNotas(e.target.value)}
+                  placeholder="Razón de Ingreso"
                   required
                 />
               </div>
 
               <div className="form-contenedor">
                 <div className="left-column">
+                  {/* Colocamos Monto encima de Categoría */}
+                  <div className="form-field">
+                    <label htmlFor="accountMoney">Monto:</label>
+                    <input
+                      type="number"
+                      id="accountMoney"
+                      value={accountMoney}
+                      onChange={(e) => setAccountMoney(e.target.value)}
+                      placeholder="Ingresa monto"
+                      required
+                    />
+                  </div>
+
                   <div className="form-field">
                     <label htmlFor="category">Categoría:</label>
                     <select
@@ -101,32 +121,9 @@ function Ingresos() {
                       required
                     />
                   </div>
-
-                  <div className="form-field">
-                    <label htmlFor="hour">Hora:</label>
-                    <input
-                      type="time"
-                      id="hour"
-                      value={hour}
-                      onChange={(e) => setHour(e.target.value)}
-                      required
-                    />
-                  </div>
                 </div>
 
                 <div className="right-column">
-                  <div className="form-field">
-                    <label htmlFor="notas">Notas:</label>
-                    <input
-                      type="text"
-                      id="notas"
-                      value={notas}
-                      onChange={(e) => setNotas(e.target.value)}
-                      placeholder="Razón de Ingreso"
-                      required
-                    />
-                  </div>
-
                   <div className="form-field">
                     <label htmlFor="estado">Estado:</label>
                     <select
@@ -158,13 +155,22 @@ function Ingresos() {
                 </div>
               </div>
 
-              {/*Button registrar */}
-              <div className="form-field">
+              {/* Botones */}
+              <div className="form-field buttons-container">
                 <button
                   type="submit"
                   className="modal-b fw-bold registrar-button"
                 >
                   REGISTRAR
+                </button>
+
+                {/* Botón de Cerrar Modal */}
+                <button
+                  type="button"
+                  className="modal-b close-button"
+                  onClick={handleCloseModal} // Llamamos a la función para cerrar y redirigir
+                >
+                  CERRAR
                 </button>
               </div>
             </form>
