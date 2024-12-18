@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './Ingresos.css';
-import { useLocation, useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Ingresos() {
   const [accountMoney, setAccountMoney] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
-  const [hour, setHour] = useState('');
+  // const [hour, setHour] = useState('');
   const [notas, setNotas] = useState('');
-  const [estado, setEstado] = useState('');
+  // const [estado, setEstado] = useState('');
   const [locacion, setLocacion] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const location = useLocation();
-  const navigate = useNavigate();  // Usamos useNavigate
+  const navigate = useNavigate();  
 
   // Este efecto se ejecutará cada vez que la ruta cambie
   useEffect(() => {
@@ -38,7 +38,7 @@ function Ingresos() {
     'Salario'
   ];
 
-  const estados = ['Recibido', 'Por recibir'];
+  // const estados = ['Recibido', 'Por recibir'];
 
   const handleRegistrar = (e) => {
     e.preventDefault();
@@ -47,10 +47,10 @@ function Ingresos() {
       accountMoney,
       category,
       date,
-      hour,
+      // hour,
       notas,
-      estado,
-      locacion,
+      // estado,
+      // locacion,
     });
   };
 
@@ -111,6 +111,9 @@ function Ingresos() {
                     </select>
                   </div>
 
+                </div>
+
+                <div className="right-column">
                   <div className="form-field">
                     <label htmlFor="date">Fecha:</label>
                     <input
@@ -121,10 +124,7 @@ function Ingresos() {
                       required
                     />
                   </div>
-                </div>
-
-                <div className="right-column">
-                  <div className="form-field">
+                  {/* <div className="form-field">     ------------------estado por recibir y recibido
                     <label htmlFor="estado">Estado:</label>
                     <select
                       id="estado"
@@ -139,9 +139,9 @@ function Ingresos() {
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
 
-                  <div className="form-field">
+                  {/* <div className="form-field">
                     <label htmlFor="locacion">Locación:</label>
                     <input
                       type="text"
@@ -151,7 +151,7 @@ function Ingresos() {
                       placeholder="Enter location"
                       required
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

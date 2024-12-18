@@ -56,19 +56,14 @@ class Usuario(db.Model):
             "capital_actual": capital_actual,
         }
 
-# Modelo de Categoría de Ingreso
-class CategoriaIngreso(db.Model):
-    __tablename__ = 'categorias_ingreso'
-    id = Column(db.Integer, primary_key=True)
-    nombre = Column(db.String(50), nullable=False, unique=True)
-    ingresos = relationship('Ingreso', backref='categoria', lazy=True)
 
-# Modelo de Categoría de Egreso
-class CategoriaEgreso(db.Model):
-    __tablename__ = 'categorias_egreso'
+# Modelo de Categorías
+class Categoria(db.Model):
+    __tablename__ = 'categorias'
     id = Column(db.Integer, primary_key=True)
     nombre = Column(db.String(50), nullable=False, unique=True)
     egresos = relationship('Egreso', backref='categoria', lazy=True)
+    ingresos = relationship('Ingreso', backref='categoria', lazy=True)
 
 # Modelo de Ingreso
 class Ingreso(db.Model):
@@ -78,7 +73,7 @@ class Ingreso(db.Model):
     descripcion = Column(db.String(255))
     fecha = Column(db.DateTime, default=datetime.now(timezone.utc))
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
-    categoria_id = Column(db.Integer, db.ForeignKey('categorias_ingreso.id'), nullable=False)
+    categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
 # Modelo de Egreso
 class Egreso(db.Model):
@@ -88,7 +83,7 @@ class Egreso(db.Model):
     descripcion = Column(db.String(255))
     fecha = Column(db.DateTime, default=datetime.now(timezone.utc))
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
-    categoria_id = Column(db.Integer, db.ForeignKey('categorias_egreso.id'), nullable=False)
+    categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
 # Modelo de Plan de Ahorro
 class PlanAhorro(db.Model):
