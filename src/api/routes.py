@@ -229,6 +229,40 @@ def obtener_alertas():
         'usuario_id': a.usuario_id
     } for a in alertas]), 200
 
+# CRUP para Reportes
+@api.route('/reportes', methods=['GET'])
+def obtener_reportes():
+    usuario_id = request.args.get('usuario_id', type=int)
+
+    if not usuario_id:
+        return jsonify({'msg': 'usuario_id es requerido'}), 400
+    
+    ingresos = Ingreso.query.filter_by(usuario_id=usuario_id).all()
+    egresos = Egreso.query.filter_by(usuario_id=usuario_id).all()
+
+    reportes = [
+        {
+            "id": ingreso.id,
+            "monto": ingreso.monto,
+            "descripcion": ingreso.descripcion,
+            "fecha": ingreso.fecha,
+            "tipo": "ingreso"
+        } for ingreso in ingresos
+    ] + [
+        {
+            "id": egreso.id,
+            "monto": egreso.monto,
+            "descripcion": egreso.descripcion,
+            "fecha": egreso.fecha,
+            "tipo": "egreso"
+        } for egreso in egresos
+    ]
+
+    reportes_ordenados = sorted(reportes, key=lambda x: x['fecha'], reverse=True)
+    return jsonify(reportes_ordenados), 200
+
+
+
 #-----------------------------
 # Ruta para obtener los totales de un usuario por ID o correo
 @api.route('/usuario/totales', methods=['GET'])
