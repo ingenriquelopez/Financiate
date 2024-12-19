@@ -1,10 +1,10 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			token: localStorage.getItem("token") || undefined, // Recupera el token del localStorage al cargar la app
-			nombreUsuario:null,
-			correo:null,
-			usuario_id:null,
+			token: localStorage.getItem("tokenFinanciaE") || undefined, // Recupera el token del localStorage al cargar la app
+			nombreUsuario: localStorage.getItem("nombreUsuario") || null,
+			correo: localStorage.getItem("correo") || null,
+			usuario_id: localStorage.getItem("usuario_id") || null,
 			message: null,
 		},
 		actions: {
@@ -12,19 +12,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.setItem("tokenFinanciaE", token); // Guarda el token en localStorage
 				setStore({ token }); // Guarda el token,correo y nombreUsuario en el store global
 			  },
-			  setCorreo: (correo) => {
-				localStorage.setItem("correo", correo); // Guarda el correo en localStorage
-				setStore({ correo }); // Guarda el correo en el store global
-			  },
-			  setUsuarioId: (usuario_id) => {
-				localStorage.setItem("usuario_id", usuario_id); // Guarda el usuario_id
-				setStore({ usuario_id }); //Guarda el id de usuario en el store Global
-			  },
-			  setNombreUsuario: (nombreUsuario) => {
-				console.log(nombreUsuario)
-				localStorage.setItem("nombreUsuario", nombreUsuario); 
-				setStore({ nombreUsuario }); // Guarda el nombre de usuairo en el store global
-			  },
+
+			setCorreo: (correo) => {
+			localStorage.setItem("correo", correo); // Guarda el correo en localStorage
+			setStore({ correo }); // Guarda el correo en el store global
+			},
+
+			setUsuarioId: (usuario_id) => {
+			localStorage.setItem("usuario_id", usuario_id); // Guarda el usuario_id
+			setStore({ usuario_id }); //Guarda el id de usuario en el store Global
+			},
+
+			setNombreUsuario: (nombreUsuario) => {
+			localStorage.setItem("nombreUsuario", nombreUsuario); 
+			setStore({ nombreUsuario }); // Guarda el nombre de usuairo en el store global
+			},
 
 			logout: () => {
 				localStorage.removeItem("tokenFinanciaE"); // Elimina el token del localStorage

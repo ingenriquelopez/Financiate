@@ -6,9 +6,9 @@ import Sidebar from "../component/Sidebar/Sidebar.js";
 export const Home = () => {
 	
 	return (
-		<div className="homeContainer text-center mt-5">
-			<Sidebar/>
-			{/* <Dashboard/> */}
+		<div className="homeContainer text-center">
+			<Sidebar className="mt-5"/>
+			<Dashboard/> 
 			
 		</div>
 	);

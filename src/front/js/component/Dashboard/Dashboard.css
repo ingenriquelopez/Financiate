@@ -3,6 +3,8 @@
     background-color: #f4f7fc;
     padding: 20px;
     border-radius: 8px;
+    width: 100%;
+    height: 100%;
 }
 
 .main-title {
@@ -14,19 +16,32 @@
     letter-spacing: 0.5px;
 }
 
-.chart-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #4e4e4e;
-    margin-bottom: 15px;
-}
-
 .dashboard {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 30px;
+    gap: 30px;  
 }
+.dona {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+.chart-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #4e4e4e;
+    margin-top: 20px; /* Ajusta el valor según lo necesites */
+    margin-bottom: 30px; /* Ya existe o puede ser agregado si es necesario */
+}
+
+tspan {
+    background-color: red;
+}
+
 
 .row {
     width: 100%;
@@ -35,7 +50,7 @@
 
 .col-md-6 {
     padding: 0;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 .progress-container {
