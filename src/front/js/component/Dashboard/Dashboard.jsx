@@ -35,6 +35,8 @@ const Dashboard = (props) => {
         { mes: "Febrero", ingresos: 4000, egresos: 2500 },
         { mes: "Marzo", ingresos: 3500, egresos: 3000 },
         { mes: "Abril", ingresos: 4500, egresos: 3200 },
+        { mes: "Mayo", ingresos: 3700, egresos: 1200 },
+        { mes: "Junio", ingresos: 5200, egresos: 2200 },
     ];
 
     const progressValue = 55;

@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta, Categoria
 from flask_jwt_extended import jwt_required, create_access_token
+from datetime import datetime
 
 # Crear el Blueprint
 api = Blueprint('api', __name__)
@@ -256,7 +257,57 @@ def obtener_totales_usuario():
          'capital_actual': totales['capital_actual']
      })
 
+#---------------------------------------------------
+@app.route('/api/datosmensuales', methods=['POST'])
+def obtener_datos_mensuales():
+    try:
+        data = request.get_json()
+        meses = data.get("meses", [])
+        usuario_id = data.get("usuario_id")  # Asumimos que el ID del usuario se envía en el payload
 
+        if not meses or not isinstance(meses, list):
+            return jsonify({"error": "Por favor, envía un arreglo válido de meses."}), 400
+
+        # Diccionario para convertir nombres de meses a números
+        meses_a_numeros = {
+            "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4,
+            "Mayo": 5, "Junio": 6, "Julio": 7, "Agosto": 8,
+            "Septiembre": 9, "Octubre": 10, "Noviembre": 11, "Diciembre": 12
+        }
+
+        # Preparar respuesta
+        resultado = []
+
+        for mes in meses:
+            mes_numero = meses_a_numeros.get(mes.capitalize())
+            if mes_numero is None:
+                return jsonify({"error": f"El mes '{mes}' no es válido."}), 400
+
+            # Filtrar ingresos y egresos por usuario, mes y año actual
+            ingresos_mes = db.session.query(db.func.sum(Ingreso.monto)).filter(
+                db.extract('month', Ingreso.fecha) == mes_numero,
+                db.extract('year', Ingreso.fecha) == datetime.now().year,
+                Ingreso.usuario_id == usuario_id
+            ).scalar() or 0
+
+            egresos_mes = db.session.query(db.func.sum(Egreso.monto)).filter(
+                db.extract('month', Egreso.fecha) == mes_numero,
+                db.extract('year', Egreso.fecha) == datetime.now().year,
+                Egreso.usuario_id == usuario_id
+            ).scalar() or 0
+
+            # Añadir al resultado
+            resultado.append({
+                "mes": mes,
+                "ingresos": ingresos_mes,
+                "egresos": egresos_mes
+            })
+
+        return jsonify(resultado), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+#-----------------------------------------------
 
 
 
