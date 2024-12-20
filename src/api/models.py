@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timezone
+from datetime import datetime, timezone,date
 from sqlalchemy import Column, ForeignKey, Integer, String, Text, DateTime, Float, Boolean
 from sqlalchemy.orm import relationship
 import hashlib
@@ -72,6 +72,7 @@ class Ingreso(db.Model):
     monto = Column(db.Float, nullable=False)
     descripcion = Column(db.String(255))
     fecha = Column(db.DateTime, default=datetime.now(timezone.utc))
+    fecha = Column(db.Date, default=date.today)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 

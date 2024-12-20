@@ -125,12 +125,13 @@ def obtener_ingresos():
 def crear_ingreso():
     data = request.get_json()
     print(data)
-    if not data or not all(k in data for k in ('monto', 'descripcion', 'usuario_id', 'categoria_id')):
+    if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha','usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
 
     nuevo_ingreso = Ingreso(
         monto=data['monto'],
         descripcion=data['descripcion'],
+        fecha=data['fecha'],
         usuario_id=data['usuario_id'],
         categoria_id=data['categoria_id']
     )
