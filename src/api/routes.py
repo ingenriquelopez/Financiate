@@ -272,32 +272,3 @@ def handle_hello():
     return jsonify(response_body), 200
 
 
-# Ruta para obtener los registros de ingresos y egresos de un usuario por su ID
-@api.route('/reportes/<int:usuario_id>', methods=['GET'])
-@jwt_required()
-def obtener_reportes(usuario_id):
-    # Obtener ingresos y egresos del usuario
-    ingresos = Ingreso.query.filter_by(usuario_id=usuario_id).all()
-    egresos = Egreso.query.filter_by(usuario_id=usuario_id).all()
-
-    # Convertir los objetos a diccionarios para retornarlos
-    ingresos_data = [{
-        'id': i.id,
-        'monto': i.monto,
-        'descripcion': i.descripcion,
-        'fecha': i.fecha,
-        'categoria_id': i.categoria_id
-    } for i in ingresos]
-
-    egresos_data = [{
-        'id': e.id,
-        'monto': e.monto,
-        'descripcion': e.descripcion,
-        'fecha': e.fecha,
-        'categoria_id': e.categoria_id
-    } for e in egresos]
-
-    return jsonify({
-        'ingresos': ingresos_data,
-        'egresos': egresos_data
-    }), 200
