@@ -1,0 +1,121 @@
+/* Estilos generales */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  padding: 20px;
+  max-width: 800px; /* Aumentamos el ancho máximo */
+  width: 100%;
+}
+
+.category-table {
+  width: 100%;
+  height: 300px; /* Altura inicial para la tabla */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  overflow-y: auto; /* Permite que la tabla crezca y tenga scroll si es necesario */
+}
+
+.category-table th, .category-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.category-table th {
+  background-color: #2f49d1; /* Cambié el fondo a #2f49d1 */
+  color: white; /* Aseguro que el texto sea blanco para mayor contraste */
+}
+
+.category-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Añadimos un estilo para la columna de acciones (botón eliminar) */
+.category-table td button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.category-table td button:hover {
+  background-color: #e53935;
+}
+
+/* Estilo para los botones principales */
+.buttons button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.buttons button:hover {
+  background-color: #45a049;
+}
+
+.buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Estilos del Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 50%; /* Ancho del modal será el 50% de la pantalla (col-6) */
+  max-width: 500px; /* Máximo ancho, puede ajustarse si es necesario */
+  min-width: 300px; /* Ancho mínimo, si la pantalla es pequeña */
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+}
+
+.modal-content input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.modal-content button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #45a049;
+}
+
+.modal-content button:nth-child(2) {
+  background-color: #f44336;
+}
+
+.modal-content button:nth-child(2):hover {
+  background-color: #e53935;
+}
