@@ -40,38 +40,38 @@ const Dashboard = () => {
     const progressValue = 55;
 
     //LLAMADA A API QUE ME TRE LOS DATOS PARA GRAFICO DE PIE
-    // useEffect(() => {
-    //     const fetchTotales = async () => {
-    //         try {
-    //             setLoading(true);
+     useEffect(() => {
+         const fetchTotales = async () => {
+             try {
+                 setLoading(true);
                 
-    //             if (!store.usuario_id) {
-    //                 throw new Error("ID  del usuario requerido");
-    //             }
+                 if (!store.usuario_id) {
+                     throw new Error("ID  del usuario requerido");
+                 }
 
-    //             const response = await fetch(process.env.BACKEND_URL + `/api/usuario/totales?usuario_id=${store.usuario_id}`);
-    //             console.log(response)
-    //             if (!response.ok) {
-    //                 throw new Error(`Error ${response.status}: ${response.statusText}`);
-    //             }
+                 const response = await fetch(process.env.BACKEND_URL + `/api/usuario/totales?usuario_id=${store.usuario_id}`);
+                 console.log(response)
+                 if (!response.ok) {
+                     throw new Error(`Error ${response.status}: ${response.statusText}`);
+                 }
 
-    //             const data = await response.json();
+                 const data = await response.json();
 
-    //             const formattedData = [
-    //                 { name: "Ingresos", value: data.total_ingresos },
-    //                 { name: "Egresos", value: data.total_egresos },
-    //             ];
+                 const formattedData = [
+                     { name: "Ingresos", value: data.total_ingresos },
+                     { name: "Egresos", value: data.total_egresos },
+                 ];
 
-    //             setTotales(formattedData);
-    //         } catch (err) {
-    //             setError("Error.....",err.message);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+                 setTotales(formattedData);
+             } catch (err) {
+                 setError("Error.....",err.message);
+             } finally {
+                 setLoading(false);
+             }
+         };
 
-    //     fetchTotales();
-    // }, []);
+         fetchTotales();
+     }, []);
 
 
     //LLAMADA A PI QUE ME TRAE DATOS PARA GRAFICO DE LINEAS
