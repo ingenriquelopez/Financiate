@@ -1,45 +1,30 @@
 import React, { useState, useContext, useEffect } from 'react';
-import './Ingresos.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Context } from '../../store/appContext';
-
+import './Ingresos.css';
 
 function Ingresos() {
-  const { store, actions } = useContext(Context);
+  const { store } = useContext(Context);
   const [ingreso, setIngreso] = useState({
     notas: "",
     category: "",
     accountMoney: 0,
     date: "",
   });
-  const [accountMoney, setAccountMoney] = useState('');
-  const [category, setCategory] = useState('');
-  const [date, setDate] = useState('');
-  // const [hour, setHour] = useState('');
-  const [notas, setNotas] = useState('');
-  // const [estado, setEstado] = useState('');
-  const [locacion, setLocacion] = useState('');
+  const [categorias, setCategorias] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Este efecto se ejecutará cada vez que la ruta cambie
   useEffect(() => {
-    if (location.pathname === '/Ingresos') {
-      setIsModalOpen(true);
-    } else {
-      setIsModalOpen(false);
-    }
+    setIsModalOpen(location.pathname === '/Ingresos');
   }, [location]);
-
-  // Categorias select input
-  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(process.env.BACKEND_URL + "/api/categorias");
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias`);
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -52,41 +37,26 @@ function Ingresos() {
 
     fetchCategorias();
   }, []);
-  // const categories = [
-  //   'Comida y Bebidas',
-  //   'Compras',
-  //   'Freelance',
-  //   'Pasaje',
-  //   'Vehículo',
-  //   'Casa',
-  //   'Recreación',
-  //   'Tecnología y conexión',
-  //   'Salud',
-  //   'Salario'
-  // ];
 
-  // const estados = ['Recibido', 'Por recibir'];
   const handleChange = (event) => {
-    setIngreso({ ...ingreso, [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    setIngreso((prevIngreso) => ({ ...prevIngreso, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { accountMoney, notas, category, date } = ingreso;
 
-    const { accountMoney, notas, category } = ingreso;
-    const usuario_id = store.usuario_id;
-    console.log(accountMoney)
-    console.log(category)
-    console.log(notas)
     try {
-      const response = await fetch(process.env.BACKEND_URL + "/api/ingreso", {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/ingreso`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           monto: accountMoney,
           descripcion: notas,
-          usuario_id,
-          categoria_id: category
+          fecha: date,
+          usuario_id: store.usuario_id,
+          categoria_id: category,
         }),
       });
 
@@ -100,24 +70,9 @@ function Ingresos() {
     }
   };
 
-  // const handleRegistrar = (e) => {
-  //   e.preventDefault();
-  //   // Handle form submission
-  //   console.log({
-  //     accountMoney,
-  //     category,
-  //     date,
-  //     // hour,
-  //     notas,
-  //     // estado,
-  //     // locacion,
-  //   });
-  // };
-
-  // Función para cerrar el modal y redirigir al Home
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Cierra el modal
-    navigate('/Home'); // Redirige a la ruta /Home
+    setIsModalOpen(false);
+    navigate('/Home');
   };
 
   return (
@@ -141,7 +96,6 @@ function Ingresos() {
 
               <div className="form-contenedor">
                 <div className="left-column">
-                  {/* Colocamos Monto encima de Categoría */}
                   <div className="form-field">
                     <label htmlFor="accountMoney">Monto:</label>
                     <input
@@ -157,21 +111,19 @@ function Ingresos() {
                   <div className="form-field">
                     <label htmlFor="category">Categoría:</label>
                     <select
-                      as="select"
                       name="category"
                       value={ingreso.category}
                       onChange={handleChange}
+                      required
                     >
                       <option value="">Selecciona una categoría</option>
                       {categorias.map((categoria) => (
                         <option key={categoria.id} value={categoria.id}>
                           {categoria.nombre}
                         </option>
-
                       ))}
                     </select>
                   </div>
-
                 </div>
 
                 <div className="right-column">
@@ -179,58 +131,20 @@ function Ingresos() {
                     <label htmlFor="date">Fecha:</label>
                     <input
                       type="date"
-                      id="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
+                      name="date"
+                      value={ingreso.date}
+                      onChange={handleChange}
                       required
                     />
                   </div>
-                  {/* <div className="form-field">     ------------------estado por recibir y recibido
-                    <label htmlFor="estado">Estado:</label>
-                    <select
-                      id="estado"
-                      value={estado}
-                      onChange={(e) => setEstado(e.target.value)}
-                      required
-                    >
-                      <option value="">Selecciona un estado</option>
-                      {estados.map((state, index) => (
-                        <option key={index} value={state}>
-                          {state}
-                        </option>
-                      ))}
-                    </select>
-                  </div> */}
-
-                  {/* <div className="form-field">
-                    <label htmlFor="locacion">Locación:</label>
-                    <input
-                      type="text"
-                      id="locacion"
-                      value={locacion}
-                      onChange={(e) => setLocacion(e.target.value)}
-                      placeholder="Enter location"
-                      required
-                    />
-                  </div> */}
                 </div>
               </div>
 
-              {/* Botones */}
               <div className="form-field buttons-container">
-                <button
-                  type="submit"
-                  className="modal-b fw-bold registrar-button"
-                >
+                <button type="submit" className="modal-b fw-bold registrar-button">
                   REGISTRAR
                 </button>
-
-                {/* Botón de Cerrar Modal */}
-                <button
-                  type="button"
-                  className="modal-b close-button"
-                  onClick={handleCloseModal} // Llamamos a la función para cerrar y redirigir
-                >
+                <button type="button" className="modal-b close-button" onClick={handleCloseModal}>
                   CERRAR
                 </button>
               </div>

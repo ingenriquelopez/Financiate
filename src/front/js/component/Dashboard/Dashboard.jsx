@@ -90,7 +90,7 @@ const Dashboard = () => {
                     'Authorization': `Bearer ${store.token}`},
                     body: JSON.stringify({
                         usuario_id: store.usuario_id,
-                        meses: ['Enero', 'Febrero', 'Marzo', 'Diciembre'],
+                        meses: ['Enero', 'Febrero', 'Marzo', 'Abril'],
                     }),
                 });
                 
@@ -135,7 +135,7 @@ const Dashboard = () => {
                     <div className="row justify-content-center mb-4">
 
                         {/* Gráfico de dona */}
-                        {/* <div className="col-md-6 mb-4 dona" >
+                         <div className="col-md-6 mb-4 dona" >
                             <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4> 
                             <ResponsiveContainer width={chartWidth} height={chartHeight} className="mt-2 respo">
                                 
@@ -175,7 +175,7 @@ const Dashboard = () => {
                                     </Pie>
                                 </PieChart>
                             </ResponsiveContainer>
-                        </div> */}
+                        </div> 
 
                         {/* Gráfico de líneas */}
                         <div className="col-md-6 mb-4">
