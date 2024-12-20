@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta, Categoria
 from flask_jwt_extended import jwt_required, create_access_token
+from datetime import datetime
 
 # Crear el Blueprint
 api = Blueprint('api', __name__)
@@ -229,6 +230,40 @@ def obtener_alertas():
         'usuario_id': a.usuario_id
     } for a in alertas]), 200
 
+# CRUP para Reportes
+@api.route('/reportes', methods=['GET'])
+def obtener_reportes():
+    usuario_id = request.args.get('usuario_id', type=int)
+
+    if not usuario_id:
+        return jsonify({'msg': 'usuario_id es requerido'}), 400
+    
+    ingresos = Ingreso.query.filter_by(usuario_id=usuario_id).all()
+    egresos = Egreso.query.filter_by(usuario_id=usuario_id).all()
+
+    reportes = [
+        {
+            "id": ingreso.id,
+            "monto": ingreso.monto,
+            "descripcion": ingreso.descripcion,
+            "fecha": ingreso.fecha,
+            "tipo": "ingreso"
+        } for ingreso in ingresos
+    ] + [
+        {
+            "id": egreso.id,
+            "monto": egreso.monto,
+            "descripcion": egreso.descripcion,
+            "fecha": egreso.fecha,
+            "tipo": "egreso"
+        } for egreso in egresos
+    ]
+
+    reportes_ordenados = sorted(reportes, key=lambda x: x['fecha'], reverse=True)
+    return jsonify(reportes_ordenados), 200
+
+
+
 #-----------------------------
 # Ruta para obtener los totales de un usuario por ID o correo
 @api.route('/usuario/totales', methods=['GET'])
@@ -256,7 +291,58 @@ def obtener_totales_usuario():
          'capital_actual': totales['capital_actual']
      })
 
+#---------------------------------------------------
+@api.route('/datosmensuales', methods=['POST'])
+def obtener_datos_mensuales():
+    try:
+        data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
+        print(data)
+        meses = data.get("meses", [])
+        usuario_id = data.get("usuario_id")
 
+        if not meses or not isinstance(meses, list):
+             return jsonify({"error": "Por favor, envía un arreglo válido de meses."}), 400
+
+        # Diccionario para convertir nombres de meses a números
+        meses_a_numeros = {
+            "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4,
+            "Mayo": 5, "Junio": 6, "Julio": 7, "Agosto": 8,
+            "Septiembre": 9, "Octubre": 10, "Noviembre": 11, "Diciembre": 12
+        }
+
+        # Preparar respuesta
+        resultado = []
+
+        for mes in meses:
+             mes_numero = meses_a_numeros.get(mes.capitalize())
+             if mes_numero is None:
+                 return jsonify({"error": f"El mes '{mes}' no es válido."}), 400
+
+            # Filtrar ingresos y egresos por usuario, mes y año actual
+             ingresos_mes = db.session.query(db.func.sum(Ingreso.monto)).filter(
+                 db.extract('month', Ingreso.fecha) == mes_numero,
+                 db.extract('year', Ingreso.fecha) == datetime.now().year,
+                 Ingreso.usuario_id == usuario_id
+             ).scalar() or 0
+
+             egresos_mes = db.session.query(db.func.sum(Egreso.monto)).filter(
+                 db.extract('month', Egreso.fecha) == mes_numero,
+                 db.extract('year', Egreso.fecha) == datetime.now().year,
+                 Egreso.usuario_id == usuario_id
+             ).scalar() or 0
+
+            # Añadir al resultado
+             resultado.append({
+                 "mes": mes,
+                 "ingresos": ingresos_mes,
+                 "egresos": egresos_mes
+             })
+        print(resultado)
+        return jsonify(resultado), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+#-----------------------------------------------
 
 
 
