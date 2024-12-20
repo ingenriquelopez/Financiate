@@ -292,15 +292,16 @@ def obtener_totales_usuario():
      })
 
 #---------------------------------------------------
-@app.route('/api/datosmensuales', methods=['POST'])
+@api.route('/datosmensuales', methods=['POST'])
 def obtener_datos_mensuales():
     try:
-        data = request.get_json()
+        data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
+        print(data)
         meses = data.get("meses", [])
-        usuario_id = data.get("usuario_id")  # Asumimos que el ID del usuario se envía en el payload
+        usuario_id = data.get("usuario_id")
 
         if not meses or not isinstance(meses, list):
-            return jsonify({"error": "Por favor, envía un arreglo válido de meses."}), 400
+             return jsonify({"error": "Por favor, envía un arreglo válido de meses."}), 400
 
         # Diccionario para convertir nombres de meses a números
         meses_a_numeros = {
@@ -313,30 +314,30 @@ def obtener_datos_mensuales():
         resultado = []
 
         for mes in meses:
-            mes_numero = meses_a_numeros.get(mes.capitalize())
-            if mes_numero is None:
-                return jsonify({"error": f"El mes '{mes}' no es válido."}), 400
+             mes_numero = meses_a_numeros.get(mes.capitalize())
+             if mes_numero is None:
+                 return jsonify({"error": f"El mes '{mes}' no es válido."}), 400
 
             # Filtrar ingresos y egresos por usuario, mes y año actual
-            ingresos_mes = db.session.query(db.func.sum(Ingreso.monto)).filter(
-                db.extract('month', Ingreso.fecha) == mes_numero,
-                db.extract('year', Ingreso.fecha) == datetime.now().year,
-                Ingreso.usuario_id == usuario_id
-            ).scalar() or 0
+             ingresos_mes = db.session.query(db.func.sum(Ingreso.monto)).filter(
+                 db.extract('month', Ingreso.fecha) == mes_numero,
+                 db.extract('year', Ingreso.fecha) == datetime.now().year,
+                 Ingreso.usuario_id == usuario_id
+             ).scalar() or 0
 
-            egresos_mes = db.session.query(db.func.sum(Egreso.monto)).filter(
-                db.extract('month', Egreso.fecha) == mes_numero,
-                db.extract('year', Egreso.fecha) == datetime.now().year,
-                Egreso.usuario_id == usuario_id
-            ).scalar() or 0
+             egresos_mes = db.session.query(db.func.sum(Egreso.monto)).filter(
+                 db.extract('month', Egreso.fecha) == mes_numero,
+                 db.extract('year', Egreso.fecha) == datetime.now().year,
+                 Egreso.usuario_id == usuario_id
+             ).scalar() or 0
 
             # Añadir al resultado
-            resultado.append({
-                "mes": mes,
-                "ingresos": ingresos_mes,
-                "egresos": egresos_mes
-            })
-
+             resultado.append({
+                 "mes": mes,
+                 "ingresos": ingresos_mes,
+                 "egresos": egresos_mes
+             })
+        print(resultado)
         return jsonify(resultado), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

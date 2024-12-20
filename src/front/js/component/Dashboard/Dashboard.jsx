@@ -19,51 +19,99 @@ import './Dashboard.css'; // Importar los estilos
 const chartWidth = "80%";
 const chartHeight = 200;
 
-const Dashboard = (props) => {
+const Dashboard = () => {
     const { store, actions } = useContext(Context);
     const [totales, setTotales] = useState([]);
+    const [datosMensuales, setDatosMensuales] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const userId = props.userId || null; // Reemplazar por la fuente real
-    const userEmail = props.userEmail || null; // Reemplazar por la fuente real
-
     const ingresosEgresos = ["#82ca9d", "#8884d8"];
 
-    const datosMensuales = [
-        { mes: "Enero", ingresos: 3000, egresos: 2000 },
-        { mes: "Febrero", ingresos: 4000, egresos: 2500 },
-        { mes: "Marzo", ingresos: 3500, egresos: 3000 },
-        { mes: "Abril", ingresos: 4500, egresos: 3200 },
-        { mes: "Mayo", ingresos: 3700, egresos: 1200 },
-        { mes: "Junio", ingresos: 5200, egresos: 2200 },
-    ];
+    // const datosMensuales = [
+    //     { mes: "Enero", ingresos: 3000, egresos: 2000 },
+    //     { mes: "Febrero", ingresos: 4000, egresos: 2500 },
+    //     { mes: "Marzo", ingresos: 3500, egresos: 3000 },
+    //     { mes: "Abril", ingresos: 4500, egresos: 3200 },
+    //     { mes: "Mayo", ingresos: 3700, egresos: 1200 },
+    //     { mes: "Junio", ingresos: 5200, egresos: 2200 },
+    // ];
 
     const progressValue = 55;
 
+    //LLAMADA A API QUE ME TRE LOS DATOS PARA GRAFICO DE PIE
+    // useEffect(() => {
+    //     const fetchTotales = async () => {
+    //         try {
+    //             setLoading(true);
+                
+    //             if (!store.usuario_id) {
+    //                 throw new Error("ID  del usuario requerido");
+    //             }
+
+    //             const response = await fetch(process.env.BACKEND_URL + `/api/usuario/totales?usuario_id=${store.usuario_id}`);
+    //             console.log(response)
+    //             if (!response.ok) {
+    //                 throw new Error(`Error ${response.status}: ${response.statusText}`);
+    //             }
+
+    //             const data = await response.json();
+
+    //             const formattedData = [
+    //                 { name: "Ingresos", value: data.total_ingresos },
+    //                 { name: "Egresos", value: data.total_egresos },
+    //             ];
+
+    //             setTotales(formattedData);
+    //         } catch (err) {
+    //             setError("Error.....",err.message);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchTotales();
+    // }, []);
+
+
+    //LLAMADA A PI QUE ME TRAE DATOS PARA GRAFICO DE LINEAS
     useEffect(() => {
-        const fetchTotales = async () => {
+        const fetchTotalDatosMensuales = async () => {
+            
             try {
                 setLoading(true);
                 
                 if (!store.usuario_id) {
                     throw new Error("ID  del usuario requerido");
                 }
-
-                const response = await fetch(process.env.BACKEND_URL + `/api/usuario/totales?usuario_id=${store.usuario_id}`);
+                const response = await fetch(process.env.BACKEND_URL + `/api/datosmensuales`, {
+                    method: "POST", // Cambiado de GET a POST
+                    headers: { "Content-Type": "application/json" ,
+                    'Authorization': `Bearer ${store.token}`},
+                    body: JSON.stringify({
+                        usuario_id: store.usuario_id,
+                        meses: ['Enero', 'Febrero', 'Marzo', 'Diciembre'],
+                    }),
+                });
+                
                 console.log(response)
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
+                console.log(data)
 
-                const formattedData = [
-                    { name: "Ingresos", value: data.total_ingresos },
-                    { name: "Egresos", value: data.total_egresos },
-                ];
+                // Formatear los datos
+                const formattedData = data.map(d => ({
+                    name: d.mes,
+                    ingresos: d.ingresos,
+                    egresos: d.egresos,
+                }));
 
-                setTotales(formattedData);
+        
+
+                setDatosMensuales(formattedData);
             } catch (err) {
                 setError("Error.....",err.message);
             } finally {
@@ -71,8 +119,8 @@ const Dashboard = (props) => {
             }
         };
 
-        fetchTotales();
-    }, [userId, userEmail]);
+        fetchTotalDatosMensuales();
+    }, []);
 
     return (
         <div className="dashboard-container">
@@ -87,7 +135,7 @@ const Dashboard = (props) => {
                     <div className="row justify-content-center mb-4">
 
                         {/* Gráfico de dona */}
-                        <div className="col-md-6 mb-4 dona" >
+                        {/* <div className="col-md-6 mb-4 dona" >
                             <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4> 
                             <ResponsiveContainer width={chartWidth} height={chartHeight} className="mt-2 respo">
                                 
@@ -127,7 +175,7 @@ const Dashboard = (props) => {
                                     </Pie>
                                 </PieChart>
                             </ResponsiveContainer>
-                        </div>
+                        </div> */}
 
                         {/* Gráfico de líneas */}
                         <div className="col-md-6 mb-4">
@@ -150,7 +198,7 @@ const Dashboard = (props) => {
                     </div>
 
                     {/* Barra de progreso */}
-                     <div className="progress-container">
+                     {/* <div className="progress-container">
                         <h4 className="chart-title">Progreso de Meta</h4>
                         <div className="progress-bar-container" style={{ width: "100%" }}>
                             <div
@@ -169,7 +217,7 @@ const Dashboard = (props) => {
                             </div>
                             <p className="progress-text">{progressValue}%</p>
                         </div>
-                    </div> 
+                    </div>  */}
                 </div>
             )}
         </div>
