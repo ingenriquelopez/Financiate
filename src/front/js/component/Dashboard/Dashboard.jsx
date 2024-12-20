@@ -112,6 +112,7 @@ const Dashboard = () => {
         
 
                 setDatosMensuales(formattedData);
+                console.log(datosMensuales);
             } catch (err) {
                 setError("Error.....",err.message);
             } finally {
