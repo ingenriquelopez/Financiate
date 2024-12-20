@@ -1,0 +1,90 @@
+/* ProgressBar.css */
+
+/* Contenedor de la barra de progreso */
+.progress-bar-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column; 
+    align-items: stretch;
+    position: relative;  /* Necesario para posicionar elementos absolutamente */
+}
+
+/* Contenedor para los valores 0% y 100% en la misma fila */
+.progress-percentage {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    width: 100%;
+    top: -20px; /* Ajusta el valor para que no se superponga con la barra */
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Estilo para el valor '0%' */
+.percentage-left {
+    position: absolute;
+    left: 0;
+}
+
+/* Estilo para el valor '100%' */
+.percentage-right {
+    position: absolute;
+    right: 0;
+}
+
+/* Estilo para el valor de porcentaje calculado */
+.percentage-calculated {
+    position: absolute;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333; /* Color para el porcentaje calculado */
+    top: 0px; /* Alineado al nivel de los valores 0% y 100% */
+}
+
+/* La barra de progreso en sí */
+.progress-bar {
+    height: 30px;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #e0f7e9;
+    position: relative;
+}
+
+/* Relleno de la barra de progreso */
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, rgba(128, 0, 128, 0.2), rgb(128, 0, 128));
+    width: 100%;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Posicionamos el texto (el valor) dentro de la barra de progreso */
+.progress-value {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4B0082;  /* Texto morado oscuro */
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 2px 6px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+/* Contenedor para los valores debajo de la barra de progreso */
+.progress-money {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

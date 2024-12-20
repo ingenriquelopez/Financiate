@@ -157,13 +157,13 @@ def obtener_egresos():
 #@jwt_required()
 def crear_egreso():
     data = request.get_json()
-    print(data)
-    if not data or not all(k in data for k in ('monto', 'descripcion', 'usuario_id', 'categoria_id')):
+    if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha','usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
 
     nuevo_egreso = Egreso(
         monto=data['monto'],
         descripcion=data['descripcion'],
+        fecha = data['fecha'],
         usuario_id=data['usuario_id'],
         categoria_id=data['categoria_id']
     )
@@ -287,6 +287,7 @@ def obtener_totales_usuario():
     print(f"totales: {totales}")
     # Retorna los totales como JSON
     return jsonify({
+         'capital_inicial':totales['capital_inicial'],
          'total_ingresos': totales['total_ingresos'],
          'total_egresos': totales['total_egresos'],
          'capital_actual': totales['capital_actual']
@@ -297,7 +298,6 @@ def obtener_totales_usuario():
 def obtener_datos_mensuales():
     try:
         data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
-        print(data)
         meses = data.get("meses", [])
         usuario_id = data.get("usuario_id")
 
@@ -338,7 +338,6 @@ def obtener_datos_mensuales():
                  "ingresos": ingresos_mes,
                  "egresos": egresos_mes
              })
-        print(resultado)
         return jsonify(resultado), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

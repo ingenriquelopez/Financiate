@@ -51,6 +51,7 @@ class Usuario(db.Model):
         total_egresos = sum(egreso.monto for egreso in self.egresos)
         capital_actual = self.capital_inicial + total_ingresos - total_egresos
         return {
+            "capital_inicial": self.capital_inicial,
             "total_ingresos": total_ingresos,
             "total_egresos": total_egresos,
             "capital_actual": capital_actual,
@@ -82,7 +83,7 @@ class Egreso(db.Model):
     id = Column(db.Integer, primary_key=True)
     monto = Column(db.Float, nullable=False)
     descripcion = Column(db.String(255))
-    fecha = Column(db.DateTime, default=datetime.now(timezone.utc))
+    fecha = Column(db.Date, default=date.today)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
 import {
+    BarChart,
+    Bar,
     PieChart,
     Pie,
     Cell,
-    LineChart,
     Line,
+    LineChart,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -14,114 +16,102 @@ import {
     ResponsiveContainer,
 } from "recharts";
 
-import './Dashboard.css'; // Importar los estilos
+import "./Dashboard.css"; // Importar los estilos
+import ProgressBar from "./ProgressBar.jsx"; // Importación de ProgressBar
 
-const chartWidth = "80%";
+const chartWidth = "100%";
 const chartHeight = 200;
+const colores = ["#4caf50", "#ff0058"]; // Colores para ingresos y egresos
 
 const Dashboard = () => {
-    const { store, actions } = useContext(Context);
+    const { store } = useContext(Context);
     const [totales, setTotales] = useState([]);
+    const [capitales, setCapitales] = useState([]);
     const [datosMensuales, setDatosMensuales] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const ingresosEgresos = ["#82ca9d", "#8884d8"];
-
-    // const datosMensuales = [
-    //     { mes: "Enero", ingresos: 3000, egresos: 2000 },
-    //     { mes: "Febrero", ingresos: 4000, egresos: 2500 },
-    //     { mes: "Marzo", ingresos: 3500, egresos: 3000 },
-    //     { mes: "Abril", ingresos: 4500, egresos: 3200 },
-    //     { mes: "Mayo", ingresos: 3700, egresos: 1200 },
-    //     { mes: "Junio", ingresos: 5200, egresos: 2200 },
-    // ];
-
-    const progressValue = 55;
-
-    //LLAMADA A API QUE ME TRE LOS DATOS PARA GRAFICO DE PIE
-     useEffect(() => {
-         const fetchTotales = async () => {
-             try {
-                 setLoading(true);
-                
-                 if (!store.usuario_id) {
-                     throw new Error("ID  del usuario requerido");
-                 }
-
-                 const response = await fetch(process.env.BACKEND_URL + `/api/usuario/totales?usuario_id=${store.usuario_id}`);
-                 console.log(response)
-                 if (!response.ok) {
-                     throw new Error(`Error ${response.status}: ${response.statusText}`);
-                 }
-
-                 const data = await response.json();
-
-                 const formattedData = [
-                     { name: "Ingresos", value: data.total_ingresos },
-                     { name: "Egresos", value: data.total_egresos },
-                 ];
-
-                 setTotales(formattedData);
-             } catch (err) {
-                 setError("Error.....",err.message);
-             } finally {
-                 setLoading(false);
-             }
-         };
-
-         fetchTotales();
-     }, []);
-
-
-    //LLAMADA A PI QUE ME TRAE DATOS PARA GRAFICO DE LINEAS
+    // LLAMADA A LA API PARA GRAFICO DE DONA
     useEffect(() => {
-        const fetchTotalDatosMensuales = async () => {
-            
+        const fetchTotales = async () => {
             try {
                 setLoading(true);
-                
+
                 if (!store.usuario_id) {
-                    throw new Error("ID  del usuario requerido");
+                    throw new Error("ID del usuario requerido");
                 }
-                const response = await fetch(process.env.BACKEND_URL + `/api/datosmensuales`, {
-                    method: "POST", // Cambiado de GET a POST
-                    headers: { "Content-Type": "application/json" ,
-                    'Authorization': `Bearer ${store.token}`},
-                    body: JSON.stringify({
-                        usuario_id: store.usuario_id,
-                        meses: ['Enero', 'Febrero', 'Marzo', 'Abril'],
-                    }),
-                });
-                
-                console.log(response)
+
+                const response = await fetch(
+                    `${process.env.BACKEND_URL}/api/usuario/totales?usuario_id=${store.usuario_id}`
+                );
+
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
-                console.log(data)
 
-                // Formatear los datos
+                const formattedData = [
+                    { name: "Ingresos", value: data.total_ingresos },
+                    { name: "Egresos", value: data.total_egresos },
+                ];
+                setTotales(formattedData);
+
+                setCapitales({
+                    "capital_inicial": data.capital_inicial,
+                    "capital_actual": data.capital_actual
+                });
+
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTotales();
+    }, [store.usuario_id]);
+
+    // LLAMADA A LA API PARA GRAFICO DE LINEAS
+    useEffect(() => {
+        const fetchTotalDatosMensuales = async () => {
+            try {
+                setLoading(true);
+
+                if (!store.usuario_id) {
+                    throw new Error("ID del usuario requerido");
+                }
+                const response = await fetch(process.env.BACKEND_URL + '/api/datosmensuales', {
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        usuario_id: store.usuario_id,
+                        meses: ['Enero', 'Febrero', 'Marzo', 'Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
                 const formattedData = data.map(d => ({
-                    name: d.mes,
+                    mes: d.mes,
                     ingresos: d.ingresos,
                     egresos: d.egresos,
                 }));
 
-        
-
                 setDatosMensuales(formattedData);
-                console.log(datosMensuales);
             } catch (err) {
-                setError("Error.....",err.message);
+                setError("Error.....", err.message);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchTotalDatosMensuales();
-    }, []);
+    }, [store.usuario_id]);
 
     return (
         <div className="dashboard-container">
@@ -133,92 +123,83 @@ const Dashboard = () => {
                 <p className="error-text">{error}</p>
             ) : (
                 <div className="dashboard">
-                    <div className="row justify-content-center mb-4">
+                    <div className="row justify-content-center mb-2">
 
-                        {/* Gráfico de dona */}
-                         <div className="col-md-6 mb-4 dona" >
-                            <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4> 
-                            <ResponsiveContainer width={chartWidth} height={chartHeight} className="mt-2 respo">
-                                
-                                <PieChart>
-                                    <Pie
-                                        data={totales}
-                                        dataKey="value"
-                                        nameKey="name"
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={75}
-                                        fill="#8884d8"
-                                        labelLine={true} // Desactiva la línea del label
-                                        label={({ x, y, name, value }) => (
-                                            <text
-                                            x={x}
-                                            y={y}
-                                            textAnchor="middle"
-                                            dominantBaseline="middle"
-                                            style={{
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                fill: "#333",
-                                                marginTop: "10px",  // Ajusta el margin-top aquí
+                        {/* Gráfico de dona con leyendas */}
+                        <div className="col-md-6 mb-4">
+                            <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4>
+                            <div className="donut-chart-container">
+                                <div className="legend-container">
+                                    <p className="legend-text capital-inicial">
+                                        Capital Inicial: {new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(capitales.capital_inicial)}
+                                    </p>
+                                </div>
+                                <ResponsiveContainer width={chartWidth} height={chartHeight}>
+                                    <PieChart>
+                                        <Pie
+                                            data={totales}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={80}
+                                            innerRadius={50}
+                                            label={({ name, value }) => `${name}: ${value}`}
+                                            labelStyle={{
+                                                fontSize: "14px",
+                                                fontWeight: "500",
+                                                fill: "#555",
                                             }}
-                                            >
-                                            {name}: {value}
-                                            </text>
-                                        )}
-                                                                            >
-                                        {totales.map((entry, index) => (
-                                            <Cell
-                                                key={`cell-${index}`}
-                                                fill={ingresosEgresos[index % ingresosEgresos.length]}
-                                            />
-                                        ))}
-                                    </Pie>
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div> 
+                                        >
+                                            {totales.map((entry, index) => (
+                                                <Cell
+                                                    key={`cell-${index}`}
+                                                    fill={colores[index % colores.length]}
+                                                />
+                                            ))}
+                                        </Pie>
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="legend-container">
+                                    <p className="legend-text capital-actual">
+                                        Capital Actual: {new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(capitales.capital_actual)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Gráfico de líneas */}
                         <div className="col-md-6 mb-4">
                             <h4 className="chart-title">Evolución Mensual de Ingresos y Egresos</h4>
-                            <ResponsiveContainer width={chartWidth} height={chartHeight}>
-                                <LineChart
-                                    data={datosMensuales}
-                                    margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="mes" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Line type="monotone" dataKey="ingresos" stroke="#82ca9d" />
-                                    <Line type="monotone" dataKey="egresos" stroke="#8884d8" />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-
-                    {/* Barra de progreso */}
-                     {/* <div className="progress-container">
-                        <h4 className="chart-title">Progreso de Meta</h4>
-                        <div className="progress-bar-container" style={{ width: "100%" }}>
-                            <div
-                                className="progress-bar"
-                                style={{
-                                    background:
-                                        "linear-gradient(to right,hsl(88, 41.40%, 80.60%),rgb(42, 121, 6))",
-                                }}
-                            >
-                                <div
-                                    className="progress-fill"
-                                    style={{
-                                        width: `${progressValue}%`,
-                                    }}
-                                ></div>
+                            <div className="line-chart-container">
+                                <ResponsiveContainer width={chartWidth} height={chartHeight}> 
+                                    <LineChart
+                                        data={[...datosMensuales, { mes: null, ingresos: null, egresos: null }]} // Agregar punto final nulo
+                                        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis
+                                            dataKey="mes"
+                                            interval={0}
+                                            padding={{ right: 10 }}
+                                            tickFormatter={(mes) => (mes ? mes.substring(0, 3) : "")} // Mostrar las tres primeras letras del mes
+                                        />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Line type="monotone" dataKey="ingresos" stroke="#82ca9d" connectNulls={false} dot />
+                                        <Line type="monotone" dataKey="egresos" stroke="#ff0058" connectNulls={false} dot />
+                                    </LineChart>
+                                </ResponsiveContainer>
                             </div>
-                            <p className="progress-text">{progressValue}%</p>
                         </div>
-                    </div>  */}
+
+                        {/* Barra de progreso */}
+                        <div className="progress-container mt-5">
+                            <ProgressBar inicio={0} total={100000} current={20000} />
+                        </div>
+
+                    </div>
                 </div>
             )}
         </div>

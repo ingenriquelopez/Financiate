@@ -42,7 +42,7 @@ function Egresos() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { amount, description, category } = egreso;
+    const { amount, description, fecha, category } = egreso;
     const usuario_id = store.usuario_id;
 
     try {
@@ -52,6 +52,7 @@ function Egresos() {
         body: JSON.stringify({
           monto: amount,
           descripcion: description,
+          fecha,
           usuario_id,
           categoria_id: category
         }),
