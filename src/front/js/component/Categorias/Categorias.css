@@ -99,7 +99,7 @@
   align-items: center;
 }
 
-.modal-content {
+.modal-contenido {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -109,13 +109,13 @@
   text-align: center;
 }
 
-.modal-content h3 {
+.modal-contenido h3 {
   margin-bottom: 20px;
   color: #333;
   font-size: 18px;
 }
 
-.modal-content input {
+.modal-contenido input {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -123,7 +123,7 @@
   border-radius: 4px;
 }
 
-.modal-content button {
+.modal-contenido button {
   padding: 10px 20px;
   margin: 5px;
   background-color: #2ecc71; /* Verde */
@@ -133,14 +133,14 @@
   cursor: pointer;
 }
 
-.modal-content button:hover {
+.modal-contenido button:hover {
   background-color: #27ae60; /* Verde más oscuro */
 }
 
-.modal-content button:nth-child(2) {
+.modal-contenido button:nth-child(2) {
   background-color: #e74c3c; /* Rojo */
 }
 
-.modal-content button:nth-child(2):hover {
+.modal-contenido button:nth-child(2):hover {
   background-color: #c0392b; /* Rojo más oscuro */
 }
