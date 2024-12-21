@@ -63,6 +63,7 @@ class Categoria(db.Model):
     __tablename__ = 'categorias'
     id = Column(db.Integer, primary_key=True)
     nombre = Column(db.String(50), nullable=False, unique=True)
+    icono =  Column(db.String(10), nullable=False, unique=True)
     egresos = relationship('Egreso', backref='categoria', lazy=True)
     ingresos = relationship('Ingreso', backref='categoria', lazy=True)
 

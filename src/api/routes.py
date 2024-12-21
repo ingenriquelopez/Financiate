@@ -176,7 +176,8 @@ def listar_categorias():
     categorias = Categoria.query.all()
     return jsonify([{
         'id': e.id,
-        'nombre': e.nombre
+        'nombre': e.nombre,
+        'icono':e.icono
     } for e in categorias]), 200
 
 
@@ -196,7 +197,8 @@ def crear_categoria():
 
     # Crear la nueva categoría
     nueva_categoria = Categoria(
-        nombre=data['nombre']
+        nombre=data['nombre'],
+        icono = data['icono']
     )
     
     # Agregarla a la base de datos
@@ -207,9 +209,11 @@ def crear_categoria():
     return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre}), 201
 
 #---------------------------------------------------
-@api.route('/categoria/<int:id>', methods=['DELETE'])
-def eliminar_categoria(id):
+@api.route('/categoria', methods=['DELETE'])
+def eliminar_categoria():
     # Verificar si la categoría existe
+    data = request.get_json()
+    id= data['id'] 
     categoria = Categoria.query.get(id)
     
     if not categoria:
@@ -220,13 +224,117 @@ def eliminar_categoria(id):
     egresos_relacionados = Egreso.query.filter_by(categoria_id=id).count()
 
     if ingresos_relacionados > 0 or egresos_relacionados > 0:
-        return jsonify({"error": "La categoría está relacionada con ingresos o egresos, no se puede eliminar."}), 400
+            return jsonify({
+                "error": "La categoría está relacionada con ingresos o egresos.",
+                "details": {
+                    "ingresos_relacionados": ingresos_relacionados,
+                    "egresos_relacionados": egresos_relacionados
+                }
+            }), 400
 
     # Eliminar la categoría si no está relacionada
     db.session.delete(categoria)
     db.session.commit()
 
     return jsonify({"message": "Categoría eliminada correctamente"}), 200
+
+#----------------------------------------------------
+@api.route('/categorias', methods=['DELETE'])
+def eliminar_todas_las_categorias():
+    try:
+        # Obtener todas las categorías
+        categorias = Categoria.query.all()
+
+        if not categorias:
+            return jsonify({"error": "No hay categorías para eliminar."}), 404
+
+        # Filtrar las categorías no comprometidas
+        categorias_no_comprometidas = []
+        categorias_comprometidas = []
+
+        for categoria in categorias:
+            ingresos_relacionados = Ingreso.query.filter_by(categoria_id=categoria.id).count()
+            egresos_relacionados = Egreso.query.filter_by(categoria_id=categoria.id).count()
+
+            if ingresos_relacionados == 0 and egresos_relacionados == 0:
+                categorias_no_comprometidas.append(categoria)
+            else:
+                categorias_comprometidas.append({
+                    "id": categoria.id,
+                    "nombre": categoria.nombre,
+                    "ingresos_relacionados": ingresos_relacionados,
+                    "egresos_relacionados": egresos_relacionados
+                })
+
+        # Eliminar las categorías no comprometidas
+        for categoria in categorias_no_comprometidas:
+            db.session.delete(categoria)
+
+        db.session.commit()
+
+        return jsonify({
+            "message": f"{len(categorias_no_comprometidas)} categorías eliminadas correctamente.",
+            "comprometidas": categorias_comprometidas
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error interno del servidor", "details": str(e)}), 500
+
+#---------------------------------------------------
+
+
+@api.route('/categorias/default', methods=['POST'])
+#@jwt_required()  # Puedes quitar el decorador jwt_required si no es necesario
+def insertar_categorias_por_defecto():
+
+    # Comprobar si la tabla de categorías está vacía
+    if Categoria.query.count() > 0:
+        return jsonify({"msg": "Las categorías ya existen en la base de datos"}), 200
+    
+    # Definir las categorías de ingresos y egresos con sus iconos, colores y nombres
+    categorias = [
+        # Categorías de ingresos
+        {'nombre': 'Salario', 'icono': '💼', 'color': '#4CAF50'},
+        {'nombre': 'Freelance / Trabajo Independiente', 'icono': '🧑‍💻', 'color': '#2196F3'},
+        {'nombre': 'Inversiones', 'icono': '💸', 'color': '#FFC107'},
+        {'nombre': 'Ventas / Comercio', 'icono': '🛒', 'color': '#FF5722'},
+        {'nombre': 'Ingreso Extraordinario', 'icono': '📈', 'color': '#8BC34A'},
+        {'nombre': 'Trabajo Remoto', 'icono': '🧑‍💻', 'color': '#9C27B0'},
+        {'nombre': 'Consultoría', 'icono': '📊', 'color': '#00BCD4'},
+        {'nombre': 'Servicios Profesionales', 'icono': '💼', 'color': '#607D8B'},
+        {'nombre': 'Venta de Productos', 'icono': '🛍️', 'color': '#3F51B5'},
+        {'nombre': 'Rendimientos Bancarios', 'icono': '🏦', 'color': '#795548'},
+        
+        # Categorías de egresos
+        {'nombre': 'Alquiler', 'icono': '🏠', 'color': '#FFC107'},
+        {'nombre': 'Supermercado', 'icono': '🛒', 'color': '#FF5722'},
+        {'nombre': 'Transporte', 'icono': '🚗', 'color': '#00BCD4'},
+        {'nombre': 'Salud', 'icono': '🩺', 'color': '#4CAF50'},
+        {'nombre': 'Educación', 'icono': '🎓', 'color': '#2196F3'},
+        {'nombre': 'Entretenimiento', 'icono': '🎬', 'color': '#9C27B0'},
+        {'nombre': 'Gastos Varios', 'icono': '📦', 'color': '#8BC34A'},
+        {'nombre': 'Comida', 'icono': '🍽️', 'color': '#FF9800'},
+        {'nombre': 'Seguros', 'icono': '🛡️', 'color': '#607D8B'},
+        {'nombre': 'Cuidado Personal', 'icono': '💅', 'color': '#795548'}
+    ]
+    # Insertar las categorías en la base de datos
+    try:
+        for categoria in categorias:
+            print(categoria)
+            nueva_categoria = Categoria(
+                nombre=categoria['nombre'],
+                icono=categoria['icono']
+            )
+            db.session.add(nueva_categoria)
+           
+        db.session.commit()
+
+
+        return jsonify({"msg": "Categorías insertadas exitosamente"}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Hubo un error al insertar las categorías", "details": str(e)}), 500
 
 
 
@@ -394,7 +502,6 @@ def obtener_datos_mensuales():
         return jsonify({"error": str(e)}), 500
 
 #-----------------------------------------------
-
 
 
 
