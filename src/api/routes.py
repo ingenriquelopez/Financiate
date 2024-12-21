@@ -181,11 +181,11 @@ def listar_categorias():
 
 
 # Ruta para crear una nueva categoría
-api.route('/categoria', methods=['POST'])
+@api.route('/categoria', methods=['POST'])
 #@jwt_required()  # Si deseas que solo los usuarios autenticados puedan agregar categorías
 def crear_categoria():
     data = request.get_json()  # Obtener los datos enviados en el cuerpo de la solicitud
-
+    print(data);
     # Validar que los datos necesarios estén presentes
     if not data or 'nombre' not in data:
         return jsonify({'msg': 'El nombre de la categoría es obligatorio'}), 400
@@ -204,7 +204,7 @@ def crear_categoria():
     db.session.commit()
 
     # Retornar el ID de la nueva categoría
-    return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id}), 201
+    return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre}), 201
 
 #---------------------------------------------------
 @api.route('/categoria/<int:id>', methods=['DELETE'])
