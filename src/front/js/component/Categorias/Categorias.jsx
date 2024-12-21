@@ -90,8 +90,34 @@ const Categorias = () => {
               ))}
             </tbody>
 
+<<<<<<< HEAD
           </table>
           <div className="d-flex justify-content-between mt-4">
+=======
+  {/* Modal */}
+  {showModal && (
+    <div className="modal d-block" tabIndex="-1">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-contenido">
+          <div className="modal-header bg-light">
+            <h5 className="modal-title elegant-text">Agregar Nueva Categoría</h5>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={() => setShowModal(false)}
+            ></button>
+          </div>
+          <div className="modal-body">
+            <input
+              type="text"
+              className="form-control elegant-input"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              placeholder="Nombre de la categoría"
+            />
+          </div>
+          <div className="modal-footer">
+>>>>>>> 9a9e115ee3340d1c56802d8ced5b9e28716e5eec
             <button
               className="btn btn-primary elegant-button"
               onClick={() => setShowModal(true)}

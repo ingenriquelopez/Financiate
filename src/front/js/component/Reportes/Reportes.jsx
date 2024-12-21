@@ -35,27 +35,34 @@ const Reportes = () => {
     <div>
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Reportes</h2>
       <ul style={{ listStyleType: "none", padding: "0" }}>
-        {reportes.map((reporte) => (
-          <li
-            key={`${reporte.tipo}-${reporte.id}`}
-            style={{
-              backgroundColor: "white",
-              border: `2px solid ${reporte.tipo === "ingreso" ? "green" : "red"}`,
-              padding: "10px",
-              margin: "5px 0",
-              borderRadius: "5px",
-            }}
-          >
-            <p style={{ textAlign: "left", fontWeight: "bold", marginBottom: "10px" }}>
-              {reporte.tipo.toUpperCase()}
-            </p>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
-              <span>Monto: ${reporte.monto.toFixed(2)}</span>
-              <span>Descripción: {reporte.descripcion}</span>
-              <span>Fecha: {new Date(reporte.fecha).toLocaleString()}</span>
-            </div>
-          </li>
-        ))}
+        {reportes
+          .slice()
+          .sort((a, b) => {
+            const fechaA = new Date(a.fecha);
+            const fechaB = new Date(b.fecha);
+            return fechaB - fechaA;
+          })
+          .map((reporte) => (
+            <li
+              key={`${reporte.tipo}-${reporte.id}`}
+              style={{
+                backgroundColor: "white",
+                border: `2px solid ${reporte.tipo === "ingreso" ? "green" : "red"}`,
+                padding: "10px",
+                margin: "5px 0",
+                borderRadius: "5px",
+              }}
+            >
+              <p style={{ textAlign: "left", fontWeight: "bold", marginBottom: "10px" }}>
+                {reporte.tipo.toUpperCase()}
+              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
+                <span>Monto: ${reporte.monto.toFixed(2)}</span>
+                <span>Descripción: {reporte.descripcion}</span>
+                <span>Fecha: {new Date(reporte.fecha).toLocaleString()}</span>
+              </div>
+            </li>
+          ))}
       </ul>
     </div>
   );
