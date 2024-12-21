@@ -75,7 +75,7 @@ const Categorias = () => {
   {showModal && (
     <div className="modal d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
+        <div className="modal-contenido">
           <div className="modal-header bg-light">
             <h5 className="modal-title elegant-text">Agregar Nueva Categoría</h5>
             <button

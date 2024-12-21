@@ -179,6 +179,55 @@ def listar_categorias():
         'nombre': e.nombre
     } for e in categorias]), 200
 
+
+# Ruta para crear una nueva categoría
+@api.route('/categoria', methods=['POST'])
+#@jwt_required()  # Si deseas que solo los usuarios autenticados puedan agregar categorías
+def crear_categoria():
+    data = request.get_json()  # Obtener los datos enviados en el cuerpo de la solicitud
+
+    # Validar que los datos necesarios estén presentes
+    if not data or 'nombre' not in data:
+        return jsonify({'msg': 'El nombre de la categoría es obligatorio'}), 400
+
+    # Verificar si ya existe una categoría con el mismo nombre
+    if Categoria.query.filter_by(nombre=data['nombre']).first():
+        return jsonify({'msg': 'La categoría ya existe'}), 400
+
+    # Crear la nueva categoría
+    nueva_categoria = Categoria(
+        nombre=data['nombre']
+    )
+    
+    # Agregarla a la base de datos
+    db.session.add(nueva_categoria)
+    db.session.commit()
+
+    return jsonify({'msg': 'Categoría creada exitosamente'}), 201
+
+@api.route('/categoria/<int:id>', methods=['DELETE'])
+def eliminar_categoria(id):
+    # Verificar si la categoría existe
+    categoria = Categoria.query.get(id)
+    
+    if not categoria:
+        return jsonify({"error": "Categoría no encontrada"}), 404
+
+    # Verificar si la categoría está relacionada con algún ingreso o egreso
+    ingresos_relacionados = Ingreso.query.filter_by(categoria_id=id).count()
+    egresos_relacionados = Egreso.query.filter_by(categoria_id=id).count()
+
+    if ingresos_relacionados > 0 or egresos_relacionados > 0:
+        return jsonify({"error": "La categoría está relacionada con ingresos o egresos, no se puede eliminar."}), 400
+
+    # Eliminar la categoría si no está relacionada
+    db.session.delete(categoria)
+    db.session.commit()
+
+    return jsonify({"message": "Categoría eliminada correctamente"}), 200
+
+
+
 # CRUD para PlanAhorro
 @api.route('/planes_ahorro', methods=['GET'])
 @jwt_required()
