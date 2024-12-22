@@ -173,7 +173,8 @@ def crear_egreso():
 
 @api.route('/categorias', methods=['GET'])
 def listar_categorias():
-    categorias = Categoria.query.all()
+    # Ordeno categorías por 'nombre' de forma ascendente
+    categorias = Categoria.query.order_by(Categoria.nombre.asc()).all()
     return jsonify([{
         'id': e.id,
         'nombre': e.nombre,

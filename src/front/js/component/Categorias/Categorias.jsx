@@ -199,7 +199,6 @@ const Categorias = () => {
         <table className="table table-striped table-bordered mt-4 mx-auto">
           <thead>
             <tr>
-              <th style={{ width: '5%' }}>ID</th>
               <th style={{ width: '10%' }}>Nombre</th>
               <th style={{ width: '5%' }}>Icono</th>
               <th style={{ width: '10%' }}>Acciones</th>
@@ -208,7 +207,6 @@ const Categorias = () => {
           <tbody>
             {categorias.map((categoria) => (
               <tr key={categoria.id}>
-                <td>{categoria.id}</td>
                 <td>{categoria.nombre}</td>
                 <td>
                   <span>{categoria.icono}</span>
