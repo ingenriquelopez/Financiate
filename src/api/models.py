@@ -88,6 +88,26 @@ class Egreso(db.Model):
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
+# Modelo de Suscripción
+class Suscripcion(db.Model):
+    __tablename__ = 'suscripciones'
+    id = Column(db.Integer, primary_key=True)
+    nombre = Column(db.String(100), nullable=False)
+    costo = Column(db.Float, nullable=False)
+    frecuencia = Column(db.String(50), nullable=False)  # Ejemplo: 'mensual', 'anual'
+    fecha_inicio = Column(db.Date, nullable=False, default=date.today)
+    usuario_id = Column(db.Integer, ForeignKey('usuarios.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'costo': self.costo,
+            'frecuencia': self.frecuencia,
+            'fecha_inicio': self.fecha_inicio.isoformat(),
+            'usuario_id': self.usuario_id
+        }
+
 # Modelo de Plan de Ahorro
 class PlanAhorro(db.Model):
     __tablename__ = 'planes_ahorro'
@@ -104,15 +124,6 @@ class FondoEmergencia(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     monto_meta = Column(db.Float, nullable=False)
     monto_actual = Column(db.Float, default=0.0)
-    usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
-
-# Modelo de Suscripción
-class Suscripcion(db.Model):
-    __tablename__ = 'suscripciones'
-    id = Column(db.Integer, primary_key=True)
-    nombre = Column(db.String(100), nullable=False)
-    costo = Column(db.Float, nullable=False)
-    frecuencia = Column(db.String(50), nullable=False)  # Ejemplo: 'mensual', 'anual'
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
 
 # Modelo de Alerta
