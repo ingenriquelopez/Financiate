@@ -13,7 +13,7 @@ const Reportes = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/reportes?usuario_id=${usuario_id}`);
+      const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/reportes?usuario_id=${usuario_id}`);
       if (response.ok) {
         const data = await response.json();
         setReportes(data);

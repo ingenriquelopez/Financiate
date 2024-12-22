@@ -24,7 +24,7 @@ function Ingresos() {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias`);
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categorias`);
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -48,7 +48,7 @@ function Ingresos() {
     const { accountMoney, notas, category, date } = ingreso;
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/ingreso`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/ingresos/ingreso`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

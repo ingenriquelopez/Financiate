@@ -20,7 +20,7 @@ function Egresos() {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias`);
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categorias`);
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -46,7 +46,7 @@ function Egresos() {
     const usuario_id = store.usuario_id;
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/egreso`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/egresos/egreso`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -42,7 +42,7 @@ const Dashboard = () => {
                 }
 
                 const response = await fetch(
-                    `${process.env.BACKEND_URL}/api/usuario/totales?usuario_id=${store.usuario_id}`
+                    `${process.env.BACKEND_URL}/api/usuarios/totales?usuario_id=${store.usuario_id}`
                 );
 
                 if (!response.ok) {
@@ -81,7 +81,7 @@ const Dashboard = () => {
                 if (!store.usuario_id) {
                     throw new Error("ID del usuario requerido");
                 }
-                const response = await fetch(process.env.BACKEND_URL + '/api/datosmensuales', {
+                const response = await fetch(process.env.BACKEND_URL + '/api/usuarios/datosmensuales', {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({

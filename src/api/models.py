@@ -67,7 +67,7 @@ class Categoria(db.Model):
     egresos = relationship('Egreso', backref='categoria', lazy=True)
     ingresos = relationship('Ingreso', backref='categoria', lazy=True)
 
-# Modelo de Ingreso
+# Modelo de Ingreso  UV J
 class Ingreso(db.Model):
     __tablename__ = 'ingresos'
     id = Column(db.Integer, primary_key=True)

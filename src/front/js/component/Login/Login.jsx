@@ -43,7 +43,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+    const response = await fetch(process.env.BACKEND_URL + "/api/usuarios/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ correo, contrasena }),
@@ -72,7 +72,7 @@ const Login = () => {
   };
 
   const handleModalSubmit = async () => {
-    const response = await fetch(process.env.BACKEND_URL + "/api/usuarios", {
+    const response = await fetch(process.env.BACKEND_URL + "/api/usuarios/usuarios", {
       method: "PUT",
       headers: {
         'Content-Type': 'application/json',

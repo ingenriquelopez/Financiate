@@ -173,8 +173,7 @@ def crear_egreso():
 
 @api.route('/categorias', methods=['GET'])
 def listar_categorias():
-    # Ordeno categorías por 'nombre' de forma ascendente
-    categorias = Categoria.query.order_by(Categoria.nombre.asc()).all()
+    categorias = Categoria.query.all()
     return jsonify([{
         'id': e.id,
         'nombre': e.nombre,
@@ -207,7 +206,7 @@ def crear_categoria():
     db.session.commit()
 
     # Retornar el ID de la nueva categoría
-    return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre,"icono":nueva_categoria.icono}), 201
+    return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre}), 201
 
 #---------------------------------------------------
 @api.route('/categoria', methods=['DELETE'])
@@ -273,13 +272,6 @@ def eliminar_todas_las_categorias():
 
         db.session.commit()
 
-        # Verificar si la tabla está vacía
-        categorias_count = db.session.execute('SELECT COUNT(*) FROM categorias').scalar()
-        if categorias_count == 0:
-            # Resetear el contador de ID para la secuencia en PostgreSQL
-            db.session.execute('ALTER SEQUENCE categorias_id_seq RESTART WITH 1;')
-            db.session.commit()
-
         return jsonify({
             "message": f"{len(categorias_no_comprometidas)} categorías eliminadas correctamente.",
             "comprometidas": categorias_comprometidas
@@ -301,21 +293,24 @@ def insertar_categorias_por_defecto():
     
     # Definir las categorías de ingresos y egresos con sus iconos, colores y nombres
     categorias = [
-    # Categorías de ingresos
+    # Categorias de ingresos
     {'nombre': 'Salario', 'icono': '💼', 'color': '#4CAF50'},
     {'nombre': 'Freelance / Trabajo Independiente', 'icono': '🧑‍💻', 'color': '#2196F3'},
     {'nombre': 'Inversiones', 'icono': '💸', 'color': '#FFC107'},
     {'nombre': 'Ventas / Comercio', 'icono': '🛒', 'color': '#FF5722'},
     {'nombre': 'Ingreso Extraordinario', 'icono': '📈', 'color': '#8BC34A'},
-    {'nombre': 'Consultoría', 'icono': '📊', 'color': '#00BCD4'},
+    {'nombre': 'Trabajo Remoto', 'icono': '🧑‍💻', 'color': '#9C27B0'},
+    {'nombre': 'Consultoria', 'icono': '📊', 'color': '#00BCD4'},
+    {'nombre': 'Servicios Profesionales', 'icono': '💼', 'color': '#607D8B'},
     {'nombre': 'Venta de Productos', 'icono': '🛍️', 'color': '#3F51B5'},
     {'nombre': 'Rendimientos Bancarios', 'icono': '🏦', 'color': '#795548'},
-
-    # Categorías de egresos
+    
+    # Categorias de egresos
     {'nombre': 'Alquiler', 'icono': '🏠', 'color': '#FFC107'},
+    {'nombre': 'Supermercado', 'icono': '🛒', 'color': '#FF5722'},
     {'nombre': 'Transporte', 'icono': '🚗', 'color': '#00BCD4'},
     {'nombre': 'Salud', 'icono': '🩺', 'color': '#4CAF50'},
-    {'nombre': 'Educación', 'icono': '🎓', 'color': '#2196F3'},
+    {'nombre': 'Educacion', 'icono': '🎓', 'color': '#2196F3'},
     {'nombre': 'Entretenimiento', 'icono': '🎬', 'color': '#9C27B0'},
     {'nombre': 'Gastos Varios', 'icono': '📦', 'color': '#8BC34A'},
     {'nombre': 'Comida', 'icono': '🍽️', 'color': '#FF9800'},
@@ -371,15 +366,10 @@ def obtener_fondos_emergencia():
     } for f in fondos]), 200
 
 # CRUD para Suscripciones
-@api.route('/suscripciones', methods=['GET'])
+@api.route('/suscripciones', methods=['GET']) 
 @jwt_required()
 def obtener_suscripciones():
-    """Obtiene todas las suscripciones del usuario autenticado."""
-    usuario_id = request.args.get('usuario_id')
-    if not usuario_id:
-        return jsonify({'msg': 'Usuario no especificado'}), 400
-
-    suscripciones = Suscripcion.query.filter_by(usuario_id=usuario_id).all()
+    suscripciones = Suscripcion.query.all()
     return jsonify([{
         'id': s.id,
         'nombre': s.nombre,
@@ -387,53 +377,6 @@ def obtener_suscripciones():
         'frecuencia': s.frecuencia,
         'usuario_id': s.usuario_id
     } for s in suscripciones]), 200
-
-
-@api.route('/suscripcion', methods=['POST'])
-@jwt_required()
-def crear_suscripcion():
-    """Crea una nueva suscripción para el usuario autenticado."""
-    data = request.get_json()
-    if not data or not all(k in data for k in ('nombre', 'costo', 'frecuencia', 'usuario_id')):
-        return jsonify({'msg': 'Datos incompletos'}), 400
-
-    nueva_suscripcion = Suscripcion(
-        nombre=data['nombre'],
-        costo=data['costo'],
-        frecuencia=data['frecuencia'],
-        usuario_id=data['usuario_id']
-    )
-    db.session.add(nueva_suscripcion)
-    db.session.commit()
-    return jsonify({'msg': 'Suscripción creada exitosamente', 'id': nueva_suscripcion.id}), 201
-
-
-@api.route('/suscripcion/<int:id>', methods=['PUT'])
-@jwt_required()
-def actualizar_suscripcion(id):
-    """Actualiza una suscripción existente."""
-    data = request.get_json()
-    suscripcion = Suscripcion.query.get_or_404(id)
-
-    if 'nombre' in data:
-        suscripcion.nombre = data['nombre']
-    if 'costo' in data:
-        suscripcion.costo = data['costo']
-    if 'frecuencia' in data:
-        suscripcion.frecuencia = data['frecuencia']
-
-    db.session.commit()
-    return jsonify({'msg': 'Suscripción actualizada exitosamente'}), 200
-
-
-@api.route('/suscripcion/<int:id>', methods=['DELETE'])
-@jwt_required()
-def eliminar_suscripcion(id):
-    """Elimina una suscripción existente."""
-    suscripcion = Suscripcion.query.get_or_404(id)
-    db.session.delete(suscripcion)
-    db.session.commit()
-    return jsonify({'msg': 'Suscripción eliminada exitosamente'}), 200
 
 # CRUD para Alerta
 @api.route('/alertas', methods=['GET'])
