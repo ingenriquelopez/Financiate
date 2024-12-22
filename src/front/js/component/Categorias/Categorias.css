@@ -1,18 +1,6 @@
-/* Estilos generales */
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-  padding: 20px;
-  max-width: 800px;
-  width: 100%;
-}
-
-/* Botones en general */
+/* Asegura que todos los botones tengan el mismo ancho */
 .boton-modal {
-  flex: 1;
+  width: 32%; /* O cualquier valor que te guste, asegurando que todos los botones tengan el mismo tamaño */
   padding: 10px 20px;
   white-space: nowrap; /* Asegura que el texto no se divida en dos filas */
   border: none;
@@ -36,6 +24,11 @@
 
 .boton-modal.btn-secondary:hover {
   background-color: #5a6268; /* Gris más oscuro */
+}
+
+/* Título de la tabla con fondo gris claro */
+.table th {
+  background-color: #f8f9fa; /* Gris claro */
 }
 
 /* Modal */
@@ -76,14 +69,6 @@
   border-radius: 4px;
 }
 
-.modal-contenido button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 /* Botones dentro del modal */
 .modal-contenido button:nth-child(1) {
   background-color: #2ecc71; /* Verde */
@@ -120,4 +105,12 @@
 .d-flex .boton-modal {
   flex: none; /* Evita que los botones se expandan igual */
   width: auto; /* Usamos el ancho automático */
+}
+/* Botón Registrar */
+.misbotones {
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 20% !important;
+  height: 2.5rem !important;
 }

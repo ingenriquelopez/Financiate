@@ -206,7 +206,7 @@ def crear_categoria():
     db.session.commit()
 
     # Retornar el ID de la nueva categoría
-    return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre}), 201
+    return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre,"icono":nueva_categoria.icono}), 201
 
 #---------------------------------------------------
 @api.route('/categoria', methods=['DELETE'])
@@ -272,6 +272,13 @@ def eliminar_todas_las_categorias():
 
         db.session.commit()
 
+        # Verificar si la tabla está vacía
+        categorias_count = db.session.execute('SELECT COUNT(*) FROM categorias').scalar()
+        if categorias_count == 0:
+            # Resetear el contador de ID para la secuencia en PostgreSQL
+            db.session.execute('ALTER SEQUENCE categorias_id_seq RESTART WITH 1;')
+            db.session.commit()
+
         return jsonify({
             "message": f"{len(categorias_no_comprometidas)} categorías eliminadas correctamente.",
             "comprometidas": categorias_comprometidas
@@ -293,30 +300,28 @@ def insertar_categorias_por_defecto():
     
     # Definir las categorías de ingresos y egresos con sus iconos, colores y nombres
     categorias = [
-        # Categorías de ingresos
-        {'nombre': 'Salario', 'icono': '💼', 'color': '#4CAF50'},
-        {'nombre': 'Freelance / Trabajo Independiente', 'icono': '🧑‍💻', 'color': '#2196F3'},
-        {'nombre': 'Inversiones', 'icono': '💸', 'color': '#FFC107'},
-        {'nombre': 'Ventas / Comercio', 'icono': '🛒', 'color': '#FF5722'},
-        {'nombre': 'Ingreso Extraordinario', 'icono': '📈', 'color': '#8BC34A'},
-        {'nombre': 'Trabajo Remoto', 'icono': '🧑‍💻', 'color': '#9C27B0'},
-        {'nombre': 'Consultoría', 'icono': '📊', 'color': '#00BCD4'},
-        {'nombre': 'Servicios Profesionales', 'icono': '💼', 'color': '#607D8B'},
-        {'nombre': 'Venta de Productos', 'icono': '🛍️', 'color': '#3F51B5'},
-        {'nombre': 'Rendimientos Bancarios', 'icono': '🏦', 'color': '#795548'},
-        
-        # Categorías de egresos
-        {'nombre': 'Alquiler', 'icono': '🏠', 'color': '#FFC107'},
-        {'nombre': 'Supermercado', 'icono': '🛒', 'color': '#FF5722'},
-        {'nombre': 'Transporte', 'icono': '🚗', 'color': '#00BCD4'},
-        {'nombre': 'Salud', 'icono': '🩺', 'color': '#4CAF50'},
-        {'nombre': 'Educación', 'icono': '🎓', 'color': '#2196F3'},
-        {'nombre': 'Entretenimiento', 'icono': '🎬', 'color': '#9C27B0'},
-        {'nombre': 'Gastos Varios', 'icono': '📦', 'color': '#8BC34A'},
-        {'nombre': 'Comida', 'icono': '🍽️', 'color': '#FF9800'},
-        {'nombre': 'Seguros', 'icono': '🛡️', 'color': '#607D8B'},
-        {'nombre': 'Cuidado Personal', 'icono': '💅', 'color': '#795548'}
-    ]
+    # Categorías de ingresos
+    {'nombre': 'Salario', 'icono': '💼', 'color': '#4CAF50'},
+    {'nombre': 'Freelance / Trabajo Independiente', 'icono': '🧑‍💻', 'color': '#2196F3'},
+    {'nombre': 'Inversiones', 'icono': '💸', 'color': '#FFC107'},
+    {'nombre': 'Ventas / Comercio', 'icono': '🛒', 'color': '#FF5722'},
+    {'nombre': 'Ingreso Extraordinario', 'icono': '📈', 'color': '#8BC34A'},
+    {'nombre': 'Consultoría', 'icono': '📊', 'color': '#00BCD4'},
+    {'nombre': 'Venta de Productos', 'icono': '🛍️', 'color': '#3F51B5'},
+    {'nombre': 'Rendimientos Bancarios', 'icono': '🏦', 'color': '#795548'},
+
+    # Categorías de egresos
+    {'nombre': 'Alquiler', 'icono': '🏠', 'color': '#FFC107'},
+    {'nombre': 'Transporte', 'icono': '🚗', 'color': '#00BCD4'},
+    {'nombre': 'Salud', 'icono': '🩺', 'color': '#4CAF50'},
+    {'nombre': 'Educación', 'icono': '🎓', 'color': '#2196F3'},
+    {'nombre': 'Entretenimiento', 'icono': '🎬', 'color': '#9C27B0'},
+    {'nombre': 'Gastos Varios', 'icono': '📦', 'color': '#8BC34A'},
+    {'nombre': 'Comida', 'icono': '🍽️', 'color': '#FF9800'},
+    {'nombre': 'Seguros', 'icono': '🛡️', 'color': '#607D8B'},
+    {'nombre': 'Cuidado Personal', 'icono': '💅', 'color': '#795548'}
+]
+
     # Insertar las categorías en la base de datos
     try:
         for categoria in categorias:

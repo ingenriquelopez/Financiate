@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 import './Categorias.css';
@@ -8,6 +9,7 @@ const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newCategory, setNewCategory] = useState({ nombre: '', icono: '' });
+  const navigate = useNavigate();
 
   // Función para agregar una categoría con nombre e icono
   const addCategory = async () => {
@@ -101,6 +103,63 @@ const Categorias = () => {
     }
   };
 
+
+  const deleteAllCategories = async () => {
+    try {
+      // Hacer la solicitud DELETE a la API para eliminar todas las categorías
+      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("No se pudieron eliminar las categorías:", errorData.error);
+  
+        // Mostrar las categorías comprometidas que no pudieron ser eliminadas
+        if (errorData.comprometidas && errorData.comprometidas.length > 0) {
+          const compromitidasHtml = errorData.comprometidas.map((categoria) => {
+            return `
+              <p><strong>${categoria.nombre}</strong></p>
+              <p>Ingresos relacionados: ${categoria.ingresos_relacionados}</p>
+              <p>Egresos relacionados: ${categoria.egresos_relacionados}</p>
+            `;
+          }).join("");
+  
+          Swal.fire({
+            icon: 'warning',
+            title: 'No se pudieron eliminar algunas categorías',
+            html: `
+              <p>Las siguientes categorías tienen ingresos o egresos relacionados:</p>
+              ${compromitidasHtml}
+            `,
+          });
+        }
+        return;
+      }
+  
+      // Si todo fue bien, actualizar el estado y mostrar mensaje de éxito
+      setCategorias([]);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Categorías eliminadas',
+        text: 'Las categorías no comprometidas han sido eliminadas correctamente.',
+      });
+    } catch (error) {
+      console.error('Error inesperado al eliminar las categorías:', error.message);
+  
+      Swal.fire({
+        icon: 'warning',
+        title: 'Algo salió mal',
+        text: 'Hubo un problema al intentar eliminar las categorías.',
+      });
+    }
+  };
+  
+  
   // Función para manejar el cambio en el formulario
   const handleInputChange = (event) => {
     event.persist(); // Esto permite que el evento sea accesible de manera asincrónica
@@ -131,20 +190,19 @@ const Categorias = () => {
   }, []);
 
   return (
-    <div className="container text-center">
+    <div className="container text-center d-flex flex-column align-items-center justify-content-center">
       {/* Título actualizado */}
       <h2>Gestión de Categorías</h2>
 
       {/* Tabla de categorías */}
-      <div className="table-responsive" style={{ width: 'calc(100% + 100px)' }}>
+      <div className="table-responsive" style={{ width: 'calc(80%)', maxHeight: '400px', overflowY: 'auto' }}>
         <table className="table table-striped table-bordered mt-4 mx-auto">
           <thead>
             <tr>
-              {/* Aumento de la columna de Nombre (30%) */}
-              <th style={{ width: '13%' }}>ID</th>
-              <th style={{ width: '40%' }}>Nombre</th>
-              <th style={{ width: '20%' }}>Icono</th>
-              <th style={{ width: '30%' }}>Acciones</th>
+              <th style={{ width: '5%' }}>ID</th>
+              <th style={{ width: '10%' }}>Nombre</th>
+              <th style={{ width: '5%' }}>Icono</th>
+              <th style={{ width: '10%' }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -153,7 +211,6 @@ const Categorias = () => {
                 <td>{categoria.id}</td>
                 <td>{categoria.nombre}</td>
                 <td>
-                  {/* Si el icono es un emoji, simplemente lo mostramos como texto */}
                   <span>{categoria.icono}</span>
                 </td>
                 <td>
@@ -167,26 +224,35 @@ const Categorias = () => {
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+      </table>
+  </div>
+
 
       {/* Botones para Agregar Categoría y Cerrar alineados horizontalmente */}
-      <div className="d-flex justify-content-between mb-3">
+      <div className="d-flex justify-content-end mt-3 mb-3" style={{ width: 'calc(80%)'}}>
+        {/* Boton para eliminar todas las categorias */}
+      <button
+        className="btn btn-outline-danger misbotones"
+        onClick={deleteAllCategories}
+      >
+        Eliminar todas
+      </button>
+
         {/* Botón Agregar Categoría */}
         <button
-          className="btn btn-primary boton-modal"
+          className="btn btn-outline-primary misbotones"
           onClick={() => setShowModal(true)}
         >
           Agregar Categoría
         </button>
 
         {/* Botón Cerrar */}
-        <button
-          className="btn btn-secondary boton-modal"
-          onClick={() => setShowModal(false)}
-        >
-          Cerrar
-        </button>
+          <button
+            className="btn btn-outline-dark misbotones"
+            onClick = {()=> navigate("/Home") }
+          >
+            Cerrar
+          </button>
       </div>
 
 
