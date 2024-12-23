@@ -13,7 +13,6 @@ const Categorias = () => {
 
   // Función para agregar una categoría con nombre e icono
   const addCategory = async () => {
-    console.log('newCategory:', newCategory);  // Verifica el valor de newCategory
     try {
       if (typeof newCategory.nombre !== 'string' || typeof newCategory.icono !== 'string') {
         throw new Error('El nombre y el icono de la categoría deben ser cadenas de texto');
@@ -39,7 +38,6 @@ const Categorias = () => {
       }
 
       const result = await response.json();
-      console.log(result);
       const { id, nombre, icono } = result;
       setCategorias((prevCategorias) => [...prevCategorias, { id, nombre, icono }]);
       setNewCategory({ id:'', nombre: '', icono: '' });
@@ -195,7 +193,6 @@ const Categorias = () => {
         }
 
         const result = await response.json();
-        console.log(result);
         setCategorias(result);
       } catch (error) {
         console.error('Error:', error.message);
