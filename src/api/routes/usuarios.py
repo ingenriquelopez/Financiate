@@ -1,10 +1,13 @@
 # api/routes/usuarios.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from api.models import db, Usuario,Ingreso,Egreso
-from flask_jwt_extended import jwt_required, create_access_token
-from  datetime import datetime
+from api.token_required import token_required
+from datetime import datetime, timedelta, timezone
+import jwt
 
+#--------------------------------------------
 usuarios_bp = Blueprint('usuarios', __name__)
+#--------------------------------------------
 
 # CRUD para Usuario
 @usuarios_bp.route('/signup', methods=['POST'])
@@ -30,6 +33,7 @@ def signup():
 
     return jsonify({'msg': 'Usuario creado exitosamente'}), 201
 
+#---------------------------------------------------------------
 @usuarios_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -40,13 +44,22 @@ def login():
     if not usuario or not usuario.verificar_contrasena(data['contrasena']):
         return jsonify({'msg': 'Credenciales inválidas'}), 401
 
-    token = create_access_token(identity=usuario.id)
+    payload = {
+        'id': usuario.id,
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=10)  # Expira en 10 minutos usando timezone
+    }
+    # Obtener el SECRET_KEY desde la configuración de la aplicación
+    SECRET_KEY = current_app.config['SECRET_KEY']  # Esto se refiere a lo que cargaste en app.py
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+    # token = create_access_token(identity=usuario.id)
     usuario_dict = usuario.to_dict()
     return jsonify({'token': token, 'usuario': usuario_dict}), 200
+    
 
 @usuarios_bp.route('/usuarios', methods=['GET'])
-@jwt_required()
-def obtener_usuarios():
+@token_required
+def obtener_usuarios(payload):
     usuarios = Usuario.query.all()
     return jsonify([{
         'id': u.id,
@@ -57,7 +70,7 @@ def obtener_usuarios():
     } for u in usuarios]), 200
 
 @usuarios_bp.route('/usuarios', methods=['PUT'])
-def actualizar_usuario():
+def actualizar_usuario(payload):
     data = request.get_json()
     usuario = Usuario.query.get_or_404(data['id'])
 
@@ -72,8 +85,8 @@ def actualizar_usuario():
     return jsonify({'msg': 'Usuario actualizado exitosamente'}), 200
 
 @usuarios_bp.route('/usuario/<int:id>', methods=['GET'])
-@jwt_required()
-def obtener_usuario(id):
+@token_required
+def obtener_usuario(payload):
     usuario = Usuario.query.get_or_404(id)
     return jsonify({
         'id': usuario.id,
@@ -84,8 +97,8 @@ def obtener_usuario(id):
     }), 200
 
 @usuarios_bp.route('/usuario/<int:id>', methods=['DELETE'])
-@jwt_required()
-def eliminar_usuario(id):
+@token_required
+def eliminar_usuario(payload):
     usuario = Usuario.query.get_or_404(id)
     db.session.delete(usuario)
     db.session.commit()
@@ -93,10 +106,14 @@ def eliminar_usuario(id):
 
 
 
-#-----------------------------
+#---------------------------------------------------
 # Ruta para obtener los totales de un usuario por ID
 @usuarios_bp.route('/totales', methods=['GET'])
-def obtener_totales_usuario():
+@token_required
+def obtener_totales_usuario(payload):
+    # current_user = get_jwt_identity()
+    # usuario = Usuario.query.get(current_user)
+
     # Obtén el ID o correo del usuario desde los parámetros de la solicitud
     usuario_id = request.args.get('usuario_id')
 
@@ -124,7 +141,8 @@ def obtener_totales_usuario():
 
 # CRUP para Reportes
 @usuarios_bp.route('/reportes', methods=['GET'])
-def obtener_reportes():
+@token_required
+def obtener_reportes(payload):
     usuario_id = request.args.get('usuario_id', type=int)
 
     if not usuario_id:
@@ -157,7 +175,11 @@ def obtener_reportes():
 
 #---------------------------------------------------
 @usuarios_bp.route('/datosmensuales', methods=['POST'])
-def obtener_datos_mensuales():
+@token_required
+def obtener_datos_mensuales(payload):
+    user_id = payload.get('id')  # O 'sub', dependiendo de cómo esté codificado
+    # current_user = get_jwt_identity()
+    # usuario = Usuario.query.get(current_user)
     try:
         data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
         meses = data.get("meses", [])

@@ -1,14 +1,15 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Suscripcion
-from flask_jwt_extended import jwt_required
+from api.token_required import token_required
 
+#------------------------------------------------------
 suscripciones_bp = Blueprint('suscripciones', __name__)
-
+#------------------------------------------------------
 
 # CRUD para Suscripciones
 @suscripciones_bp.route('/suscripciones', methods=['GET'])
-#@jwt_required()
-def obtener_suscripciones():
+@token_required
+def obtener_suscripciones(payload):
     """Obtiene todas las suscripciones del usuario autenticado."""
     usuario_id = request.args.get('usuario_id')
     if not usuario_id:
@@ -26,8 +27,8 @@ def obtener_suscripciones():
 
 
 @suscripciones_bp.route('/suscripcion', methods=['POST'])
-#@jwt_required()
-def crear_suscripcion():
+@token_required
+def crear_suscripcion(payload):
     """Crea una nueva suscripción para el usuario autenticado."""
     data = request.get_json()
     if not data or not all(k in data for k in ('nombre', 'costo', 'frecuencia', 'fecha_inicio','usuario_id')):
@@ -46,9 +47,10 @@ def crear_suscripcion():
 
 
 @suscripciones_bp.route('/suscripcion/<int:id>', methods=['PUT'])
-#@jwt_required()
-def actualizar_suscripcion(id):
+@token_required
+def actualizar_suscripcion(paqyload):
     """Actualiza una suscripción existente."""
+    id=1;
     data = request.get_json()
     suscripcion = Suscripcion.query.get_or_404(id)
 
@@ -64,8 +66,9 @@ def actualizar_suscripcion(id):
 
 
 @suscripciones_bp.route('/suscripcion/<int:id>', methods=['DELETE'])
-@jwt_required()
-def eliminar_suscripcion(id):
+@token_required
+def eliminar_suscripcion(payload):
+    id=1;
     """Elimina una suscripción existente."""
     suscripcion = Suscripcion.query.get_or_404(id)
     db.session.delete(suscripcion)

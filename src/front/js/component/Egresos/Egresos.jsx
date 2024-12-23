@@ -17,14 +17,23 @@ function Egresos() {
 
   const navigate = useNavigate();
 
+  //traemos todas las categorias para listarlas despues
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categorias`);
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/traertodas`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+          },
+        });
+
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
         const data = await response.json();
+        console.log(data)
         setCategorias(data);
       } catch (error) {
         console.error("Error:", error);
@@ -46,9 +55,11 @@ function Egresos() {
     const usuario_id = store.usuario_id;
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/egresos/egreso`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/egresos/agrega_egreso`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`, 
+        },
         body: JSON.stringify({
           monto: amount,
           descripcion: description,

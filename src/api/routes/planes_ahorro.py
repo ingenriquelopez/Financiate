@@ -1,13 +1,15 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, PlanAhorro
-from flask_jwt_extended import jwt_required
+from api.token_required import token_required
 
+#-----------------------------------------------------
 planes_ahorro_bp = Blueprint('planes_ahorro', __name__)
+#-----------------------------------------------------
 
 # CRUD para PlanAhorro
 @planes_ahorro_bp.route('/planes_ahorro', methods=['GET'])
-@jwt_required()
-def obtener_planes_ahorro():
+@token_required
+def obtener_planes_ahorro(payload):
     planes = PlanAhorro.query.all()
     return jsonify([{
         'id': p.id,

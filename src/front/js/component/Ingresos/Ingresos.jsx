@@ -24,7 +24,15 @@ function Ingresos() {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categorias`);
+
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/traertodas`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+          },
+        });
+    
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -50,7 +58,9 @@ function Ingresos() {
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/ingresos/ingreso`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" ,
+        'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`, 
+        },
         body: JSON.stringify({
           monto: accountMoney,
           descripcion: notas,

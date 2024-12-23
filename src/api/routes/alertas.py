@@ -1,13 +1,15 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Alerta
-from flask_jwt_extended import jwt_required
+from api.token_required import token_required
 
+#-----------------------------------------
 alertas_bp = Blueprint('alertas', __name__)
+#-----------------------------------------
 
 # CRUD para Alerta
 @alertas_bp.route('/alertas', methods=['GET'])
-@jwt_required()
-def obtener_alertas():
+@token_required
+def obtener_alertas(payload):
     alertas = Alerta.query.all()
     return jsonify([{
         'id': a.id,

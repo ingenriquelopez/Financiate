@@ -1,13 +1,15 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, FondoEmergencia
-from flask_jwt_extended import jwt_required
+from api.token_required import token_required
 
+#--------------------------------------------------------------
 fondos_emergencia_bp = Blueprint('fondos_emergencia', __name__)
+#--------------------------------------------------------------
 
 # CRUD para FondoEmergencia
 @fondos_emergencia_bp.route('/fondos_emergencia', methods=['GET'])
-@jwt_required()
-def obtener_fondos_emergencia():
+@token_required
+def obtener_fondos_emergencia(payload):
     fondos = FondoEmergencia.query.all()
     return jsonify([{
         'id': f.id,

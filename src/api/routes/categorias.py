@@ -1,12 +1,16 @@
 # api/routes/categorias.py
 from flask import Blueprint, request, jsonify
 from api.models import db, Categoria, Ingreso, Egreso
+from api.token_required import token_required
 
+#------------------------------------------------
 categorias_bp = Blueprint('categorias', __name__)
+#------------------------------------------------
 
 
-@categorias_bp.route('/categorias', methods=['GET'])
-def listar_categorias():
+@categorias_bp.route('/traertodas', methods=['GET'])
+@token_required
+def listar_categorias(payload):
     # Ordeno categorías por 'nombre' de forma ascendente
     categorias = Categoria.query.order_by(Categoria.nombre.asc()).all()
     return jsonify([{
@@ -15,13 +19,14 @@ def listar_categorias():
         'icono':e.icono
     } for e in categorias]), 200
 
+
+
 #----------------------------------------------------
 # Ruta para crear una nueva categoría
 @categorias_bp.route('/categoria', methods=['POST'])
-#@jwt_required()  # Si deseas que solo los usuarios autenticados puedan agregar categorías
-def crear_categoria():
+@token_required
+def crear_categoria(payload):
     data = request.get_json()  # Obtener los datos enviados en el cuerpo de la solicitud
-    print(data);
     # Validar que los datos necesarios estén presentes
     if not data or 'nombre' not in data:
         return jsonify({'msg': 'El nombre de la categoría es obligatorio'}), 400
@@ -43,9 +48,11 @@ def crear_categoria():
     # Retornar el ID de la nueva categoría
     return jsonify({'msg': 'Categoría creada exitosamente', 'id': nueva_categoria.id,"nombre":nueva_categoria.nombre,"icono":nueva_categoria.icono}), 201
 
+
 #---------------------------------------------------
 @categorias_bp.route('/categoria', methods=['DELETE'])
-def eliminar_categoria():
+@token_required
+def eliminar_categoria(payload):
     # Verificar si la categoría existe
     data = request.get_json()
     id= data['id'] 
@@ -74,8 +81,9 @@ def eliminar_categoria():
     return jsonify({"message": "Categoría eliminada correctamente"}), 200
 
 #----------------------------------------------------
-@categorias_bp.route('/categorias', methods=['DELETE'])
-def eliminar_todas_las_categorias():
+@categorias_bp.route('/eliminartodas', methods=['DELETE'])
+@token_required
+def eliminar_todas_las_categorias(payload):
     try:
         # Obtener todas las categorías
         categorias = Categoria.query.all()
@@ -125,9 +133,12 @@ def eliminar_todas_las_categorias():
 #---------------------------------------------------
 
 @categorias_bp.route('/default', methods=['POST'])
-#@jwt_required()  # Puedes quitar el decorador jwt_required si no es necesario
-def insertar_categorias_por_defecto():
+@token_required
+def insertar_categorias_por_defecto(payload):
     # Comprobar si la tabla de categorías está vacía
+    print('perros')
+    # current_user = get_jwt_identity()
+
     if Categoria.query.count() > 0:
         return jsonify({"msg": "Las categorías ya existen en la base de datos"}), 200
     
@@ -173,3 +184,4 @@ def insertar_categorias_por_defecto():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Hubo un error al insertar las categorías", "details": str(e)}), 500
+    

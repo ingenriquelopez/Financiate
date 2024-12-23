@@ -29,6 +29,7 @@ const Categorias = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
         body: JSON.stringify(data),
       });
@@ -51,10 +52,11 @@ const Categorias = () => {
   // Función para eliminar una categoría
   const deleteCategory = async (categoryId) => {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/categoria`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categoria`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
         body: JSON.stringify({ id: categoryId }),
       });
@@ -107,10 +109,11 @@ const Categorias = () => {
   const deleteAllCategories = async () => {
     try {
       // Hacer la solicitud DELETE a la API para eliminar todas las categorías
-      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/eliminartodas`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
       });
   
@@ -174,10 +177,23 @@ const Categorias = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categorias`);
+        const token = localStorage.getItem('tokenFinanciaE');
+        if (!token) {
+          throw new Error("Token no disponible");
+          }
+
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/traertodas`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });;
+
         if (!response.ok) {
           throw new Error('Error al obtener las categorías');
         }
+
         const result = await response.json();
         console.log(result);
         setCategorias(result);
