@@ -70,7 +70,7 @@ const Dashboard = () => {
         };
 
         fetchTotales();
-    }, [store.usuario_id]);
+    }, []);
 
     // LLAMADA A LA API PARA GRAFICO DE LINEAS
     useEffect(() => {
@@ -89,7 +89,7 @@ const Dashboard = () => {
                         meses: ['Enero', 'Febrero', 'Marzo', 'Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
                     }),
                 });
-
+                console.log(response)
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
@@ -111,7 +111,7 @@ const Dashboard = () => {
         };
 
         fetchTotalDatosMensuales();
-    }, [store.usuario_id]);
+    }, []);
 
     return (
         <div className="dashboard-container">

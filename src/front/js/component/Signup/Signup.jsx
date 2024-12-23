@@ -23,11 +23,11 @@ const Signup = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-     const validationErrors = validateForm();
-     if (Object.keys(validationErrors).length > 0) {
-       setErrors(validationErrors);
-       return;
-     }
+    //  const validationErrors = validateForm();
+    //  if (Object.keys(validationErrors).length > 0) {
+    //    setErrors(validationErrors);
+    //    return;
+    //  }
     // Lógica para el registro
     
     const response = await fetch(process.env.BACKEND_URL + "/api/usuarios/signup", {

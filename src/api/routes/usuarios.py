@@ -2,6 +2,7 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Usuario,Ingreso,Egreso
 from flask_jwt_extended import jwt_required, create_access_token
+from  datetime import datetime
 
 usuarios_bp = Blueprint('usuarios', __name__)
 
@@ -111,7 +112,6 @@ def obtener_totales_usuario():
 
     # Calcula los totales usando la función del modelo
     totales = usuario.calcular_totales()
-    print(f"totales: {totales}")
     # Retorna los totales como JSON
     return jsonify({
          'capital_inicial':totales['capital_inicial'],
@@ -156,16 +156,17 @@ def obtener_reportes():
 
 
 #---------------------------------------------------
-@usuarios_bp.route('/datosmensuales', methods=['GET'])
+@usuarios_bp.route('/datosmensuales', methods=['POST'])
 def obtener_datos_mensuales():
     try:
         data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
         meses = data.get("meses", [])
         usuario_id = data.get("usuario_id")
+        
 
         if not meses or not isinstance(meses, list):
              return jsonify({"error": "Por favor, envía un arreglo válido de meses."}), 400
-
+        
         # Diccionario para convertir nombres de meses a números
         meses_a_numeros = {
             "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4,
