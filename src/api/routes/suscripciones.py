@@ -11,9 +11,13 @@ suscripciones_bp = Blueprint('suscripciones', __name__)
 @token_required
 def obtener_suscripciones(payload):
     """Obtiene todas las suscripciones del usuario autenticado."""
-    usuario_id = request.args.get('usuario_id')
+  # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
+
+    # Verificar que el usuario_id esté presente en el payload
     if not usuario_id:
-        return jsonify({'msg': 'Usuario no especificado'}), 400
+        return jsonify({"error": "Usuario no autenticado"}), 401
+    
 
     suscripciones = Suscripcion.query.filter_by(usuario_id=usuario_id).all()
     return jsonify([{
@@ -48,9 +52,8 @@ def crear_suscripcion(payload):
 
 @suscripciones_bp.route('/suscripcion/<int:id>', methods=['PUT'])
 @token_required
-def actualizar_suscripcion(paqyload):
+def actualizar_suscripcion(payload,id):
     """Actualiza una suscripción existente."""
-    id=1;
     data = request.get_json()
     suscripcion = Suscripcion.query.get_or_404(id)
 
@@ -67,8 +70,7 @@ def actualizar_suscripcion(paqyload):
 
 @suscripciones_bp.route('/suscripcion/<int:id>', methods=['DELETE'])
 @token_required
-def eliminar_suscripcion(payload):
-    id=1;
+def eliminar_suscripcion(payload,id):
     """Elimina una suscripción existente."""
     suscripcion = Suscripcion.query.get_or_404(id)
     db.session.delete(suscripcion)

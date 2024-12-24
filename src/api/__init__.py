@@ -3,7 +3,6 @@
 from flask import Flask
 import os
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
 from .models import db
 from .routes import init_app  # Este es el que registra los blueprints
 from .commands import setup_commands
@@ -28,8 +27,6 @@ def create_app():
     # Configura CORS
     CORS(app)
 
-    # Configura JWT
-    jwt = JWTManager(app)
 
     # Configura los comandos personalizados
     setup_commands(app)

@@ -3,6 +3,8 @@ from flask import Blueprint, request, jsonify, current_app
 from api.models import db, Usuario,Ingreso,Egreso
 from api.token_required import token_required
 from datetime import datetime, timedelta, timezone
+
+
 import jwt
 
 #--------------------------------------------
@@ -58,7 +60,6 @@ def login():
     
 
 @usuarios_bp.route('/usuarios', methods=['GET'])
-@token_required
 def obtener_usuarios(payload):
     usuarios = Usuario.query.all()
     return jsonify([{
@@ -70,7 +71,7 @@ def obtener_usuarios(payload):
     } for u in usuarios]), 200
 
 @usuarios_bp.route('/usuarios', methods=['PUT'])
-def actualizar_usuario(payload):
+def actualizar_usuario():
     data = request.get_json()
     usuario = Usuario.query.get_or_404(data['id'])
 
@@ -111,31 +112,27 @@ def eliminar_usuario(payload):
 @usuarios_bp.route('/totales', methods=['GET'])
 @token_required
 def obtener_totales_usuario(payload):
-    # current_user = get_jwt_identity()
-    # usuario = Usuario.query.get(current_user)
+    # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
 
-    # Obtén el ID o correo del usuario desde los parámetros de la solicitud
-    usuario_id = request.args.get('usuario_id')
-
-    # Busca el usuario según el ID o correo
-    if usuario_id:
-        usuario = Usuario.query.filter_by(id=usuario_id).first()
-    else:
-        return jsonify({'error': 'Se requiere un ID o un correo'}), 400
-
-    # Verifica si el usuario existe
-    if not usuario:
-        return jsonify({'error': 'Usuario no encontrado'}), 404
-
+    # Verificar que el usuario_id esté presente en el payload
+    if not usuario_id:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+    try:
+        usuario = Usuario.query.get_or_404(usuario_id)
+    except Exception as e:
+        return jsonify({"error": f"Error al acceder a la base de datos: {str(e)}"}), 500
+    
     # Calcula los totales usando la función del modelo
     totales = usuario.calcular_totales()
+
     # Retorna los totales como JSON
     return jsonify({
-         'capital_inicial':totales['capital_inicial'],
-         'total_ingresos': totales['total_ingresos'],
-         'total_egresos': totales['total_egresos'],
-         'capital_actual': totales['capital_actual']
-     })
+        'capital_inicial': totales.get('capital_inicial', 0),
+        'total_ingresos': totales.get('total_ingresos', 0),
+        'total_egresos': totales.get('total_egresos', 0),
+        'capital_actual': totales.get('capital_actual', 0)
+    })
 
 #-----------------------------------------------
 
@@ -143,10 +140,12 @@ def obtener_totales_usuario(payload):
 @usuarios_bp.route('/reportes', methods=['GET'])
 @token_required
 def obtener_reportes(payload):
-    usuario_id = request.args.get('usuario_id', type=int)
+    # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
 
+    # Verificar que el usuario_id esté presente en el payload
     if not usuario_id:
-        return jsonify({'msg': 'usuario_id es requerido'}), 400
+        return jsonify({"error": "Usuario no autenticado"}), 401
     
     ingresos = Ingreso.query.filter_by(usuario_id=usuario_id).all()
     egresos = Egreso.query.filter_by(usuario_id=usuario_id).all()
@@ -177,13 +176,16 @@ def obtener_reportes(payload):
 @usuarios_bp.route('/datosmensuales', methods=['POST'])
 @token_required
 def obtener_datos_mensuales(payload):
-    user_id = payload.get('id')  # O 'sub', dependiendo de cómo esté codificado
-    # current_user = get_jwt_identity()
-    # usuario = Usuario.query.get(current_user)
+     # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
+
+    # Verificar que el usuario_id esté presente en el payload
+    if not usuario_id:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+    
     try:
         data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
         meses = data.get("meses", [])
-        usuario_id = data.get("usuario_id")
         
 
         if not meses or not isinstance(meses, list):

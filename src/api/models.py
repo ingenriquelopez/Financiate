@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone,date
-from sqlalchemy import Column, ForeignKey, Integer, String, Text, DateTime, Float, Boolean
+from sqlalchemy import Column, ForeignKey, String, Date, DateTime
 from sqlalchemy.orm import relationship
 import hashlib
 
@@ -112,10 +112,11 @@ class Suscripcion(db.Model):
 class PlanAhorro(db.Model):
     __tablename__ = 'planes_ahorro'
     id = db.Column(db.Integer, primary_key=True)
-    monto_meta = Column(db.Float, nullable=False)
-    monto_actual = Column(db.Float, default=0.0)
     descripcion = Column(db.String(255))
-    fecha_objetivo = Column(db.DateTime)
+    monto_inicial = Column(db.Float, default=0.0)
+    fecha_inicio = Column(db.Date, default=date.today)
+    monto_objetivo = Column(db.Float, nullable=False)
+    fecha_objetivo = Column(db.Date, default=date.today)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
 
 # Modelo de Fondo de Emergencia

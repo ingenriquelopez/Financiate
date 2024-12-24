@@ -43,7 +43,7 @@ const Dashboard = () => {
 
 
                 const response = await fetch(
-                    `${process.env.BACKEND_URL}/api/usuarios/totales?usuario_id=${store.usuario_id}`,{
+                    `${process.env.BACKEND_URL}/api/usuarios/totales`,{
                         headers: {
                             'Content-Type': 'application/json', // Aseguramos que enviamos el tipo de contenido adecuado
                             'Authorization': `Bearer ${store.token}`,
@@ -93,7 +93,6 @@ const Dashboard = () => {
                               }`,
                     },
                     body: JSON.stringify({
-                        usuario_id: store.usuario_id,
                         meses: ['Enero', 'Febrero', 'Marzo', 'Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
                     }),
                 });
