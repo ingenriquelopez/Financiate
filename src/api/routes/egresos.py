@@ -27,7 +27,7 @@ def crear_egreso(payload):
     data = request.get_json()
     if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha','usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
-
+    print(data)
     nuevo_egreso = Egreso(
         monto=data['monto'],
         descripcion=data['descripcion'],

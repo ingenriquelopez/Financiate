@@ -64,6 +64,8 @@ class Categoria(db.Model):
     id = Column(db.Integer, primary_key=True)
     nombre = Column(db.String(50), nullable=False, unique=True)
     icono =  Column(db.String(10), nullable=False, unique=True)
+    is_default = db.Column(db.Boolean, default=False)  # Categoría predeterminada
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)  # Null si es predeterminada
     egresos = relationship('Egreso', backref='categoria', lazy=True)
     ingresos = relationship('Ingreso', backref='categoria', lazy=True)
 
@@ -73,7 +75,6 @@ class Ingreso(db.Model):
     id = Column(db.Integer, primary_key=True)
     monto = Column(db.Float, nullable=False)
     descripcion = Column(db.String(255))
-    fecha = Column(db.DateTime, default=datetime.now(timezone.utc))
     fecha = Column(db.Date, default=date.today)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)

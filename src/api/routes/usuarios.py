@@ -4,7 +4,6 @@ from api.models import db, Usuario,Ingreso,Egreso
 from api.token_required import token_required
 from datetime import datetime, timedelta, timezone
 
-
 import jwt
 
 #--------------------------------------------
@@ -54,7 +53,6 @@ def login():
     SECRET_KEY = current_app.config['SECRET_KEY']  # Esto se refiere a lo que cargaste en app.py
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
-    # token = create_access_token(identity=usuario.id)
     usuario_dict = usuario.to_dict()
     return jsonify({'token': token, 'usuario': usuario_dict}), 200
     
