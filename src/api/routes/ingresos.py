@@ -19,7 +19,7 @@ def obtener_ingresos():
     } for i in ingresos]), 200
 
 @ingresos_bp.route('/ingreso', methods=['POST'])
-@jwt_required()
+#@jwt_required()
 def crear_ingreso():
     data = request.get_json()
     if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha','usuario_id', 'categoria_id')):

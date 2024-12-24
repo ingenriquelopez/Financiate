@@ -15,7 +15,7 @@ def listar_categorias():
         'icono':e.icono
     } for e in categorias]), 200
 
-
+#----------------------------------------------------
 # Ruta para crear una nueva categoría
 @categorias_bp.route('/categoria', methods=['POST'])
 #@jwt_required()  # Si deseas que solo los usuarios autenticados puedan agregar categorías
@@ -124,11 +124,9 @@ def eliminar_todas_las_categorias():
 
 #---------------------------------------------------
 
-
-@categorias_bp.route('/categorias/default', methods=['POST'])
+@categorias_bp.route('/default', methods=['POST'])
 #@jwt_required()  # Puedes quitar el decorador jwt_required si no es necesario
 def insertar_categorias_por_defecto():
-
     # Comprobar si la tabla de categorías está vacía
     if Categoria.query.count() > 0:
         return jsonify({"msg": "Las categorías ya existen en la base de datos"}), 200
