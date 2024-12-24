@@ -12,6 +12,7 @@ import Egresos from "./component/Egresos/Egresos.jsx";
 import Ingresos from "./component/Ingresos/Ingresos.jsx";
 import Categorias from "./component/Categorias/Categorias.jsx";
 import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
+import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx";
 import Reportes from "./component/Reportes/Reportes.jsx";
 
 const Layout = () => {
@@ -53,6 +54,7 @@ const LayoutContent = () => {
           <Route element={<Ingresos />} path="/Ingresos" />
           <Route element={<Categorias/>} path="/categorias"/>
           <Route element={<Suscripciones />} path="/Suscripciones" />
+          <Route element={<PlanDeAhorro />} path="/plandeahorro" />
           <Route element={<Reportes />} path="/reportes" />
           <Route element={<h1>Not found!</h1>} />
         </Routes>

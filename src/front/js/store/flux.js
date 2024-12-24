@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			token: localStorage.getItem("tokenFinanciaE") || undefined, // Recupera el token del localStorage al cargar la app
+			token: localStorage.getItem("tokenFinanciaE") || null, // Recupera el token del localStorage al cargar la app
 			nombreUsuario: localStorage.getItem("nombreUsuario") || null,
 			correo: localStorage.getItem("correo") || null,
 			usuario_id: localStorage.getItem("usuario_id") || null,

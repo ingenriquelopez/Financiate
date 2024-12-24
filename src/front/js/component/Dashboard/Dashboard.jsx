@@ -41,9 +41,14 @@ const Dashboard = () => {
                     throw new Error("ID del usuario requerido");
                 }
 
+
                 const response = await fetch(
-                    `${process.env.BACKEND_URL}/api/usuarios/totales?usuario_id=${store.usuario_id}`
-                );
+                    `${process.env.BACKEND_URL}/api/usuarios/totales`,{
+                        headers: {
+                            'Content-Type': 'application/json', // Aseguramos que enviamos el tipo de contenido adecuado
+                            'Authorization': `Bearer ${store.token}`,
+                          },
+                        });            
 
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -83,13 +88,14 @@ const Dashboard = () => {
                 }
                 const response = await fetch(process.env.BACKEND_URL + '/api/usuarios/datosmensuales', {
                     method: "POST", 
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json",
+                                'Authorization': `Bearer ${store.token
+                              }`,
+                    },
                     body: JSON.stringify({
-                        usuario_id: store.usuario_id,
                         meses: ['Enero', 'Febrero', 'Marzo', 'Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
                     }),
                 });
-                console.log(response)
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }

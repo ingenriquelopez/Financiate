@@ -1,10 +1,15 @@
 # api/routes/usuarios.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from api.models import db, Usuario,Ingreso,Egreso
-from flask_jwt_extended import jwt_required, create_access_token
-from  datetime import datetime
+from api.token_required import token_required
+from datetime import datetime, timedelta, timezone
 
+
+import jwt
+
+#--------------------------------------------
 usuarios_bp = Blueprint('usuarios', __name__)
+#--------------------------------------------
 
 # CRUD para Usuario
 @usuarios_bp.route('/signup', methods=['POST'])
@@ -30,6 +35,7 @@ def signup():
 
     return jsonify({'msg': 'Usuario creado exitosamente'}), 201
 
+#---------------------------------------------------------------
 @usuarios_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -40,13 +46,21 @@ def login():
     if not usuario or not usuario.verificar_contrasena(data['contrasena']):
         return jsonify({'msg': 'Credenciales inválidas'}), 401
 
-    token = create_access_token(identity=usuario.id)
+    payload = {
+        'id': usuario.id,
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=10)  # Expira en 10 minutos usando timezone
+    }
+    # Obtener el SECRET_KEY desde la configuración de la aplicación
+    SECRET_KEY = current_app.config['SECRET_KEY']  # Esto se refiere a lo que cargaste en app.py
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+    # token = create_access_token(identity=usuario.id)
     usuario_dict = usuario.to_dict()
     return jsonify({'token': token, 'usuario': usuario_dict}), 200
+    
 
 @usuarios_bp.route('/usuarios', methods=['GET'])
-@jwt_required()
-def obtener_usuarios():
+def obtener_usuarios(payload):
     usuarios = Usuario.query.all()
     return jsonify([{
         'id': u.id,
@@ -72,8 +86,8 @@ def actualizar_usuario():
     return jsonify({'msg': 'Usuario actualizado exitosamente'}), 200
 
 @usuarios_bp.route('/usuario/<int:id>', methods=['GET'])
-@jwt_required()
-def obtener_usuario(id):
+@token_required
+def obtener_usuario(payload):
     usuario = Usuario.query.get_or_404(id)
     return jsonify({
         'id': usuario.id,
@@ -84,8 +98,8 @@ def obtener_usuario(id):
     }), 200
 
 @usuarios_bp.route('/usuario/<int:id>', methods=['DELETE'])
-@jwt_required()
-def eliminar_usuario(id):
+@token_required
+def eliminar_usuario(payload):
     usuario = Usuario.query.get_or_404(id)
     db.session.delete(usuario)
     db.session.commit()
@@ -93,42 +107,45 @@ def eliminar_usuario(id):
 
 
 
-#-----------------------------
+#---------------------------------------------------
 # Ruta para obtener los totales de un usuario por ID
 @usuarios_bp.route('/totales', methods=['GET'])
-def obtener_totales_usuario():
-    # Obtén el ID o correo del usuario desde los parámetros de la solicitud
-    usuario_id = request.args.get('usuario_id')
+@token_required
+def obtener_totales_usuario(payload):
+    # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
 
-    # Busca el usuario según el ID o correo
-    if usuario_id:
-        usuario = Usuario.query.filter_by(id=usuario_id).first()
-    else:
-        return jsonify({'error': 'Se requiere un ID o un correo'}), 400
-
-    # Verifica si el usuario existe
-    if not usuario:
-        return jsonify({'error': 'Usuario no encontrado'}), 404
-
+    # Verificar que el usuario_id esté presente en el payload
+    if not usuario_id:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+    try:
+        usuario = Usuario.query.get_or_404(usuario_id)
+    except Exception as e:
+        return jsonify({"error": f"Error al acceder a la base de datos: {str(e)}"}), 500
+    
     # Calcula los totales usando la función del modelo
     totales = usuario.calcular_totales()
+
     # Retorna los totales como JSON
     return jsonify({
-         'capital_inicial':totales['capital_inicial'],
-         'total_ingresos': totales['total_ingresos'],
-         'total_egresos': totales['total_egresos'],
-         'capital_actual': totales['capital_actual']
-     })
+        'capital_inicial': totales.get('capital_inicial', 0),
+        'total_ingresos': totales.get('total_ingresos', 0),
+        'total_egresos': totales.get('total_egresos', 0),
+        'capital_actual': totales.get('capital_actual', 0)
+    })
 
 #-----------------------------------------------
 
 # CRUP para Reportes
 @usuarios_bp.route('/reportes', methods=['GET'])
-def obtener_reportes():
-    usuario_id = request.args.get('usuario_id', type=int)
+@token_required
+def obtener_reportes(payload):
+    # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
 
+    # Verificar que el usuario_id esté presente en el payload
     if not usuario_id:
-        return jsonify({'msg': 'usuario_id es requerido'}), 400
+        return jsonify({"error": "Usuario no autenticado"}), 401
     
     ingresos = Ingreso.query.filter_by(usuario_id=usuario_id).all()
     egresos = Egreso.query.filter_by(usuario_id=usuario_id).all()
@@ -157,11 +174,18 @@ def obtener_reportes():
 
 #---------------------------------------------------
 @usuarios_bp.route('/datosmensuales', methods=['POST'])
-def obtener_datos_mensuales():
+@token_required
+def obtener_datos_mensuales(payload):
+     # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
+
+    # Verificar que el usuario_id esté presente en el payload
+    if not usuario_id:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+    
     try:
         data = request.get_json()  # Los datos ahora se esperan en el cuerpo de la solicitud
         meses = data.get("meses", [])
-        usuario_id = data.get("usuario_id")
         
 
         if not meses or not isinstance(meses, list):
