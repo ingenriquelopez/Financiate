@@ -19,8 +19,16 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <img src={Logo} alt="Logo Financia" />
+        {/* Fecha y hora */}
+        <div className="date-time">
+          {new Date().toLocaleString('es-ES', { dateStyle: 'long', timeStyle: 'short' })}
+        </div>
+        {/* Contenedor del logo con fondo azul */}
+        <div className="logo-container">
+          <img src={Logo} alt="Logo Financia" />
+        </div>
       </div>
+
       <div className="sidebar-body">
         <nav className="nav flex-column">
           <Link className="nav-link" to="/Home">
@@ -41,8 +49,12 @@ const Sidebar = () => {
           <Link className="nav-link" to="/Suscripciones">
             <i className="fa-solid fa-list"></i> Suscripciones
           </Link>
+          <Link className="nav-link" to="/plandeahorro">
+            <i className="fa-solid fa-piggy-bank"></i> Plan de Ahorro
+          </Link>
         </nav>
       </div>
+
       <div className="sidebar-footer">
         <div className="user-info">
           <span><i className="fa-solid fa-user"></i> {store.nombreUsuario}</span>

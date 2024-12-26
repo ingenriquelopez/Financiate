@@ -52,7 +52,7 @@ const LayoutContent = () => {
           <Route element={<Home />} path="/Home" />
           <Route element={<Egresos />} path="/egresos" />
           <Route element={<Ingresos />} path="/Ingresos" />
-          <Route element={<Categorias/>} path="/categorias"/>
+          <Route element={<Categorias />} path="/categorias" />
           <Route element={<Suscripciones />} path="/Suscripciones" />
           <Route element={<PlanDeAhorro />} path="/plandeahorro" />
           <Route element={<Reportes />} path="/reportes" />
