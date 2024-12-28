@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { format } from 'date-fns';
 import { Context } from '../../store/appContext';
 
 const Reportes = () => {
@@ -13,9 +14,17 @@ const Reportes = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/reportes?usuario_id=${usuario_id}`);
+      const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/reportes?usuario_id=${usuario_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+        },
+      });
+
       if (response.ok) {
         const data = await response.json();
+        console.log(data)
         setReportes(data);
       } else {
         console.error("Error al obtener reportes");
@@ -59,7 +68,8 @@ const Reportes = () => {
               <div style={{ display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
                 <span>Monto: ${reporte.monto.toFixed(2)}</span>
                 <span>Descripción: {reporte.descripcion}</span>
-                <span>Fecha: {new Date(reporte.fecha).toLocaleString()}</span>
+                <span>Fecha: {new Date(reporte.fecha).toISOString().split('T')[0].split('-').reverse().join('/')}</span>
+
               </div>
             </li>
           ))}

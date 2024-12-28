@@ -13,7 +13,6 @@ const Categorias = () => {
 
   // Función para agregar una categoría con nombre e icono
   const addCategory = async () => {
-    console.log('newCategory:', newCategory);  // Verifica el valor de newCategory
     try {
       if (typeof newCategory.nombre !== 'string' || typeof newCategory.icono !== 'string') {
         throw new Error('El nombre y el icono de la categoría deben ser cadenas de texto');
@@ -29,6 +28,7 @@ const Categorias = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
         body: JSON.stringify(data),
       });
@@ -38,7 +38,6 @@ const Categorias = () => {
       }
 
       const result = await response.json();
-      console.log(result);
       const { id, nombre, icono } = result;
       setCategorias((prevCategorias) => [...prevCategorias, { id, nombre, icono }]);
       setNewCategory({ id:'', nombre: '', icono: '' });
@@ -51,10 +50,11 @@ const Categorias = () => {
   // Función para eliminar una categoría
   const deleteCategory = async (categoryId) => {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/categoria`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categoria`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
         body: JSON.stringify({ id: categoryId }),
       });
@@ -107,10 +107,11 @@ const Categorias = () => {
   const deleteAllCategories = async () => {
     try {
       // Hacer la solicitud DELETE a la API para eliminar todas las categorías
-      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/eliminartodas`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
       });
   
@@ -174,12 +175,24 @@ const Categorias = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/categorias`);
+        const token = localStorage.getItem('tokenFinanciaE');
+        if (!token) {
+          throw new Error("Token no disponible");
+          }
+
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/traertodas`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });;
+
         if (!response.ok) {
           throw new Error('Error al obtener las categorías');
         }
+
         const result = await response.json();
-        console.log(result);
         setCategorias(result);
       } catch (error) {
         console.error('Error:', error.message);

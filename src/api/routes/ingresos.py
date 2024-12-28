@@ -1,13 +1,15 @@
 # api/routes/ingresos.py
 from flask import Blueprint, request, jsonify
 from api.models import db, Ingreso
-from flask_jwt_extended import jwt_required
+from api.token_required import token_required
 
+#--------------------------------------------
 ingresos_bp = Blueprint('ingresos', __name__)
+#--------------------------------------------
 
 @ingresos_bp.route('/ingresos', methods=['GET'])
-@jwt_required()
-def obtener_ingresos():
+@token_required
+def obtener_ingresos(payload):
     ingresos = Ingreso.query.all()
     return jsonify([{
         'id': i.id,
@@ -18,9 +20,11 @@ def obtener_ingresos():
         'categoria_id': i.categoria_id
     } for i in ingresos]), 200
 
+
+#--------------------------------------------------
 @ingresos_bp.route('/ingreso', methods=['POST'])
-#@jwt_required()
-def crear_ingreso():
+@token_required
+def crear_ingreso(payload):
     data = request.get_json()
     if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha','usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
