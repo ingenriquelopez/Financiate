@@ -1,0 +1,8 @@
+TERMINAR DE ACTUALIZAR API DE EGRESOS EN RELACION CON CATEGORIAS IGUAL QUE INGRESOS
+en archivo reportes checar linea 17  const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/reportes?usuario_id=${usuario_id}`
+en ciuanto al parametro id
+
+revisar todas las llamdas a las APIS que lleven el prefijo del BACKEND_URL
+documentar el BACKEND
+agregar valdaciones mas solidades en el back.
+terminal el fondo de ahorro.
