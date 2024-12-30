@@ -114,10 +114,10 @@ class PlanAhorro(db.Model):
     __tablename__ = 'planes_ahorro'
     id = db.Column(db.Integer, primary_key=True)
     descripcion = Column(db.String(255))
-    monto_inicial = Column(db.Float, default=0.0)
     fecha_inicio = Column(db.Date, default=date.today)
-    monto_objetivo = Column(db.Float, nullable=False)
+    monto_inicial = Column(db.Float, default=0.0)
     fecha_objetivo = Column(db.Date, default=date.today)
+    monto_objetivo = Column(db.Float, nullable=False)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
 
 # Modelo de Fondo de Emergencia

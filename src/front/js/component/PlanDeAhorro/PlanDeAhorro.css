@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+/* Agregar una fuente más ligera y estilizada para los títulos */
+th {
+    font-family: 'Roboto', sans-serif; /* Puedes cambiar 'Roboto' por cualquier otra fuente */
+    font-weight: 500; /* Peso de fuente menos pesado */
+    color: #333; /* Color más suave para el texto */
+  }
+  
+  /* Si quieres cambiar la fuente de todo el cuerpo de la tabla */
+  .table {
+    font-family: 'Arial', sans-serif;
+  }
+  

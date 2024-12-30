@@ -1,6 +1,6 @@
 # api/routes/ingresos.py
 from flask import Blueprint, request, jsonify
-from api.models import db, Ingreso, Categoria
+from api.models import db, Ingreso
 from api.token_required import token_required
 from datetime import date
 
@@ -39,7 +39,7 @@ def obtener_ingresos(payload):
 
 
 #----------------------------------------------------------------------------------------
-# Ruta para crear un ingreso
+# Ruta para crear un INGRESO
 @ingresos_bp.route('/ingreso', methods=['POST'])
 @token_required
 def crear_ingreso(payload):
