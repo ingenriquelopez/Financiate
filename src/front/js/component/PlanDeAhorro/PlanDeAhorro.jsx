@@ -6,8 +6,10 @@ import Detalles from './Detalles.jsx';
 const PlanDeAhorro = () => {
   const [plans, setPlans] = useState([]);
   const [showModalCrear, setShowModalCrear] = useState(false);  // Estado independiente para el modal de creación
+  const [showModalDelete, setShowModalDelete] = useState(false);  // Estado independiente para el modal de Eliminacion
   const [showModalDetalles, setShowModalDetalles] = useState(false);  // Estado independiente para el modal de detalles
   const [planToEdit, setPlanToEdit] = useState(null);
+  const [planToDelete, setPlanToDelete] = useState(null);
   const [loading, setLoading] = useState(true);
   const isMounted = useRef(true);
 
@@ -21,7 +23,6 @@ const PlanDeAhorro = () => {
         },
       });
       const data = await response.json();
-      console.log(data)
       if (isMounted.current) {
         setPlans(data);
         setLoading(false);
@@ -46,6 +47,12 @@ const PlanDeAhorro = () => {
     setPlanToEdit(plan);
     setShowModalCrear(true);  // Abre el modal de creación/edición
   };
+
+  const handleDelete = (plan) => {
+    setPlanToDelete(plan);
+    setShowModalDelete(true);  // Abre el modal de Eliminacion
+  };
+
 
   const handleDetalles = (plan) => {
     setPlanToEdit(plan);
@@ -89,6 +96,7 @@ const PlanDeAhorro = () => {
         plan={planToEdit}
         onClose={handleCloseDetallesModal}
         onEdit={() => handleEdit(planToEdit)}
+        onDelete={() => handleDelete(planToEdit)}
       />
 
       {/* Listado de planes */}

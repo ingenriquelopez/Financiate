@@ -11,3 +11,9 @@ VALÑIDAR QUE SIEMPRE EXISTA UNA CATEGORIA PLAND E AHORRO
 LIMPIAR EL FORM DE AGREGAR PLAN DESPUES DE AGREGAR O EDITAR
 ACTUALIZAR EL RENDER DE PLAN DE AHORRO
 validar el id 11 plan de ahorro en ingresos y egresos en relacion con el plan de ahorro
+MONTO INIUCIAL EL EL CARD NO ESM JUY UITO, MEJOR AMBNIAR A MONTO OBJETIVO
+ACTUALIZAR LOSC CARDS. EN USSEEFFECT
+BOT0ONJ CERRAR ABAJO EN VER DETALLES PLAN DEA AHAOROO
+menu de administracion usuario admin para iniciualizar aplicacion(borrar todo) modo nocturno
+manejar comandos de voz.
+exportar a pdfs y excel

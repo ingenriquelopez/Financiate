@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from api.models import db, PlanAhorro, Categoria,Egreso,Ingreso
 from api.token_required import token_required
 from datetime import date
+from sqlalchemy.exc import SQLAlchemyError
 
 #-----------------------------------------------------
 plandeahorro_bp = Blueprint('plandeahorro', __name__)
@@ -119,34 +120,61 @@ def editar_plan_ahorro(payload):
     return jsonify({"msg": "Plan de ahorro actualizado exitosamente"}), 200
 #---------------------------------------------------------
 
-@plandeahorro_bp.route('/eliminarplan', methods=['DELETE'])
+@plandeahorro_bp.route('/eliminar_plan_ahorro', methods=['DELETE'])
 @token_required
-def eliminar_plan_ahorro(payload):
-    # El 'id' del usuario ya está disponible a través de 'payload'
-    usuario_id = payload.get('id')
-
-    if not usuario_id:
-        return jsonify({"error": "Usuario no autenticado"}), 401
-
-    # Obtener el id del plan desde el cuerpo de la solicitud
+def eliminar_plan_ahorro():
     data = request.get_json()
-    plan_id = data.get('id')  # Aquí es donde obtienes el id del plan
 
-    if not plan_id:
-        return jsonify({"error": "ID del plan es necesario"}), 400
+    # Validar que se reciba el ID del plan de ahorro
+    if 'plan_ahorro_id' not in data:
+        return jsonify({'error': 'Falta el campo "plan_ahorro_id".'}), 400
 
-    # Buscar el plan de ahorro por ID
-    plan = PlanAhorro.query.get_or_404(plan_id)
+    plan_ahorro_id = data['plan_ahorro_id']
 
-    # Verificar que el plan pertenece al usuario autenticado
-    if plan.usuario_id != usuario_id:
-        return jsonify({"error": "No tienes permiso para eliminar este plan"}), 403
+    try:
+        # Buscar el plan de ahorro por ID
+        plan_ahorro = PlanAhorro.query.get(plan_ahorro_id)
 
-    # Eliminar el plan
-    db.session.delete(plan)
-    db.session.commit()
+        if not plan_ahorro:
+            return jsonify({'error': 'Plan de ahorro no encontrado.'}), 404
 
-    return jsonify({"msg": "Plan de ahorro eliminado exitosamente"}), 200
+        # Si el plan de ahorro tiene egresos asociados, procesamos la reversión
+        egresos = plan_ahorro.egresos_relacionados  # Asegúrate de usar el nombre correcto del backref
+
+        # Generar un ingreso por la cancelación del plan de ahorro
+        ingresos_por_cancelacion = 0
+        for egreso in egresos:
+            ingresos_por_cancelacion += egreso.monto  # Acumulamos el monto de los egresos
+
+            # Crear el ingreso que "restituye" el monto del egreso
+            ingreso_cancelacion = Ingreso(
+                monto=egreso.monto,
+                descripcion=f'Reversión por cancelación de plan de ahorro: {plan_ahorro.nombre_plan}',
+                usuario_id=plan_ahorro.usuario_id,  # Asociamos al mismo usuario
+                categoria_id=None  # O la categoría que prefieras
+            )
+            db.session.add(ingreso_cancelacion)
+
+            # Eliminar el egreso asociado
+            db.session.delete(egreso)
+
+        # Actualizar el capital acumulado del plan de ahorro a cero
+        plan_ahorro.monto_acumulado = 0.0
+
+        # Eliminar el plan de ahorro
+        db.session.delete(plan_ahorro)
+
+        # Hacer commit de todas las operaciones en la base de datos
+        db.session.commit()
+
+        return jsonify({
+            'message': 'Plan de ahorro eliminado correctamente y egresos revertidos.',
+            'ingreso_generado': ingresos_por_cancelacion
+        }), 200
+
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': 'Error al eliminar el plan de ahorro.', 'details': str(e)}), 500
 #---------------------------------------------------------
 
 @plandeahorro_bp.route('/traerplan', methods=['GET'])
@@ -221,7 +249,8 @@ def registrar_deposito_plan(payload):
             monto=monto_ahorro,
             descripcion=descripcion_deposito,
             fecha=fecha,
-            categoria_id=categoria_plan_ahorro.id
+            categoria_id=categoria_plan_ahorro.id,
+            plan_ahorro_id = plan.id,
         )
 
         db.session.add(nuevo_egreso)

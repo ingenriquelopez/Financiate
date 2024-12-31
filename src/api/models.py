@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone,date
 from sqlalchemy import Column, ForeignKey, String, Date, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,remote
 import hashlib
 
 db = SQLAlchemy()
@@ -79,15 +79,76 @@ class Ingreso(db.Model):
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
-# Modelo de Egreso
+
+# Modelo de Plan de Ahorro
+class PlanAhorro(db.Model):
+    __tablename__ = 'planes_ahorro'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre_plan = db.Column(db.String(255))
+    fecha_inicio = db.Column(db.Date, default=date.today)
+    monto_inicial = db.Column(db.Float, default=0.0)
+    fecha_objetivo = db.Column(db.Date, default=date.today)
+    monto_objetivo = db.Column(db.Float, nullable=False)
+    monto_acumulado = db.Column(db.Float, default=0.0)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+
+    # Cambio en el nombre del backref a 'egresos_en_plan' para evitar conflictos.
+    egresos = db.relationship(
+        'Egreso', 
+        backref='plan_ahorro_en_plan',  # Nombre único
+        lazy=True
+    )
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre_plan': self.nombre_plan,
+            'monto_inicial': self.monto_inicial,
+            'monto_objetivo': self.monto_objetivo,
+            'fecha_inicio': self.fecha_inicio.isoformat(),
+            'fecha_objetivo': self.fecha_objetivo.isoformat(),
+            'monto_acumulado': self.monto_acumulado,
+            'usuario_id': self.usuario_id,
+        }
+
+
+# Modelo de Egresoclass Egreso(db.Model):
 class Egreso(db.Model):
     __tablename__ = 'egresos'
-    id = Column(db.Integer, primary_key=True)
-    monto = Column(db.Float, nullable=False)
-    descripcion = Column(db.String(255))
-    fecha = Column(db.Date, default=date.today)
+    id = db.Column(db.Integer, primary_key=True)
+    monto = db.Column(db.Float, nullable=False)
+    descripcion = db.Column(db.String(255))
+    fecha = db.Column(db.Date, default=date.today)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
+    plan_ahorro_id = db.Column(db.Integer, db.ForeignKey('planes_ahorro.id'), nullable=True)
+
+    # Relación con PlanAhorro, cambiamos el nombre del backref a 'egresos_relacionados'
+    plan_ahorro = db.relationship(
+        'PlanAhorro', 
+        backref=db.backref('egresos_relacionados', lazy=True),  # Nombre único aquí
+        lazy=True
+    )
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'monto': self.monto,
+            'descripcion': self.descripcion,
+            'fecha': self.fecha.isoformat(),
+            'usuario_id': self.usuario_id,
+            'categoria_id': self.categoria_id,
+            'plan_ahorro_id': self.plan_ahorro_id,
+        }
+
+
+# Modelo de Fondo de Emergencia
+class FondoEmergencia(db.Model):
+    __tablename__ = 'fondos_emergencia'
+    id = db.Column(db.Integer, primary_key=True)
+    monto_meta = Column(db.Float, nullable=False)
+    monto_actual = Column(db.Float, default=0.0)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
-    categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
 # Modelo de Suscripción
 class Suscripcion(db.Model):
@@ -108,38 +169,6 @@ class Suscripcion(db.Model):
             'fecha_inicio': self.fecha_inicio.isoformat(),
             'usuario_id': self.usuario_id
         }
-
-# Modelo de Plan de Ahorro
-class PlanAhorro(db.Model):
-    __tablename__ = 'planes_ahorro'
-    id = db.Column(db.Integer, primary_key=True)
-    nombre_plan = Column(db.String(255))
-    fecha_inicio = Column(db.Date, default=date.today)
-    monto_inicial = Column(db.Float, default=0.0)
-    fecha_objetivo = Column(db.Date, default=date.today)
-    monto_objetivo = Column(db.Float, nullable=False)
-    monto_acumulado = Column(db.Float, default=0.0)  # Nuevo campo
-    usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'nombre_plan': self.nombre_plan,
-            'monto_inicial': self.monto_inicial,
-            'monto_objetivo': self.monto_objetivo,
-            'fecha_inicio': self.fecha_inicio.isoformat(),
-            'fecha_objetivo': self.fecha_objetivo.isoformat(),
-            'monto_acumulado': self.monto_acumulado,
-            'usuario_id': self.usuario_id  # Evitar devolver toda la relación del usuario
-        }
-
-# Modelo de Fondo de Emergencia
-class FondoEmergencia(db.Model):
-    __tablename__ = 'fondos_emergencia'
-    id = db.Column(db.Integer, primary_key=True)
-    monto_meta = Column(db.Float, nullable=False)
-    monto_actual = Column(db.Float, default=0.0)
-    usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
 
 # Modelo de Alerta
 class Alerta(db.Model):

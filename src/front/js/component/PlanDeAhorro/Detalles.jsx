@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import EditarPlan from "./EditarPlan.jsx"; // Importamos el componente para editar el plan
 import RegistrarAhorro from "./RegistrarAhorro.jsx"; // Importamos el componente para registrar el ahorro
+import EliminarPlanDeAhorro from "./EliminarPlanDeAhorro.jsx"; // Importamos el componente para eliminar el plan
 
-const Detalles = ({ plan, onClose, onDelete }) => {
+const Detalles = ({ plan, onClose, onEdit, onDelete }) => {
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false); // Estado para controlar la visibilidad del modal de Registrar Ahorro
 
   const handleEdit = () => {
@@ -12,6 +14,14 @@ const Detalles = ({ plan, onClose, onDelete }) => {
 
   const handleCloseEditModal = () => {
     setShowEditModal(false); // Cerrar el modal de edición
+  };
+
+  const handleDelete = () => {
+    setShowDeleteModal(true); // Abrir el modal de eliminar cuando se hace clic en "Eliminar"
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false); // Cerrar el modal de eliminar
   };
 
   const handleUpdate = () => {
@@ -69,7 +79,7 @@ const Detalles = ({ plan, onClose, onDelete }) => {
               </table>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-outline-danger" onClick={onDelete}>🗑️ Eliminar</button>
+              <button type="button" className="btn btn-outline-danger" onClick={handleDelete}>🗑️ Eliminar</button>
               <button type="button" className="btn btn-outline-warning" onClick={handleEdit}>✏️ Editar</button>
               <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Registrar Ahorro</button>
             </div>
@@ -91,6 +101,14 @@ const Detalles = ({ plan, onClose, onDelete }) => {
         <RegistrarAhorro
           plan={plan} // Pasamos el ID del plan al modal
           onClose={handleCloseRegistrarAhorro}
+        />
+      )}
+
+      {/* Modal de Eliminar Plan de Ahorro */}
+      {showDeleteModal && (
+        <EliminarPlanDeAhorro
+          plan={plan} // Pasamos el ID del plan al modal
+          onClose={handleCloseDeleteModal}
         />
       )}
     </div>
