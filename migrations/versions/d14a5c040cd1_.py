@@ -1,14 +1,8 @@
 """empty message
 
-<<<<<<<< HEAD:migrations/versions/db8bea5c7e8d_.py
-Revision ID: db8bea5c7e8d
+Revision ID: d14a5c040cd1
 Revises: 
-Create Date: 2024-12-30 05:46:08.452307
-========
-Revision ID: 97b70fb3352b
-Revises: 
-Create Date: 2024-12-28 01:45:45.879392
->>>>>>>> 6a66f3f920af563801f33d7a6f93b3f0815b0445:migrations/versions/97b70fb3352b_.py
+Create Date: 2024-12-31 04:18:00.479187
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/db8bea5c7e8d_.py
-revision = 'db8bea5c7e8d'
-========
-revision = '97b70fb3352b'
->>>>>>>> 6a66f3f920af563801f33d7a6f93b3f0815b0445:migrations/versions/97b70fb3352b_.py
+revision = 'd14a5c040cd1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -70,11 +60,12 @@ def upgrade():
     )
     op.create_table('planes_ahorro',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('descripcion', sa.String(length=255), nullable=True),
+    sa.Column('nombre_plan', sa.String(length=255), nullable=True),
     sa.Column('fecha_inicio', sa.Date(), nullable=True),
     sa.Column('monto_inicial', sa.Float(), nullable=True),
     sa.Column('fecha_objetivo', sa.Date(), nullable=True),
     sa.Column('monto_objetivo', sa.Float(), nullable=False),
+    sa.Column('monto_acumulado', sa.Float(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id')

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from api.models import db, PlanAhorro
+from api.models import db, PlanAhorro, Categoria,Egreso,Ingreso
 from api.token_required import token_required
 from datetime import date
 
@@ -22,7 +22,7 @@ def agregar_plan_ahorro(payload):
     data = request.get_json()
 
     # Verificar que los campos requeridos estén presentes (campos que yo decido son indispensables)
-    required_fields = ['descripcion', 'monto_objetivo', 'fecha_inicio', 'monto_inicial', 'fecha_objetivo']
+    required_fields = ['nombre_plan', 'monto_objetivo', 'fecha_inicio', 'monto_inicial', 'fecha_objetivo']
     missing_fields = [field for field in required_fields if field not in data]
     
     if missing_fields:
@@ -49,7 +49,7 @@ def agregar_plan_ahorro(payload):
 
     # Crear el nuevo plan de ahorro
     nuevo_plan = PlanAhorro(
-        descripcion=data['descripcion'],
+        nombre_plan=data['nombre_plan'],
         fecha_inicio=fecha_inicio,
         monto_inicial=monto_inicial,
         monto_objetivo=monto_objetivo,
@@ -66,7 +66,7 @@ def agregar_plan_ahorro(payload):
         "msg": "Plan de ahorro agregado exitosamente",
         "nuevo_plan": {
             "id": nuevo_plan.id,
-            "descripcion": nuevo_plan.descripcion,
+            "nombre_plan": nuevo_plan.nombre_plan,
             "fecha_inicio": nuevo_plan.fecha_inicio.isoformat(),
             "monto_inicial": nuevo_plan.monto_inicial,
             "monto_objetivo": nuevo_plan.monto_objetivo,
@@ -74,6 +74,7 @@ def agregar_plan_ahorro(payload):
             "usuario_id": nuevo_plan.usuario_id
         }
     }), 201
+
 #------------------------------------------------------
 @plandeahorro_bp.route('/editarplan', methods=['PUT'])
 @token_required
@@ -101,8 +102,8 @@ def editar_plan_ahorro(payload):
     # Obtener los datos para actualizar
     data = request.get_json()
 
-    if 'descripcion' in data:
-        plan.descripcion = data['descripcion']
+    if 'nombre_plan' in data:
+        plan.nombre_plan = data['nombre_plan']
     if 'monto_inicial' in data:
         plan.monto_inicial = data['monto_inicial']
     if 'fecha_inicio' in data:
@@ -116,7 +117,7 @@ def editar_plan_ahorro(payload):
     db.session.commit()
 
     return jsonify({"msg": "Plan de ahorro actualizado exitosamente"}), 200
-#-------------------------------------------------------------------------
+#---------------------------------------------------------
 
 @plandeahorro_bp.route('/eliminarplan', methods=['DELETE'])
 @token_required
@@ -146,9 +147,8 @@ def eliminar_plan_ahorro(payload):
     db.session.commit()
 
     return jsonify({"msg": "Plan de ahorro eliminado exitosamente"}), 200
-#----------------------------------------------------------------------
+#---------------------------------------------------------
 
-# CRUD para PlanAhorro
 @plandeahorro_bp.route('/traerplan', methods=['GET'])
 @token_required
 def obtener_planes_ahorro(payload):
@@ -160,18 +160,119 @@ def obtener_planes_ahorro(payload):
         return jsonify({"error": "Usuario no autenticado"}), 401
     
     planes = PlanAhorro.query.filter_by(usuario_id=usuario_id).all()
-    #Serialziar los planes de ahorro filtrados por usuario segun token
-    planes_serializados = [
-        {
-            'id': p.id,
-            'descripcion': p.descripcion,
-            'monto_inicial': p.monto_inicial,
-            'fecha_inicio': p.fecha_inicio.isoformat(),
-            'fecha_objetivo': p.fecha_objetivo.isoformat(),
-            'monto_objetivo': p.monto_objetivo,
-            'usuario_id': p.usuario_id
-        } 
-        for p in planes
-    ]
+    # Serializar los planes de ahorro filtrados por usuario según token
+    planes_serializados = [p.to_dict() for p in planes]
 
+    # Retornar la respuesta con los planes serializados
     return jsonify(planes_serializados), 200
+
+
+#---------------------------------------------------------
+@plandeahorro_bp.route('/depositar', methods=['POST'])
+@token_required
+def registrar_deposito_plan(payload):
+    #Registra un monto hacia un plan de ahorro y crea un egreso asociado.
+    data = request.json  # Datos enviados en el cuerpo de la solicitud aqui los recibo
+
+     # El 'id' del usuario ya está disponible a través de 'payload'
+    usuario_id = payload.get('id')  # Acceder al 'id' del usuario
+
+    # Obtener los datos del cuerpo de la solicitud
+    plan_id = data.get('plan_id')  # ID del plan de ahorro al que se deposita
+    nombre_plan = data.get('nombre_plan')  # ID del plan de ahorro al que se deposita
+    monto_ahorro = float(data.get('monto_ahorro'))  # Monto a depositar
+    descripcion_deposito = data.get('descripcion', "Deposito al plan de ahorro")  # Descripción opcional
+    fecha = data.get('fecha')
+
+    # Validar datos requeridos
+    if not usuario_id or not plan_id or not monto_ahorro or not fecha:
+        return jsonify({"error": "Faltan datos requeridos (usuario_id, plan_id, nombre_plan,monto_monto_ahorro,fecha)"}), 400
+
+    # Buscar la categoría "Plan de Ahorro"  
+    categoria_plan_ahorro = Categoria.query.filter_by(nombre="Plan de ahorro").first()
+     
+    try:
+
+        # Buscar el plan de ahorro
+        plan = PlanAhorro.query.get(plan_id)
+        
+        if not plan:
+            return jsonify({"error": "Plan de ahorro no encontrado"}), 404
+        
+        if plan.usuario_id != usuario_id:
+            return jsonify({"error": "El plan de ahorro no pertenece al usuario"}), 403
+
+        # Verificar que el monto sea válido
+        if monto_ahorro <= 0:
+            return jsonify({"error": "El monto debe ser mayor a cero"}), 400
+
+        if not categoria_plan_ahorro:
+            return jsonify({"error": "La categoría 'Plan de Ahorro' no está definida"}), 500
+
+        try:
+            # Convertir fecha desde el formato ISO 8601
+            fecha = date.fromisoformat(data['fecha'])
+        except ValueError:
+            return jsonify({'msg': 'Formato de fecha inválido. Debe ser YYYY-MM-DD.'}), 400
+
+        # Registrar el egreso
+        nuevo_egreso = Egreso(
+            usuario_id=usuario_id,
+            monto=monto_ahorro,
+            descripcion=descripcion_deposito,
+            fecha=fecha,
+            categoria_id=categoria_plan_ahorro.id
+        )
+
+        db.session.add(nuevo_egreso)
+
+        # Actualizar el monto acumulado en el plan de ahorro
+        plan.monto_acumulado += monto_ahorro
+
+        # Guardar cambios
+        db.session.commit()
+
+        return jsonify({
+            "message": "Depósito registrado exitosamente",
+            "plan": plan.to_dict(),
+            "egreso": {
+                "id": nuevo_egreso.id,
+                "monto": nuevo_egreso.monto,
+                "descripcion": nuevo_egreso.descripcion,
+                "fecha": nuevo_egreso.fecha.isoformat(),
+                "categoria_id": nuevo_egreso.categoria_id
+            }
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()  # Revertir cambios en caso de error
+        return jsonify({"error": f"Ocurrió un error al registrar el depósito: {str(e)}"}), 500
+
+
+
+    
+
+#---------------------------------------------------------------
+@plandeahorro_bp.route('/Cancelar', methods=['PUT'])
+def cancelar_plan_ahorro(self, plan_id):
+    #Liquida un plan de ahorro, reintegrando el monto acumulado como un ingreso.
+    
+    # Encontrar el plan de ahorro
+    plan = PlanAhorro.query.get(plan_id)
+    if not plan or plan.usuario_id != self.id:
+        raise ValueError(f"No se encontró un plan de ahorro válido con ID {plan_id}")
+
+    # Crear un ingreso asociado al monto acumulado
+    nuevo_ingreso = Ingreso(
+        usuario_id=self.id,
+        monto=plan.monto_acumulado,
+        descripcion=f"Liquidación del Plan de Ahorro: {plan.nombre}",
+        fecha=date.today()
+    )
+    db.session.add(nuevo_ingreso)
+
+    # Eliminar o archivar el plan de ahorro
+    db.session.delete(plan)  # O marcar como completado/archivado
+
+    # Guardar cambios
+    db.session.commit()

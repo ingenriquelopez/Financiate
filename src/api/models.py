@@ -113,12 +113,25 @@ class Suscripcion(db.Model):
 class PlanAhorro(db.Model):
     __tablename__ = 'planes_ahorro'
     id = db.Column(db.Integer, primary_key=True)
-    descripcion = Column(db.String(255))
+    nombre_plan = Column(db.String(255))
     fecha_inicio = Column(db.Date, default=date.today)
     monto_inicial = Column(db.Float, default=0.0)
     fecha_objetivo = Column(db.Date, default=date.today)
     monto_objetivo = Column(db.Float, nullable=False)
+    monto_acumulado = Column(db.Float, default=0.0)  # Nuevo campo
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre_plan': self.nombre_plan,
+            'monto_inicial': self.monto_inicial,
+            'monto_objetivo': self.monto_objetivo,
+            'fecha_inicio': self.fecha_inicio.isoformat(),
+            'fecha_objetivo': self.fecha_objetivo.isoformat(),
+            'monto_acumulado': self.monto_acumulado,
+            'usuario_id': self.usuario_id  # Evitar devolver toda la relación del usuario
+        }
 
 # Modelo de Fondo de Emergencia
 class FondoEmergencia(db.Model):

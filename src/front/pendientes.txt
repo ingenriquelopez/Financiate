@@ -7,3 +7,7 @@ documentar el BACKEND
 agregar valdaciones mas solidades en el back.
 terminal el fondo de ahorro.
 LOS SWEETALERT EN DONDE SEA NECESARIO Y CHECAR LOS ALERT DE PREGUNTAS DE COINFIRMACION
+VALÑIDAR QUE SIEMPRE EXISTA UNA CATEGORIA PLAND E AHORRO
+LIMPIAR EL FORM DE AGREGAR PLAN DESPUES DE AGREGAR O EDITAR
+ACTUALIZAR EL RENDER DE PLAN DE AHORRO
+validar el id 11 plan de ahorro en ingresos y egresos en relacion con el plan de ahorro

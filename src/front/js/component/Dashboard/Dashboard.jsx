@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Context } from "../../store/appContext";
 import {
     BarChart,
@@ -28,8 +28,11 @@ const Dashboard = () => {
     const [totales, setTotales] = useState([]);
     const [capitales, setCapitales] = useState([]);
     const [datosMensuales, setDatosMensuales] = useState([]);
+    const [planes, setPlanes]= useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const isMounted = useRef(true);
+    
 
     // LLAMADA A LA API PARA GRAFICO DE DONA
     useEffect(() => {
@@ -119,6 +122,37 @@ const Dashboard = () => {
         fetchTotalDatosMensuales();
     }, []);
 
+    const fetchPlans = async () => {
+        try {
+          const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+            },
+          });
+          const data = await response.json();
+          console.log(data)
+          if (isMounted.current) {
+            setPlanes(data);
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error('Error fetching plans:', error);
+          if (isMounted.current) {
+            setLoading(false);
+          }
+        }
+      };
+    
+      useEffect(() => {
+        isMounted.current = true;
+        fetchPlans();
+        return () => {
+          isMounted.current = false;
+        };
+      }, []);
+
     return (
         <div className="dashboard-container">
             <h3 className="main-title">Dashboard Fináncia+E</h3>
@@ -201,9 +235,24 @@ const Dashboard = () => {
                         </div>
 
                         {/* Barra de progreso */}
+                        
+                        
                         <div className="progress-container mt-5">
-                            <ProgressBar inicio={0} total={100000} current={20000} />
+                            {planes.length > 0 ? (
+                                planes.map((plan, index) => (
+                                    <ProgressBar
+                                        key={index} // Usar índice como clave si no hay un ID único
+                                        nombre_plan={plan.nombre_plan}
+                                        monto_inicial={plan.monto_inicial}
+                                        total={plan.monto_objetivo}
+                                        current={plan.monto_acumulado}
+                                    />
+                                ))
+                            ) : (
+                                <p>No hay planes disponibles</p> // Mensaje alternativo si no hay planes
+                            )}
                         </div>
+
 
                     </div>
                 </div>
