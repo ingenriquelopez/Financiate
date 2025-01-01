@@ -14,7 +14,8 @@ class Usuario(db.Model):
     correo = Column(String(120), nullable=False, unique=True)
     contrasena_hash = Column(String(128), nullable=False)
     creado_en = Column(DateTime, default=datetime.now(timezone.utc))
-    capital_inicial = db.Column(db.Float, nullable=True, default=None)
+    capital_inicial = db.Column(db.Float, nullable=True, default=0.00)
+    capital_actual = db.Column(db.Float, nullable=True, default=0.00)
     moneda = db.Column(db.String(10), nullable=True, default=None)  # Moneda del usuario
 
     ingresos = relationship('Ingreso', backref='usuario', lazy=True)
@@ -49,12 +50,11 @@ class Usuario(db.Model):
     def calcular_totales(self):
         total_ingresos = sum(ingreso.monto for ingreso in self.ingresos)
         total_egresos = sum(egreso.monto for egreso in self.egresos)
-        capital_actual = self.capital_inicial + total_ingresos - total_egresos
         return {
             "capital_inicial": self.capital_inicial,
             "total_ingresos": total_ingresos,
             "total_egresos": total_egresos,
-            "capital_actual": capital_actual,
+            "capital_actual": self.capital_actual,
         }
 
 
@@ -78,6 +78,17 @@ class Ingreso(db.Model):
     fecha = Column(db.Date, default=date.today)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria_id = Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
+    
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'monto': self.monto,
+            'descripcion': self.descripcion,
+            'fecha': self.fecha.isoformat() if self.fecha else None,
+            'usuario_id': self.usuario_id,
+            'categoria_id': self.categoria_id,
+        }
 
 
 # Modelo de Plan de Ahorro
@@ -92,10 +103,10 @@ class PlanAhorro(db.Model):
     monto_acumulado = db.Column(db.Float, default=0.0)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
 
-    # Cambio en el nombre del backref a 'egresos_en_plan' para evitar conflictos.
+    # Cambiar backref a back_populates
     egresos = db.relationship(
-        'Egreso', 
-        backref='plan_ahorro_en_plan',  # Nombre único
+        'Egreso',
+        back_populates='plan_ahorro',  # Establecer como back_populates
         lazy=True
     )
 
@@ -123,10 +134,10 @@ class Egreso(db.Model):
     categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
     plan_ahorro_id = db.Column(db.Integer, db.ForeignKey('planes_ahorro.id'), nullable=True)
 
-    # Relación con PlanAhorro, cambiamos el nombre del backref a 'egresos_relacionados'
+    # Cambiar backref a back_populates
     plan_ahorro = db.relationship(
-        'PlanAhorro', 
-        backref=db.backref('egresos_relacionados', lazy=True),  # Nombre único aquí
+        'PlanAhorro',
+        back_populates='egresos',  # Establecer como back_populates
         lazy=True
     )
 

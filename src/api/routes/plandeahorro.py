@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from api.models import db, PlanAhorro, Categoria,Egreso,Ingreso
+from api.models import db, PlanAhorro, Categoria,Egreso,Ingreso,Usuario
 from api.token_required import token_required
 from datetime import date
 from sqlalchemy.exc import SQLAlchemyError
@@ -48,7 +48,7 @@ def agregar_plan_ahorro(payload):
     if monto_inicial < 0 or monto_objetivo <= 0:
         return jsonify({"error": "El monto inicial no puede ser negativo y el monto objetivo debe ser mayor que cero"}), 400
 
-    # Crear el nuevo plan de ahorro
+    # Crear el nuevo plan de ahorroñl
     nuevo_plan = PlanAhorro(
         nombre_plan=data['nombre_plan'],
         fecha_inicio=fecha_inicio,
@@ -122,8 +122,9 @@ def editar_plan_ahorro(payload):
 
 @plandeahorro_bp.route('/eliminar_plan_ahorro', methods=['DELETE'])
 @token_required
-def eliminar_plan_ahorro():
+def eliminar_plan_ahorro(payload):
     data = request.get_json()
+    usuario_id = payload.get('id')
 
     # Validar que se reciba el ID del plan de ahorro
     if 'plan_ahorro_id' not in data:
@@ -134,12 +135,14 @@ def eliminar_plan_ahorro():
     try:
         # Buscar el plan de ahorro por ID
         plan_ahorro = PlanAhorro.query.get(plan_ahorro_id)
-
+        
         if not plan_ahorro:
             return jsonify({'error': 'Plan de ahorro no encontrado.'}), 404
 
         # Si el plan de ahorro tiene egresos asociados, procesamos la reversión
-        egresos = plan_ahorro.egresos_relacionados  # Asegúrate de usar el nombre correcto del backref
+        egresos = plan_ahorro.egresos  # Asegúrate de usar el nombre correcto del backref
+        # Tomar la categoría del primer egreso (todas las categorías son las mismas)
+        #categoria_id = egresos[0].categoria_id
 
         # Generar un ingreso por la cancelación del plan de ahorro
         ingresos_por_cancelacion = 0
@@ -147,26 +150,36 @@ def eliminar_plan_ahorro():
             ingresos_por_cancelacion += egreso.monto  # Acumulamos el monto de los egresos
 
             # Crear el ingreso que "restituye" el monto del egreso
-            ingreso_cancelacion = Ingreso(
-                monto=egreso.monto,
-                descripcion=f'Reversión por cancelación de plan de ahorro: {plan_ahorro.nombre_plan}',
-                usuario_id=plan_ahorro.usuario_id,  # Asociamos al mismo usuario
-                categoria_id=None  # O la categoría que prefieras
-            )
-            db.session.add(ingreso_cancelacion)
+            # ingreso_cancelacion = Ingreso(
+            #     monto=egreso.monto,
+            #     descripcion=f'Reversión por cancelación de plan de ahorro: {plan_ahorro.nombre_plan}',
+            #     usuario_id=plan_ahorro.usuario_id,  # Asociamos al mismo usuario
+            #     fecha = date.today(),
+            #     categoria_id= egreso.categoria_id
+            # )
+
+            # db.session.add(ingreso_cancelacion)
 
             # Eliminar el egreso asociado
             db.session.delete(egreso)
+        
+         # Obtener el usuario para actualizar su capital_actual
+        usuario = Usuario.query.get(usuario_id)
+        if not usuario:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        # Actualizar el capital_actual restando el monto del depósito
+        usuario.capital_actual += plan_ahorro.monto_acumulado
 
         # Actualizar el capital acumulado del plan de ahorro a cero
         plan_ahorro.monto_acumulado = 0.0
 
         # Eliminar el plan de ahorro
         db.session.delete(plan_ahorro)
-
+    
         # Hacer commit de todas las operaciones en la base de datos
         db.session.commit()
-
+        print("170")
         return jsonify({
             'message': 'Plan de ahorro eliminado correctamente y egresos revertidos.',
             'ingreso_generado': ingresos_por_cancelacion
@@ -258,6 +271,14 @@ def registrar_deposito_plan(payload):
         # Actualizar el monto acumulado en el plan de ahorro
         plan.monto_acumulado += monto_ahorro
 
+        # Obtener el usuario para actualizar su capital_actual
+        usuario = Usuario.query.get(usuario_id)
+        if not usuario:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        # Actualizar el capital_actual restando el monto del depósito
+        usuario.capital_actual -= monto_ahorro
+
         # Guardar cambios
         db.session.commit()
 
@@ -277,31 +298,3 @@ def registrar_deposito_plan(payload):
         db.session.rollback()  # Revertir cambios en caso de error
         return jsonify({"error": f"Ocurrió un error al registrar el depósito: {str(e)}"}), 500
 
-
-
-    
-
-#---------------------------------------------------------------
-@plandeahorro_bp.route('/Cancelar', methods=['PUT'])
-def cancelar_plan_ahorro(self, plan_id):
-    #Liquida un plan de ahorro, reintegrando el monto acumulado como un ingreso.
-    
-    # Encontrar el plan de ahorro
-    plan = PlanAhorro.query.get(plan_id)
-    if not plan or plan.usuario_id != self.id:
-        raise ValueError(f"No se encontró un plan de ahorro válido con ID {plan_id}")
-
-    # Crear un ingreso asociado al monto acumulado
-    nuevo_ingreso = Ingreso(
-        usuario_id=self.id,
-        monto=plan.monto_acumulado,
-        descripcion=f"Liquidación del Plan de Ahorro: {plan.nombre}",
-        fecha=date.today()
-    )
-    db.session.add(nuevo_ingreso)
-
-    # Eliminar o archivar el plan de ahorro
-    db.session.delete(plan)  # O marcar como completado/archivado
-
-    # Guardar cambios
-    db.session.commit()

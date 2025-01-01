@@ -75,8 +75,11 @@ def actualizar_usuario():
 
     if 'correo' in data:
         usuario.correo = data['correo']
+        
     if 'capital_inicial' in data:
         usuario.capital_inicial = data['capital_inicial']
+        usuario.capital_actual  = data['capital_inicial']
+
     if 'moneda' in data:
         usuario.moneda = data['moneda']
 

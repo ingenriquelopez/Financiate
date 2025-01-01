@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from api.models import db, Egreso
+from api.models import db, Egreso,Usuario
 from api.token_required import token_required
 from datetime import date
 #------------------------------------------
@@ -62,5 +62,14 @@ def crear_egreso(payload):
         categoria_id=data['categoria_id']
     )
     db.session.add(nuevo_egreso)
+
+    # Obtener el usuario para actualizar su capital_actual
+    usuario = Usuario.query.get(data['usuario_id'])
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+    
+    # Actualizar el capital_actual RESTANDO el monto del depósito
+    usuario.capital_actual -= float(data['monto'])
+
     db.session.commit()
     return jsonify({'msg': 'Egreso creado exitosamente'}), 201

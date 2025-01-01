@@ -1,6 +1,6 @@
 # api/routes/ingresos.py
 from flask import Blueprint, request, jsonify
-from api.models import db, Ingreso
+from api.models import db, Ingreso,Usuario
 from api.token_required import token_required
 from datetime import date
 
@@ -44,6 +44,7 @@ def obtener_ingresos(payload):
 @token_required
 def crear_ingreso(payload):
     data = request.get_json()
+    print(data)
     # Validar que todos los campos requeridos estén presentes
     if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha', 'usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
@@ -62,6 +63,16 @@ def crear_ingreso(payload):
         categoria_id=data['categoria_id']
     )
     db.session.add(nuevo_ingreso)
+
+    # Obtener el usuario para actualizar su capital_actual
+    usuario = Usuario.query.get(data['usuario_id'])
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+    
+    # Actualizar el capital_actual sumando el monto del depósito
+    usuario.capital_actual += float(data['monto'])
+
+
     db.session.commit()
     return jsonify({'msg': 'Ingreso creado exitosamente'}), 201
 

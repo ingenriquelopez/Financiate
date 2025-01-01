@@ -1,32 +1,21 @@
 import React, { useState } from "react";
-import EditarPlan from "./EditarPlan.jsx"; // Importamos el componente para editar el plan
-import RegistrarAhorro from "./RegistrarAhorro.jsx"; // Importamos el componente para registrar el ahorro
-import EliminarPlanDeAhorro from "./EliminarPlanDeAhorro.jsx"; // Importamos el componente para eliminar el plan
+import { Button } from "react-bootstrap";
+import Swal from "sweetalert2";  // Importar SweetAlert2
+import EditarPlan from "./EditarPlan.jsx";
+import RegistrarAhorro from "./RegistrarAhorro.jsx";
 
-const Detalles = ({ plan, onClose, onEdit, onDelete }) => {
+const Detalles = ({ plan, onClose }) => {
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false); // Estado para controlar la visibilidad del modal de Registrar Ahorro
+  const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false);
+  const [loading, setLoading] = useState(false);  // Para controlar el estado de carga
+  const [error, setError] = useState("");  // Para manejar errores
 
   const handleEdit = () => {
-    setShowEditModal(true); // Abrir el modal de edición cuando se hace clic en "Editar"
+    setShowEditModal(true); // Abrir el modal de edición
   };
 
   const handleCloseEditModal = () => {
     setShowEditModal(false); // Cerrar el modal de edición
-  };
-
-  const handleDelete = () => {
-    setShowDeleteModal(true); // Abrir el modal de eliminar cuando se hace clic en "Eliminar"
-  };
-
-  const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false); // Cerrar el modal de eliminar
-  };
-
-  const handleUpdate = () => {
-    // Llamar al onClose o actualizar el estado después de la edición
-    onClose();
   };
 
   const handleRegistrarAhorro = () => {
@@ -37,7 +26,38 @@ const Detalles = ({ plan, onClose, onEdit, onDelete }) => {
     setShowRegistrarAhorroModal(false); // Cerrar el modal de Registrar Ahorro
   };
 
-  if (!plan) return null; // Si no hay un plan seleccionado, no renderiza nada
+  const handleEliminar = async () => {
+    if (!plan || !plan.id) return;  // Asegurarse de que haya un plan
+
+    setLoading(true);
+    setError("");  // Resetear el error antes de hacer la solicitud
+    
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/eliminar_plan_ahorro`, {
+        method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+        },
+        body: JSON.stringify({ "plan_ahorro_id": plan.id }),
+      });
+
+      if (response.ok) {
+        onClose();  // Cerrar el modal o realizar alguna otra acción después de la eliminación
+        Swal.fire("Deleted!", "Your plan has been deleted.", "success");  // Alerta de éxito
+      } else {
+        setError("Error al eliminar el plan de ahorro.");
+        Swal.fire("Error", "No se pudo eliminar el plan.", "error");  // Alerta de error
+      }
+    } catch (err) {
+      setError("Hubo un error al intentar eliminar el plan.");
+      Swal.fire("Error", "Hubo un problema al eliminar el plan.", "error");  // Alerta de error en caso de fallo en la petición
+    } finally {
+      setLoading(false);  // Finalizar el estado de carga
+    }
+  };
+
+  if (!plan) return null; // Si no hay un plan, no renderiza nada
 
   return (
     <div>
@@ -79,7 +99,24 @@ const Detalles = ({ plan, onClose, onEdit, onDelete }) => {
               </table>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-outline-danger" onClick={handleDelete}>🗑️ Eliminar</button>
+              <Button variant="danger" onClick={() => {
+                Swal.fire({
+                  title: "Estas Seguro?",
+                  text: "No podras revertir esta accion!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Si, Eliminalo!",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    // Aquí es donde se ejecuta la lógica de eliminación solo cuando el usuario confirma
+                    handleEliminar();
+                  }
+                });
+              }} disabled={loading}>
+                {loading ? "Eliminando..." : "Eliminar"}
+              </Button>
               <button type="button" className="btn btn-outline-warning" onClick={handleEdit}>✏️ Editar</button>
               <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Registrar Ahorro</button>
             </div>
@@ -92,23 +129,14 @@ const Detalles = ({ plan, onClose, onEdit, onDelete }) => {
         <EditarPlan
           plan={plan}
           onClose={handleCloseEditModal}
-          onUpdate={handleUpdate}
         />
       )}
 
       {/* Modal de Registrar Ahorro */}
       {showRegistrarAhorroModal && (
         <RegistrarAhorro
-          plan={plan} // Pasamos el ID del plan al modal
+          plan={plan}
           onClose={handleCloseRegistrarAhorro}
-        />
-      )}
-
-      {/* Modal de Eliminar Plan de Ahorro */}
-      {showDeleteModal && (
-        <EliminarPlanDeAhorro
-          plan={plan} // Pasamos el ID del plan al modal
-          onClose={handleCloseDeleteModal}
         />
       )}
     </div>
