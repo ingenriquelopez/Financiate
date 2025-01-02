@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
+const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
   const [formData, setFormData] = useState({
     nombre_plan: '',
     fecha_inicio: '',
@@ -11,6 +11,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
     monto_acumulado: '',
   });
 
+  // Limpiar el formulario cuando se edita un plan o se cancela
   useEffect(() => {
     if (planToEdit) {
       setFormData({
@@ -21,8 +22,18 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
         monto_objetivo: planToEdit.monto_objetivo || '',
         monto_acumulado: planToEdit.monto_acumulado || '',
       });
+    } else {
+      // Si no hay plan para editar, aseguramos que el formulario esté limpio
+      setFormData({
+        nombre_plan: '',
+        fecha_inicio: '',
+        monto_inicial: '',
+        fecha_objetivo: '',
+        monto_objetivo: '',
+        monto_acumulado: '',
+      });
     }
-  }, [planToEdit]);
+  }, [planToEdit]); // Dependemos de planToEdit para actualizar los campos
 
   // Manejar los cambios del formulario
   const handleChange = (e) => {
@@ -42,9 +53,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
     }
 
     try {
-      const url = planToEdit 
-        ? `${process.env.BACKEND_URL}/api/plandeahorro/editarplan`
-        : `${process.env.BACKEND_URL}/api/plandeahorro/agregarplan`;
+      const url = `${process.env.BACKEND_URL}/api/plandeahorro/agregarplan`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -59,16 +68,20 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
         alert("Error al guardar el plan.");
         return;
       }
+      // Leer el cuerpo de la respuesta como JSON
+      const data = await response.json();
 
       // Si todo va bien, se cierra el modal y se puede actualizar el listado de planes
       Swal.fire({
         title: "Plan Guardado Correctamente",
         icon: "success",
-  
       });
-      onClose();
-       // Resetear el estado después de guardar
-       setFormData({
+
+      // Aquí actualizamos el estado con el nuevo plan
+      updatePlans(data.nuevo_plan); // Esto debería actualizar el estado en el componente principal
+
+      // Resetear el estado después de guardar
+      setFormData({
         nombre_plan: '',
         fecha_inicio: '',
         monto_inicial: '',
@@ -76,10 +89,25 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
         monto_objetivo: '',
         monto_acumulado: '',
       });
+
+      onClose(); // Cerrar el modal después de guardar el plan
     } catch (error) {
       console.error('Error guardando el plan:', error);
       alert('Error al guardar el plan.');
     }
+  };
+
+  // Manejar el cierre del modal y limpiar el formulario
+  const handleCloseModal = () => {
+    setFormData({
+      nombre_plan: '',
+      fecha_inicio: '',
+      monto_inicial: '',
+      fecha_objetivo: '',
+      monto_objetivo: '',
+      monto_acumulado: '',
+    }); // Limpiar el formulario al cerrar el modal
+    onClose(); // Llamar a la función onClose para cerrar el modal
   };
 
   return (
@@ -88,7 +116,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
         <div className="modal-content">
           <div className="modal-header bg-primary text-white text-center">
             <h5 className="modal-title" id="planModalLabel">{planToEdit ? 'Editar Plan' : 'Agregar Plan'}</h5>
-            <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
+            <button type="button" className="btn-close" onClick={handleCloseModal} aria-label="Close"></button>
           </div>
           <div className="modal-body">
             <form>
@@ -154,7 +182,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit }) => {
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+            <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cancelar</button>
             <button type="button" className="btn btn-primary" onClick={handleSave}>Guardar</button>
           </div>
         </div>

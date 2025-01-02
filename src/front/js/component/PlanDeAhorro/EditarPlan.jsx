@@ -48,7 +48,7 @@ const EditarPlan = ({ plan, onClose, onUpdate }) => {
 
       const data = await response.json();
       if (response.ok) {
-        onUpdate(); // Actualizar la lista de planes
+        //onUpdate(); // Actualizar la lista de planes
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',

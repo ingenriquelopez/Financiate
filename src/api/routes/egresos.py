@@ -67,9 +67,9 @@ def crear_egreso(payload):
     usuario = Usuario.query.get(data['usuario_id'])
     if not usuario:
         return jsonify({"error": "Usuario no encontrado"}), 404
-    
+
     # Actualizar el capital_actual RESTANDO el monto del depósito
-    usuario.capital_actual -= float(data['monto'])
+    usuario.capital_actual -=  float(data['monto'])
 
     db.session.commit()
     return jsonify({'msg': 'Egreso creado exitosamente'}), 201

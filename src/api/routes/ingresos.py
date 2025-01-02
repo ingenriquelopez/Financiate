@@ -44,7 +44,6 @@ def obtener_ingresos(payload):
 @token_required
 def crear_ingreso(payload):
     data = request.get_json()
-    print(data)
     # Validar que todos los campos requeridos estén presentes
     if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha', 'usuario_id', 'categoria_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400

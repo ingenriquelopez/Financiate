@@ -32,22 +32,23 @@ const RegistrarAhorro = ({ plan, onClose }) => {
           fecha,
         }),
       });
-      console.log(response)
 
       if (!response.ok) {
         throw new Error('Error al registrar el depósito');
       }
 
       const data = await response.json();
+    // Mostrar la notificación de éxito
       Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
         text: 'Depósito registrado con éxito',
         confirmButtonText: 'Aceptar'
+      }).then(() => {
+        // Cerrar el modal
+        onClose(); // Cierra el modal
       });
-      
 
-      onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error('Error submitting deposit:', error);
       setError('Error al registrar el depósito');

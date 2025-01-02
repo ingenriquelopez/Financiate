@@ -15,7 +15,7 @@ class Usuario(db.Model):
     contrasena_hash = Column(String(128), nullable=False)
     creado_en = Column(DateTime, default=datetime.now(timezone.utc))
     capital_inicial = db.Column(db.Float, nullable=True, default=0.00)
-    capital_actual = db.Column(db.Float, nullable=True, default=0.00)
+    capital_actual  = db.Column(db.Float, nullable=True, default=0.00)
     moneda = db.Column(db.String(10), nullable=True, default=None)  # Moneda del usuario
 
     ingresos = relationship('Ingreso', backref='usuario', lazy=True)

@@ -1,36 +1,66 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import Swal from "sweetalert2";  // Importar SweetAlert2
+import Swal from "sweetalert2"; 
 import EditarPlan from "./EditarPlan.jsx";
 import RegistrarAhorro from "./RegistrarAhorro.jsx";
 
-const Detalles = ({ plan, onClose }) => {
+const formatNumber = (number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(number);
+};
+
+const Detalles = ({ plan, onClose, updatePlans  }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false);
-  const [loading, setLoading] = useState(false);  // Para controlar el estado de carga
-  const [error, setError] = useState("");  // Para manejar errores
+  const [loading, setLoading] = useState(false);  
+  const [error, setError]= useState(false);
 
   const handleEdit = () => {
-    setShowEditModal(true); // Abrir el modal de edición
+    setShowEditModal(true);
   };
 
   const handleCloseEditModal = () => {
-    setShowEditModal(false); // Cerrar el modal de edición
+    setShowEditModal(false);
   };
 
   const handleRegistrarAhorro = () => {
-    setShowRegistrarAhorroModal(true); // Mostrar el modal de Registrar Ahorro
+    setShowRegistrarAhorroModal(true);
   };
 
   const handleCloseRegistrarAhorro = () => {
-    setShowRegistrarAhorroModal(false); // Cerrar el modal de Registrar Ahorro
+    setShowRegistrarAhorroModal(false);
   };
 
+
+    // Función para obtener los planes de la API
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+          },
+        });
+  
+        const data = await response.json();
+        
+        // Aquí actualizamos el estado con el nuevo plan
+        updatePlans(data); // Esto debería actualizar el estado en el componente principal
+        setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban los planes
+      } catch (error) {
+        console.error('Error fetching plans:', error);
+        setLoading(false); // En caso de error, también se cambia el estado de carga
+      }
+    };
+
   const handleEliminar = async () => {
-    if (!plan || !plan.id) return;  // Asegurarse de que haya un plan
+    if (!plan || !plan.id) return;  
 
     setLoading(true);
-    setError("");  // Resetear el error antes de hacer la solicitud
+    setError("");  
     
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/eliminar_plan_ahorro`, {
@@ -43,21 +73,23 @@ const Detalles = ({ plan, onClose }) => {
       });
 
       if (response.ok) {
-        onClose();  // Cerrar el modal o realizar alguna otra acción después de la eliminación
-        Swal.fire("Deleted!", "Your plan has been deleted.", "success");  // Alerta de éxito
+        fetchPlans();
+        onClose();  
+
+        Swal.fire("Deleted!", "Your plan has been deleted.", "success");  
       } else {
         setError("Error al eliminar el plan de ahorro.");
-        Swal.fire("Error", "No se pudo eliminar el plan.", "error");  // Alerta de error
+        Swal.fire("Error", "No se pudo eliminar el plan.", "error");  
       }
     } catch (err) {
       setError("Hubo un error al intentar eliminar el plan.");
-      Swal.fire("Error", "Hubo un problema al eliminar el plan.", "error");  // Alerta de error en caso de fallo en la petición
+      Swal.fire("Error", "Hubo un problema al eliminar el plan.", "error");  
     } finally {
-      setLoading(false);  // Finalizar el estado de carga
+      setLoading(false);  
     }
   };
 
-  if (!plan) return null; // Si no hay un plan, no renderiza nada
+  if (!plan) return null;
 
   return (
     <div>
@@ -71,35 +103,17 @@ const Detalles = ({ plan, onClose }) => {
             <div className="modal-body">
               <table className="table table-bordered">
                 <tbody>
-                  <tr>
-                    <th>Nombre del Plan</th>
-                    <td>{plan.nombre_plan}</td>
-                  </tr>
-                  <tr>
-                    <th>Fecha de Inicio</th>
-                    <td>{plan.fecha_inicio ? plan.fecha_inicio.slice(0, 10) : "Sin fecha"}</td>
-                  </tr>
-                  <tr>
-                    <th>Monto Inicial</th>
-                    <td>{plan.monto_inicial}</td>
-                  </tr>
-                  <tr>
-                    <th>Fecha Objetivo</th>
-                    <td>{plan.fecha_objetivo ? plan.fecha_objetivo.slice(0, 10) : "Sin fecha"}</td>
-                  </tr>
-                  <tr>
-                    <th>Monto Objetivo</th>
-                    <td>{plan.monto_objetivo}</td>
-                  </tr>
-                  <tr>
-                    <th>Monto Acumulado</th>
-                    <td>{plan.monto_acumulado}</td>
-                  </tr>
+                  <tr><th>Nombre del Plan</th><td>{plan.nombre_plan}</td></tr>
+                  <tr><th>Fecha de Inicio</th><td>{plan.fecha_inicio ? plan.fecha_inicio.slice(0, 10) : "Sin fecha"}</td></tr>
+                  <tr><th>Monto Inicial</th><td>{formatNumber(plan.monto_inicial)}</td></tr>
+                  <tr><th>Fecha Objetivo</th><td>{plan.fecha_objetivo ? plan.fecha_objetivo.slice(0, 10) : "Sin fecha"}</td></tr>
+                  <tr><th>Monto Objetivo</th><td>{formatNumber(plan.monto_objetivo)}</td></tr>
+                  <tr><th>Monto Acumulado</th><td>{formatNumber(plan.monto_acumulado)}</td></tr>
                 </tbody>
               </table>
             </div>
             <div className="modal-footer">
-              <Button variant="danger" onClick={() => {
+              <button type="button" className="btn btn-outline-danger" onClick={() => {
                 Swal.fire({
                   title: "Estas Seguro?",
                   text: "No podras revertir esta accion!",
@@ -110,13 +124,12 @@ const Detalles = ({ plan, onClose }) => {
                   confirmButtonText: "Si, Eliminalo!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    // Aquí es donde se ejecuta la lógica de eliminación solo cuando el usuario confirma
                     handleEliminar();
                   }
                 });
               }} disabled={loading}>
-                {loading ? "Eliminando..." : "Eliminar"}
-              </Button>
+                {loading ? "Eliminando..." : "🗑️ Eliminar"}
+              </button>
               <button type="button" className="btn btn-outline-warning" onClick={handleEdit}>✏️ Editar</button>
               <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Registrar Ahorro</button>
             </div>
@@ -124,7 +137,6 @@ const Detalles = ({ plan, onClose }) => {
         </div>
       </div>
 
-      {/* Modal de edición */}
       {showEditModal && (
         <EditarPlan
           plan={plan}
@@ -132,7 +144,6 @@ const Detalles = ({ plan, onClose }) => {
         />
       )}
 
-      {/* Modal de Registrar Ahorro */}
       {showRegistrarAhorroModal && (
         <RegistrarAhorro
           plan={plan}

@@ -12,3 +12,23 @@ th {
     font-family: 'Arial', sans-serif;
   }
   
+  .small-title {
+    font-size: 1.1rem; /* Ajusta el tamaño */
+    font-weight: 300;  /* Usar un peso de fuente más ligero */
+    color: #333;      /* Un color oscuro pero suave */
+    letter-spacing: 0.5px; /* Un poco de espaciado entre letras para mayor elegancia */
+    margin-bottom: 0.5rem; /* Reducir el margen inferior */
+  }
+
+ /* Agregar una sombra suave a las tarjetas */
+.cardplan {
+  min-height: 160px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 8px; /* Opcional: para bordes redondeados */
+  transition: box-shadow 0.3s ease; /* Suaviza el cambio de sombra */
+}
+
+/* Agregar un efecto de sombra más fuerte cuando el mouse pasa sobre la tarjeta */
+.cardplan:hover {
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Sombra más profunda al pasar el mouse */
+}
