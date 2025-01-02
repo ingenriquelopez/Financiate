@@ -9,13 +9,13 @@ import CerditoImg from "../../../img/Cerdito.png";
 const SobreNosotros = () => {
     return (
         <div>
-            {/* Aquí se incluye el Navbar */}
+
             <Navbar />
 
             <div className="container mt-5">
                 <div className="fw-bold fs-1 mb-5">Sobre Nosotros</div>
 
-                {/* Descripción "Sobre Nosotros" y la imagen del cerdito al lado derecho */}
+
                 <div className="row">
                     <div className="col-8">
                         <p>FINÁNCIA+E es la app definitiva para gestionar tu economía personal de manera sencilla y efectiva. Organiza tus gastos con categorías personalizadas, recibe alertas de tus suscripciones y planifica tus ahorros. Todo esto y mucho más, al alcance de tu mouse o celular. ¡Toma el control de tus finanzas hoy mismo!</p>
