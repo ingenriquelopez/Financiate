@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';  // Importamos useNavigate
 import { Context } from "../../store/appContext";
 import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
@@ -7,9 +7,11 @@ import Logo from '../../../img/LogoFinancia.png';
 const Sidebar = () => {
   const { store } = useContext(Context);
   const location = useLocation();
+  const navigate = useNavigate();  // Usamos el hook useNavigate
 
   const handleLogout = () => {
-    window.location.href = '/login';
+    // Aquí redirigimos al LandingPage (ruta "/")
+    navigate('/');  // Redirige a la página de inicio (LandingPage)
   };
 
   if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup') {
