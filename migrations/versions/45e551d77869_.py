@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 97b70fb3352b
+Revision ID: 45e551d77869
 Revises: 
-Create Date: 2024-12-28 01:45:45.879392
+Create Date: 2025-01-02 05:41:05.617081
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '97b70fb3352b'
+revision = '45e551d77869'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('contrasena_hash', sa.String(length=128), nullable=False),
     sa.Column('creado_en', sa.DateTime(), nullable=True),
     sa.Column('capital_inicial', sa.Float(), nullable=True),
+    sa.Column('capital_actual', sa.Float(), nullable=True),
     sa.Column('moneda', sa.String(length=10), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('correo'),
@@ -60,11 +61,12 @@ def upgrade():
     )
     op.create_table('planes_ahorro',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('descripcion', sa.String(length=255), nullable=True),
-    sa.Column('monto_inicial', sa.Float(), nullable=True),
+    sa.Column('nombre_plan', sa.String(length=255), nullable=True),
     sa.Column('fecha_inicio', sa.Date(), nullable=True),
-    sa.Column('monto_objetivo', sa.Float(), nullable=False),
+    sa.Column('monto_inicial', sa.Float(), nullable=True),
     sa.Column('fecha_objetivo', sa.Date(), nullable=True),
+    sa.Column('monto_objetivo', sa.Float(), nullable=False),
+    sa.Column('monto_acumulado', sa.Float(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -86,7 +88,9 @@ def upgrade():
     sa.Column('fecha', sa.Date(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=False),
     sa.Column('categoria_id', sa.Integer(), nullable=False),
+    sa.Column('plan_ahorro_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['categoria_id'], ['categorias.id'], ),
+    sa.ForeignKeyConstraint(['plan_ahorro_id'], ['planes_ahorro.id'], ),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

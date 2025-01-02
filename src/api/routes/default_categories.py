@@ -9,6 +9,7 @@ default_categories = [
     {'nombre': 'Gastos Varios', 'icono': '📦', 'color': '#8BC34A'},
     {'nombre': 'Ingreso Extraordinario', 'icono': '📈', 'color': '#8BC34A'},
     {'nombre': 'Inversiones', 'icono': '💸', 'color': '#FFC107'},
+    {'nombre': 'Plan de ahorro','icono':'💰','color': '#2196F3'},
     {'nombre': 'Rendimientos Bancarios', 'icono': '🏦', 'color': '#795548'},
     {'nombre': 'Salario', 'icono': '💼', 'color': '#4CAF50'},
     {'nombre': 'Salud', 'icono': '🩺', 'color': '#4CAF50'},

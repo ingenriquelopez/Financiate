@@ -47,7 +47,7 @@ def login():
 
     payload = {
         'id': usuario.id,
-        'exp': datetime.now(timezone.utc) + timedelta(minutes=10)  # Expira en 10 minutos usando timezone
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=20)  # Expira en 10 minutos usando timezone
     }
     # Obtener el SECRET_KEY desde la configuración de la aplicación
     SECRET_KEY = current_app.config['SECRET_KEY']  # Esto se refiere a lo que cargaste en app.py
@@ -75,8 +75,11 @@ def actualizar_usuario():
 
     if 'correo' in data:
         usuario.correo = data['correo']
+        
     if 'capital_inicial' in data:
         usuario.capital_inicial = data['capital_inicial']
+        usuario.capital_actual  = data['capital_inicial']
+
     if 'moneda' in data:
         usuario.moneda = data['moneda']
 
