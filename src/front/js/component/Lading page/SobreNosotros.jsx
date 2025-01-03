@@ -11,7 +11,7 @@ const SobreNosotros = () => {
         <div>
 
             <Navbar />
-
+            <br /><br /><br /><br /> <br /><br /><br /><br />
             <div className="container mt-5">
                 <div className="fw-bold fs-1 mb-5">Sobre Nosotros</div>
 
@@ -25,7 +25,7 @@ const SobreNosotros = () => {
                     </div>
                 </div>
 
-                <br /><br /><br /><br />
+                <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br />
 
                 {/* Primer bloque de contenido */}
                 <div className="row">
@@ -48,7 +48,7 @@ const SobreNosotros = () => {
                     </div>
                 </div>
 
-                <br /><br /><br /><br />
+                <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br />
 
                 {/* Segundo bloque de contenido */}
                 <div className="row mt-4">
@@ -61,7 +61,7 @@ const SobreNosotros = () => {
                     </div>
                 </div>
 
-                <br /><br /><br /><br />
+                <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br />
 
                 {/* Tercer bloque de contenido */}
                 <div className="row">
@@ -75,7 +75,7 @@ const SobreNosotros = () => {
                     </div>
                 </div>
 
-                <br /><br /><br /><br />
+                <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br /><br /><br />
 
                 {/* Cuarto bloque de contenido */}
                 <div className="row mt-4">
