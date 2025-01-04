@@ -1,5 +1,4 @@
 import React from 'react';
-import './SobreNosotros.css';
 import Navbar from './Navbar.jsx';  // Ajusta la ruta
 import VadhirImg from "../../../img/Vadhir.png";
 import RadovanImg from "../../../img/Radovan.png";
