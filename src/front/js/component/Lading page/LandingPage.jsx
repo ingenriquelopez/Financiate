@@ -14,7 +14,7 @@ const LandingPage = () => {
 
             <div className="container mt-5">
                 <div className="row align-items-center">
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-6 ">
                         <div className="header">Tus ingresos y egresos a un solo click</div>
 
                         {/* Descripción */}
@@ -34,11 +34,11 @@ const LandingPage = () => {
                     </div>
                 </div>
             </div>
-            <br /><br /><br /><br /> <br /><br /><br /><br /> <br /><br />
+
 
             {/* Explicacion de Plan de ahorro*/}
             <div className="container mt-5">
-                <div className="row align-items-center">
+                <div className="row align-items-center min-vh-100 pt-5">
                     {/* Columna de imagen*/}
                     <div className="col-12 col-md-6 order-md-1 mt-4 mt-md-0">
                         <img src={CerditoVacasImg} alt="Imagen de Cerdito y Vacas" className="img-fluid" />
