@@ -31,7 +31,7 @@ const SobreNosotros = () => {
                 <div className="row">
                     <div className="col-4">
                         <img src={EnriqueImg} alt="Enrique" className="img-fluid" />
-                        <p className="fw-bold text-center mt-2">Enrique</p>
+                        <p className="fw-bold text-center mt-2">Enrique López </p>
                     </div>
                     <div className="col-8">
                         <p>Web Developer Full Stack
@@ -57,7 +57,7 @@ const SobreNosotros = () => {
                     </div>
                     <div className="col-4">
                         <img src={VadhirImg} alt="Vadhir" className="img-fluid" />
-                        <p className="fw-bold text-center mt-2">Vadhir</p>
+                        <p className="fw-bold text-center mt-2">Jesus Lorenzo</p>
                     </div>
                 </div>
 
@@ -71,7 +71,7 @@ const SobreNosotros = () => {
                     </div>
                     <div className="col-8">
                         <p>Web Developer Full Stack
-                            Licenciado en Comunicación Social, mención audiovisual, con más de diez años de experiencia en el ámbito del marketing digital y animación tanto 2D como 3D, dominio de programas como: Adobe Photoshop, Adobe Illustrator, After Effects y Blender. Durante su trayectoria, se especializó en el modelado 3D de productos para videos publicitarios. Actualmente ve la programación como una oportunidad de expansión del diseño web y otras tecnologías digitales. Esto lo lleva a iniciar su formación en tecnologías como: HTML, CSS, JavaScript, Python y React. De esta forma puede integrar tanto funcionalidad operativa como diseño web.</p>
+                            Licenciado en Comunicación Social, mención audiovisual, con más de diez años de experiencia en el ámbito del marketing digital y animación tanto 2D como 3D, dominio de programas como: Adobe Photoshop, Adobe Illustrator, After Effects y Blender. Durante su trayectoria, se especializó en el modelado 3D de productos para videos publicitarios. Actualmente ve la programación como una oportunidad de expansión del diseño web y otras tecnologías digitales. Esto lo lleva a iniciar su formación en tecnologías como: HTML, CSS, JavaScript, Python, PSQL y React. De esta forma puede integrar tanto funcionalidad operativa como diseño web.</p>
                     </div>
                 </div>
 
@@ -88,7 +88,7 @@ const SobreNosotros = () => {
                     </div>
                     <div className="col-4">
                         <img src={PabloImg} alt="Pablo" className="img-fluid" />
-                        <p className="fw-bold text-center mt-2">Pablo</p>
+                        <p className="fw-bold text-center mt-2">Pablo Terán</p>
                     </div>
                 </div>
 

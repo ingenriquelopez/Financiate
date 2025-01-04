@@ -54,7 +54,14 @@ const LandingPage = () => {
                     </div>
                 </div>
             </div>
-
+            {/* Footer */}
+            <footer className="bg-body-secondary py-3 mt-5">
+                <div className="container d-flex justify-content-center align-items-center">
+                    <p className="mb-0 text-center pb-4">
+                        Copyrights 2025 | Developed and designed in 4Geeks Academy
+                    </p>
+                </div>
+            </footer>
         </div>
     );
 };
