@@ -20,6 +20,7 @@ def obtener_suscripciones(payload):
     
 
     suscripciones = Suscripcion.query.filter_by(usuario_id=usuario_id).all()
+    
     return jsonify([{
         'id': s.id,
         'nombre': s.nombre,
@@ -33,8 +34,9 @@ def obtener_suscripciones(payload):
 @suscripciones_bp.route('/suscripcion', methods=['POST'])
 @token_required
 def crear_suscripcion(payload):
-    """Crea una nueva suscripción para el usuario autenticado."""
+    #Crea una nueva suscripción para el usuario autenticado.
     data = request.get_json()
+
     if not data or not all(k in data for k in ('nombre', 'costo', 'frecuencia', 'fecha_inicio','usuario_id')):
         return jsonify({'msg': 'Datos incompletos'}), 400
 
