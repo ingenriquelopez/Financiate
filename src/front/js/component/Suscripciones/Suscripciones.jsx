@@ -19,7 +19,33 @@ function Suscripciones() {
 
   const handleAddSubscription = (e) => {
     e.preventDefault();
-    setSubscriptions([...subscriptions, modalData]);
+    console.log(modalData)
+    try {
+          const url = `${process.env.BACKEND_URL}/api/suscripciones/suscripcion`;
+    
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+            },
+            body: JSON.stringify(modalData),
+          });
+    
+          if (!response.ok) {
+            alert("Error al guardar el plan.");
+            return;
+          }
+          // Leer el cuerpo de la respuesta como JSON
+          const data = await response.json();
+    
+          // Si todo va bien, se cierra el modal y se puede actualizar el listado de planes
+          Swal.fire({
+            title: "Suscripcion Guardada Correctamente",
+            icon: "success",
+          });
+    // x aqui va el catch
+    // setSubscriptions([...subscriptions, modalData]);
     setModalData({ name: '', type: '', value: '', date: '', periodicidad: 'mensual' });
     setIsModalOpen(false);
   };

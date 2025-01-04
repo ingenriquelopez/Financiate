@@ -167,7 +167,7 @@ class Suscripcion(db.Model):
     id = Column(db.Integer, primary_key=True)
     nombre = Column(db.String(100), nullable=False)
     costo = Column(db.Float, nullable=False)
-    frecuencia = Column(db.String(50), nullable=False)  # Ejemplo: 'mensual', 'anual'
+    frecuencia = Column(db.String(50), nullable=False)
     fecha_inicio = Column(db.Date, nullable=False, default=date.today)
     usuario_id = Column(db.Integer, ForeignKey('usuarios.id'), nullable=False)
 
