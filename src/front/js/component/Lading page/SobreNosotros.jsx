@@ -1,4 +1,5 @@
 import React from 'react';
+import './SobreNosotros.css';
 import Navbar from './Navbar.jsx';  // Ajusta la ruta
 import VadhirImg from "../../../img/Vadhir.png";
 import RadovanImg from "../../../img/Radovan.png";
@@ -34,10 +35,12 @@ const SobreNosotros = () => {
                         <p className="fw-bold text-center mt-2">Enrique</p>
                     </div>
                     <div className="col-8">
-                        <p>Web Developer Full Stack
+                        <p className = "txtNosotros">Web Developer Full Stack
                             Ingeniero en Sistemas Computacionales | Especialista en Análisis y Visualización de Datos Masivos
 
                             Con más de 20 años de experiencia en la industria tecnológica, soy un desarrollador full stack apasionado por crear soluciones innovadoras que combinen funcionalidad y diseño. Domino tanto el front-end como el back-end, y tengo una sólida experiencia en bases de datos.
+                        </p>
+                        <p className = "txtNosotros">
 
                             Mi expertise incluye:
 
@@ -52,7 +55,7 @@ const SobreNosotros = () => {
 
                 {/* Segundo bloque de contenido */}
                 <div className="row mt-4">
-                    <div className="col-8">
+                    <div className="col-8 txtNosotros">
                         <p>Licenciado en Docencia de Idiomas con más de ocho años de experiencia en el ámbito educativo. Durante su trayectoria, observó cómo la tecnología puede transformar y enriquecer el proceso de enseñanza-aprendizaje, inspirándolo a explorar nuevas formas de integrar herramientas digitales en la educación. Esto lo llevó a iniciar su formación como Full Stack Developer, donde desarrolló habilidades en tecnologías como HTML, CSS, JavaScript, React, Python, SQL, entre otras. Su objetivo ahora es combinar la experiencia pedagógica con los conocimientos en programación para crear soluciones innovadoras que impulsen el aprendizaje y la accesibilidad en la educación.</p>
                     </div>
                     <div className="col-4">
@@ -69,7 +72,7 @@ const SobreNosotros = () => {
                         <img src={RadovanImg} alt="Radovan" className="img-fluid" />
                         <p className="fw-bold text-center mt-2">Radovan Halir</p>
                     </div>
-                    <div className="col-8">
+                    <div className="col-8 txtNosotros">
                         <p>Web Developer Full Stack
                             Licenciado en Comunicación Social, mención audiovisual, con más de diez años de experiencia en el ámbito del marketing digital y animación tanto 2D como 3D, dominio de programas como: Adobe Photoshop, Adobe Illustrator, After Effects y Blender. Durante su trayectoria, se especializó en el modelado 3D de productos para videos publicitarios. Actualmente ve la programación como una oportunidad de expansión del diseño web y otras tecnologías digitales. Esto lo lleva a iniciar su formación en tecnologías como: HTML, CSS, JavaScript, Python y React. De esta forma puede integrar tanto funcionalidad operativa como diseño web.</p>
                     </div>
@@ -79,7 +82,7 @@ const SobreNosotros = () => {
 
                 {/* Cuarto bloque de contenido */}
                 <div className="row mt-4">
-                    <div className="col-8">
+                    <div className="col-8 txtNosotros">
                         <p>Ingeniero Industrial y Magíster en Seguridad y Salud Ocupacional, con especialidad en Administración y Gerencia de Instituciones de Salud. Con más de 12 años de experiencia liderando proyectos en diversos sectores, he descubierto que la tecnología es el puente hacia el futuro, capaz de transformar tanto a las empresas como a las personas.
 
                             A lo largo de mi trayectoria, he sido un apasionado por la innovación tecnológica y su impacto en la vida diaria. Este interés me llevó a embarcarme en un nuevo desafío: formarme como Full Stack Developer. Durante este proceso, he adquirido habilidades en tecnologías como HTML, CSS, JavaScript, React, Python y SQL, con el firme propósito de combinar mi experiencia profesional con soluciones digitales.
