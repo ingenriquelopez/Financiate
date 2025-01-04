@@ -5,7 +5,6 @@ import logoFinanciaUrlBlue from "../../../img/Financiate_blue.png";
 import CerditoVacasImg from "../../../img/Cerdito_Vacas.png";
 import LpMan from "../../../img/man-holding.png";
 import Navbar from './Navbar.jsx';
-import './LandingPage.css';
 
 const LandingPage = () => {
     return (
