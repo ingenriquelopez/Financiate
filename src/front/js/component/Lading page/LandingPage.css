@@ -1,9 +1,9 @@
-body {
+/* body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #d0e7ff, #a2c9f7);
-}
+  background: linear-gradient(135deg, #d0e7ff, #a2c9f7) no-repeat cover; */
+ 
 
 /* Navbar */
 .navbar {

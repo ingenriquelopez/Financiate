@@ -17,6 +17,7 @@ import Categorias from "./component/Categorias/Categorias.jsx";
 import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
 import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx";
 import Reportes from "./component/Reportes/Reportes.jsx";
+import Navbar from './component/Lading page/Navbar.jsx';
 
 const Layout = () => {
   const basename = process.env.BASENAME || "";
@@ -39,8 +40,9 @@ const LayoutContent = () => {
   const hideSidebar = location.pathname === '/' || location.pathname === '/login'  || location.pathname === '/lp' || location.pathname === '/sobre-nosotros';
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: hideSidebar ? "column":"row" , minHeight: '100vh' }}>
       {!hideSidebar && <Sidebar />}
+      {hideSidebar && <Navbar />}
       <div
         style={{
           marginLeft: hideSidebar ? '0' : '250px',

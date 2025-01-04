@@ -4,13 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logoFinanciaUrlBlue from "../../../img/Financiate_blue.png";
 import CerditoVacasImg from "../../../img/Cerdito_Vacas.png";
 import LpMan from "../../../img/man-holding.png";
-import Navbar from './Navbar.jsx';
 
 const LandingPage = () => {
     return (
         <div>
-            <Navbar />
-
             <div className="container mt-5">
                 <div className="row align-items-center">
                     <div className="col-12 col-md-6 ">
