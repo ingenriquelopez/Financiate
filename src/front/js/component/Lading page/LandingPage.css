@@ -123,4 +123,6 @@ button.Boton-cta {
   }
 }
 
-
+.text-justify {
+  text-align: justify;
+}
