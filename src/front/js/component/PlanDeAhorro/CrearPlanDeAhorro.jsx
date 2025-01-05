@@ -1,41 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/material_green.css'; // Importa el estilo de flatpickr
+import './CrearPlanDeAhorro.css';
 
 const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    today.setHours(today.getHours() - today.getHours());
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${day}-${month}-${year}`;
+  };
+
   const [formData, setFormData] = useState({
     nombre_plan: '',
-    fecha_inicio: '',
+    fecha_inicio: getCurrentDate(),
     monto_inicial: '',
-    fecha_objetivo: '',
+    fecha_objetivo: getCurrentDate(),
     monto_objetivo: '',
     monto_acumulado: '',
   });
 
-  // Limpiar el formulario cuando se edita un plan o se cancela
+  const [isChecked, setIsChecked] = useState(true); 
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true); 
+
+  const formatToDDMMYYYY = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const formatToYYYYMMDD = (dateString) => {
+    const [day, month, year] = dateString.split('-');
+    return `${year}-${month}-${day}`;
+  };
+
+
   useEffect(() => {
     if (planToEdit) {
       setFormData({
         nombre_plan: planToEdit.nombre_plan || '',
-        fecha_inicio: planToEdit.fecha_inicio ? planToEdit.fecha_inicio.slice(0, 10) : '',
+        fecha_inicio: planToEdit.fecha_inicio ? formatToDDMMYYYY(planToEdit.fecha_inicio) : getCurrentDate(),
         monto_inicial: planToEdit.monto_inicial || '',
-        fecha_objetivo: planToEdit.fecha_objetivo ? planToEdit.fecha_objetivo.slice(0, 10) : '',
+        fecha_objetivo: planToEdit.fecha_objetivo ? formatToDDMMYYYY(planToEdit.fecha_objetivo) : getCurrentDate(),
         monto_objetivo: planToEdit.monto_objetivo || '',
         monto_acumulado: planToEdit.monto_acumulado || '',
       });
     } else {
-      // Si no hay plan para editar, aseguramos que el formulario esté limpio
       setFormData({
         nombre_plan: '',
-        fecha_inicio: '',
+        fecha_inicio: getCurrentDate(),
         monto_inicial: '',
-        fecha_objetivo: '',
+        fecha_objetivo: getCurrentDate(),
         monto_objetivo: '',
         monto_acumulado: '',
       });
     }
-  }, [planToEdit]); // Dependemos de planToEdit para actualizar los campos
+  }, [planToEdit]);
 
-  // Manejar los cambios del formulario
+
+  useEffect(() => {
+    const { nombre_plan, monto_inicial, monto_objetivo, fecha_objetivo, fecha_inicio } = formData;
+    if (nombre_plan && monto_inicial && monto_objetivo && fecha_objetivo && fecha_inicio) {
+      setIsSaveDisabled(false);
+    } else {
+      setIsSaveDisabled(true);
+    }
+  }, [formData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -44,13 +81,25 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
     }));
   };
 
-  // Función para guardar el plan (crear o editar)
   const handleSave = async () => {
-    // Validación de campos vacíos
     if (!formData.nombre_plan || !formData.monto_inicial || !formData.fecha_inicio || !formData.monto_objetivo || !formData.fecha_objetivo) {
       Swal.fire("Por favor, complete todos los campos.");
       return;
     }
+
+    const fechaInicio = new Date(formData.fecha_inicio.split('-').reverse().join('-'));
+    const fechaObjetivo = new Date(formData.fecha_objetivo.split('-').reverse().join('-'));
+
+    if (isNaN(fechaInicio) || isNaN(fechaObjetivo)) {
+      Swal.fire("Las fechas ingresadas no son válidas.");
+      return;
+    }
+
+    fechaInicio.setHours(0, 0, 0, 0);
+    fechaObjetivo.setHours(0, 0, 0, 0);
+
+    const fecha_inicio_formateada = formatToYYYYMMDD(formData.fecha_inicio);
+    const fecha_objetivo_formateada = formatToYYYYMMDD(formData.fecha_objetivo);
 
     try {
       const url = `${process.env.BACKEND_URL}/api/plandeahorro/agregarplan`;
@@ -61,26 +110,26 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          fecha_inicio: fecha_inicio_formateada,
+          fecha_objetivo: fecha_objetivo_formateada
+        }),
       });
 
       if (!response.ok) {
         alert("Error al guardar el plan.");
         return;
       }
-      // Leer el cuerpo de la respuesta como JSON
+
       const data = await response.json();
 
-      // Si todo va bien, se cierra el modal y se puede actualizar el listado de planes
       Swal.fire({
         title: "Plan Guardado Correctamente",
         icon: "success",
       });
 
-      // Aquí actualizamos el estado con el nuevo plan
-      updatePlans(data.nuevo_plan); // Esto debería actualizar el estado en el componente principal
-
-      // Resetear el estado después de guardar
+      updatePlans(data.nuevo_plan); 
       setFormData({
         nombre_plan: '',
         fecha_inicio: '',
@@ -90,14 +139,13 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
         monto_acumulado: '',
       });
 
-      onClose(); // Cerrar el modal después de guardar el plan
+      onClose(); 
     } catch (error) {
       console.error('Error guardando el plan:', error);
       alert('Error al guardar el plan.');
     }
   };
 
-  // Manejar el cierre del modal y limpiar el formulario
   const handleCloseModal = () => {
     setFormData({
       nombre_plan: '',
@@ -106,8 +154,8 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
       fecha_objetivo: '',
       monto_objetivo: '',
       monto_acumulado: '',
-    }); // Limpiar el formulario al cerrar el modal
-    onClose(); // Llamar a la función onClose para cerrar el modal
+    });
+    onClose(); 
   };
 
   return (
@@ -145,13 +193,17 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                 </div>
                 <div className="col-md-6 mb-3">
                   <label htmlFor="fecha_inicio" className="form-label">Fecha de Inicio</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="fecha_inicio"
-                    name="fecha_inicio"
+                  <Flatpickr
                     value={formData.fecha_inicio}
-                    onChange={handleChange}
+                    onChange={([date]) => setFormData({
+                      ...formData,
+                      fecha_inicio: formatToDDMMYYYY(date)
+                    })}
+                    options={{
+                      dateFormat: "d-m-Y",
+                      minDate: "today" // Evitar fechas pasadas
+                    }}
+                    className="form-control"
                   />
                 </div>
               </div>
@@ -168,22 +220,25 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                   />
                 </div>
                 <div className="col-md-6 mb-3">
-                  <label htmlFor="fecha_objetivo" className="form-label">Fecha Objetivo</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="fecha_objetivo"
-                    name="fecha_objetivo"
+                  <label htmlFor="fecha_objetivo" className="form-label">Fecha de Objetivo</label>
+                  <Flatpickr
                     value={formData.fecha_objetivo}
-                    onChange={handleChange}
+                    onChange={([date]) => setFormData({
+                      ...formData,
+                      fecha_objetivo: formatToDDMMYYYY(date)
+                    })}
+                    options={{
+                      dateFormat: "d-m-Y"
+                    }}
+                    className="form-control"
                   />
                 </div>
               </div>
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cancelar</button>
-            <button type="button" className="btn btn-primary" onClick={handleSave}>Guardar</button>
+            <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cerrar</button>
+            <button type="button" className="btn btn-primary" onClick={handleSave} disabled={isSaveDisabled}>Guardar</button>
           </div>
         </div>
       </div>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2"; 
 import EditarPlan from "./EditarPlan.jsx";
 import RegistrarAhorro from "./RegistrarAhorro.jsx";
+import moment from "moment"; // Importamos moment.js
 
 const formatNumber = (number) => {
   return new Intl.NumberFormat('en-US', {
@@ -11,11 +12,11 @@ const formatNumber = (number) => {
   }).format(number);
 };
 
-const Detalles = ({ plan, onClose, updatePlans  }) => {
+const Detalles = ({ plan, onClose, updatePlans }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false);
   const [loading, setLoading] = useState(false);  
-  const [error, setError]= useState(false);
+  const [error, setError] = useState(false);
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -33,28 +34,27 @@ const Detalles = ({ plan, onClose, updatePlans  }) => {
     setShowRegistrarAhorroModal(false);
   };
 
+  // Función para obtener los planes de la API
+  const fetchPlans = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+        },
+      });
 
-    // Función para obtener los planes de la API
-    const fetchPlans = async () => {
-      try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
-          },
-        });
-  
-        const data = await response.json();
-        
-        // Aquí actualizamos el estado con el nuevo plan
-        updatePlans(data); // Esto debería actualizar el estado en el componente principal
-        setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban los planes
-      } catch (error) {
-        console.error('Error fetching plans:', error);
-        setLoading(false); // En caso de error, también se cambia el estado de carga
-      }
-    };
+      const data = await response.json();
+      
+      // Aquí actualizamos el estado con el nuevo plan
+      updatePlans(data); // Esto debería actualizar el estado en el componente principal
+      setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban los planes
+    } catch (error) {
+      console.error('Error fetching plans:', error);
+      setLoading(false); // En caso de error, también se cambia el estado de carga
+    }
+  };
 
   const handleEliminar = async () => {
     if (!plan || !plan.id) return;  
@@ -91,6 +91,10 @@ const Detalles = ({ plan, onClose, updatePlans  }) => {
 
   if (!plan) return null;
 
+  // Usamos moment para manipular las fechas sin cambiar la zona horaria
+  const validFechaInicio = plan.fecha_inicio ? moment(plan.fecha_inicio).format("DD/MM/YYYY") : null;  // Usamos moment.js para formatear
+  const validFechaObjetivo = plan.fecha_objetivo ? moment(plan.fecha_objetivo).format("DD/MM/YYYY") : null;
+
   return (
     <div>
       <div className="modal fade show" tabIndex="-1" style={{ display: "block" }} aria-labelledby="detallesModalLabel" aria-hidden="false">
@@ -104,9 +108,9 @@ const Detalles = ({ plan, onClose, updatePlans  }) => {
               <table className="table table-bordered">
                 <tbody>
                   <tr><th>Nombre del Plan</th><td>{plan.nombre_plan}</td></tr>
-                  <tr><th>Fecha de Inicio</th><td>{plan.fecha_inicio ? plan.fecha_inicio.slice(0, 10) : "Sin fecha"}</td></tr>
+                  <tr><th>Fecha de Inicio</th><td>{validFechaInicio ? validFechaInicio : "Fecha inválida"}</td></tr>
                   <tr><th>Monto Inicial</th><td>{formatNumber(plan.monto_inicial)}</td></tr>
-                  <tr><th>Fecha Objetivo</th><td>{plan.fecha_objetivo ? plan.fecha_objetivo.slice(0, 10) : "Sin fecha"}</td></tr>
+                  <tr><th>Fecha Objetivo</th><td>{validFechaObjetivo ? validFechaObjetivo : "Fecha inválida"}</td></tr>
                   <tr><th>Monto Objetivo</th><td>{formatNumber(plan.monto_objetivo)}</td></tr>
                   <tr><th>Monto Acumulado</th><td>{formatNumber(plan.monto_acumulado)}</td></tr>
                 </tbody>
@@ -131,7 +135,7 @@ const Detalles = ({ plan, onClose, updatePlans  }) => {
                 {loading ? "Eliminando..." : "🗑️ Eliminar"}
               </button>
               <button type="button" className="btn btn-outline-warning" onClick={handleEdit}>✏️ Editar</button>
-              <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Registrar Ahorro</button>
+              <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Registrar Ahorro</button> 
             </div>
           </div>
         </div>

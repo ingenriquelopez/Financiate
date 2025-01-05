@@ -7,6 +7,7 @@ import { FaTrash } from 'react-icons/fa';
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
+  const [refreshCategories, setRefreshCategories] = useState(false);  // Nuevo estado de refresco
   const [showModal, setShowModal] = useState(false);
   const [newCategory, setNewCategory] = useState({ nombre: '', icono: '' });
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Categorias = () => {
 
       const result = await response.json();
       const { id, nombre, icono } = result;
+      
       setCategorias((prevCategorias) => [...prevCategorias, { id, nombre, icono }]);
       setNewCategory({ id:'', nombre: '', icono: '' });
       setShowModal(false);
@@ -140,9 +142,12 @@ const Categorias = () => {
         }
         return;
       }
+      // Después de eliminar todas las categorías, actualizar el estado para recargar las categorías
+      setRefreshCategories(true);
+  
   
       // Si todo fue bien, actualizar el estado y mostrar mensaje de éxito
-      setCategorias([]);
+      //setCategorias([]);
       
       Swal.fire({
         icon: 'success',
@@ -200,7 +205,7 @@ const Categorias = () => {
     };
 
     fetchCategorias();
-  }, []);
+  }, [refreshCategories]);
 
   return (
     <div className="container text-center d-flex flex-column align-items-center justify-content-center">
@@ -209,7 +214,8 @@ const Categorias = () => {
 
       {/* Tabla de categorías */}
       <div className="table-responsive" style={{ width: 'calc(80%)', maxHeight: '400px', overflowY: 'auto' }}>
-        <table className="table table-striped table-bordered mt-4 mx-auto">
+      <p className = "predeterminadas">⭐ = Predeterminadas</p>
+        <table className="table table-striped table-bordered mt-0 mx-auto">
           <thead>
             <tr>
               <th style={{ width: '10%' }}>Nombre</th>
@@ -220,17 +226,24 @@ const Categorias = () => {
           <tbody>
             {categorias.map((categoria) => (
               <tr key={categoria.id}>
-                <td>{categoria.nombre}</td>
+                <td>{categoria.nombre}{categoria.is_default ? "⭐":""}</td>
                 <td>
                   <span>{categoria.icono}</span>
                 </td>
                 <td>
+                <div className="btn-tooltip-container">
                   <button
                     className="btn btn-danger"
+                    aria-disabled={categoria.is_default ? 'true' : 'false'}                    
+                     disabled = {categoria.is_default}
                     onClick={() => deleteCategory(categoria.id)}
                   >
                     <FaTrash />
                   </button>
+                  {categoria.is_default && (
+                    <span className="tooltip">Imposible Eliminar Categorías Predeterminadas</span>
+                  )}
+                </div>
                 </td>
               </tr>
             ))}

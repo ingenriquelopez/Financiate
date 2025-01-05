@@ -21,6 +21,7 @@ def agregar_plan_ahorro(payload):
 
     # Obtener los datos del nuevo plan desde el body de la solicitud
     data = request.get_json()
+    print(data)
 
     # Verificar que los campos requeridos estén presentes (campos que yo decido son indispensables)
     required_fields = ['nombre_plan', 'monto_objetivo', 'fecha_inicio', 'monto_inicial', 'fecha_objetivo']
