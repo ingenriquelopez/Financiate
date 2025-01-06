@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint
 from api.models import db, Usuario, Ingreso, Egreso, PlanAhorro, FondoEmergencia, Suscripcion, Alerta, Categoria
-from flask_jwt_extended import jwt_required, create_access_token
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from datetime import datetime
 
 # Crear el Blueprint
@@ -154,7 +154,7 @@ def obtener_egresos():
     } for e in egresos]), 200
 
 @api.route('/egreso', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def crear_egreso():
     data = request.get_json()
     if not data or not all(k in data for k in ('monto', 'descripcion', 'fecha','usuario_id', 'categoria_id')):
@@ -357,13 +357,43 @@ def obtener_planes_ahorro():
 @api.route('/fondos_emergencia', methods=['GET'])
 @jwt_required()
 def obtener_fondos_emergencia():
-    fondos = FondoEmergencia.query.all()
+    usuario_id = get_jwt_identity()
+
+    fondos = FondoEmergencia.query.filter_by(usuario_id=usuario_id).all()
+
+    if not fondos:
+        return jsonify({'msg': 'No se encontraron fondos de emergencia para este usuario.'}), 404
+
     return jsonify([{
         'id': f.id,
-        'monto_meta': f.monto_meta,
+        'monto': f.monto,
         'monto_actual': f.monto_actual,
+        'razon': f.razon,
         'usuario_id': f.usuario_id
     } for f in fondos]), 200
+
+@api.route('/fondos_emergencia', methods=['POST'])
+@jwt_required()
+def crear_fondo_emergencia():
+    datos = request.get_json()
+    monto = datos.get('monto')
+    razon = datos.get('razon')
+
+    if not monto or not razon:
+        return jsonify({'msg': 'Faltan datos requeridos (monto, razon).'}), 400
+
+    usuario_id = get_jwt_identity()
+
+    nuevo_fondo = FondoEmergencia(
+        monto=monto,
+        monto_actual=0.0,
+        razon=razon,
+        usuario_id=usuario_id
+    )
+    db.session.add(nuevo_fondo)
+    db.session.commit()
+
+    return jsonify({'msg': 'Fondo de emergencia creado exitosamente.'}), 201
 
 # CRUD para Suscripciones
 @api.route('/suscripciones', methods=['GET']) 

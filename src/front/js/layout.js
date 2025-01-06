@@ -12,8 +12,9 @@ import Egresos from "./component/Egresos/Egresos.jsx";
 import Ingresos from "./component/Ingresos/Ingresos.jsx";
 import Categorias from "./component/Categorias/Categorias.jsx";
 import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
-import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx";
-import Reportes from "./component/Reportes/Reportes.jsx";
+import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx"; 
+import Reportes from "./component/Reportes/Reportes.jsx"; 
+import Fondo from "./component/FondoDeEmergencias/Fondo.jsx";
 
 const Layout = () => {
   const basename = process.env.BASENAME || "";
@@ -56,6 +57,7 @@ const LayoutContent = () => {
           <Route element={<Suscripciones />} path="/Suscripciones" />
           <Route element={<PlanDeAhorro />} path="/plandeahorro" />
           <Route element={<Reportes />} path="/reportes" />
+          <Route element={<Fondo />} path="/fondo" />
           <Route element={<h1>Not found!</h1>} />
         </Routes>
       </div>

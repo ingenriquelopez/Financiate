@@ -20,7 +20,7 @@ class Usuario(db.Model):
     ingresos = relationship('Ingreso', backref='usuario', lazy=True)
     egresos = relationship('Egreso', backref='usuario', lazy=True)
     planes_ahorro = relationship('PlanAhorro', backref='usuario', lazy=True)
-    fondos_emergencia = relationship('FondoEmergencia', backref='usuario', lazy=True)
+    fondos_emergencia = relationship('FondoEmergencia', lazy=True, back_populates='usuario')
     suscripciones = db.relationship('Suscripcion', backref='usuario', lazy=True)
     alertas = db.relationship('Alerta', backref='usuario', lazy=True)
 
@@ -122,10 +122,14 @@ class PlanAhorro(db.Model):
 # Modelo de Fondo de Emergencia
 class FondoEmergencia(db.Model):
     __tablename__ = 'fondos_emergencia'
-    id = db.Column(db.Integer, primary_key=True)
-    monto_meta = Column(db.Float, nullable=False)
+    id = Column(db.Integer, primary_key=True)
+    monto = Column(db.Float, nullable=False)
     monto_actual = Column(db.Float, default=0.0)
     usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    razon = Column(db.String(255), nullable=False)
+    usuario = relationship('Usuario', back_populates='fondos_emergencia', lazy=True)
+
+
 
 # Modelo de Alerta
 class Alerta(db.Model):
@@ -134,4 +138,4 @@ class Alerta(db.Model):
     mensaje = Column(db.String(255), nullable=False)
     leida = Column(db.Boolean, default=False)
     creada_en = Column(db.DateTime, default=datetime.now(timezone.utc))
-    usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    usuario_id = Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False) 

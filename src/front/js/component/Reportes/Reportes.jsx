@@ -66,7 +66,7 @@ const Reportes = () => {
               <div style={{ display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
                 <span>Monto: ${reporte.monto.toFixed(2)}</span>
                 <span>Descripción: {reporte.descripcion}</span>
-                <span>Fecha: {new Date(reporte.fecha).toLocaleString()}</span>
+                <span>Fecha: {new Date(reporte.fecha).toISOString().split('T')[0]}</span>
               </div>
             </li>
           ))}

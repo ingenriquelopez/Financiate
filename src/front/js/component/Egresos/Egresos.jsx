@@ -57,8 +57,9 @@ function Egresos() {
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/egresos/agrega_egreso`, {
         method: "POST",
-        headers: { "Content-Type": "application/json",
-          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`, 
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
         body: JSON.stringify({
           monto: amount,
