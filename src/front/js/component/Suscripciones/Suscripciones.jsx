@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Suscripciones.css';
+import Swal from 'sweetalert2';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/material_green.css'; // Importa el estilo de flatpickr
 
 function Suscripciones() {
     const [subscriptions, setSubscriptions] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true); // Estado de carga
+    const isMounted = useRef(true);
+    const [error, setError] = useState(false);
+    
+    
     const [modalData, setModalData] = useState({
         nombre: '',
         costo: '',
@@ -11,26 +19,17 @@ function Suscripciones() {
         fecha_inicio: ''
     });
 
+            
     const fetchSubscriptions = async () => {
-        const token = localStorage.getItem('tokenFinanciaE');
-        console.log("Token enviado:", token);
-
-        if (!token) {
-            alert("Token no disponible. Redirigiendo a la página de inicio de sesión...");
-            window.location.href = '/login';
-            return;
-        }
-
         try {
-            const response = await fetch('https://effective-train-7vpj6676q742x9jg-3000.app.github.dev/suscripciones', {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Cache-Control': 'no-cache',
-                }
-            });
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                },
+              });
 
-            console.log("Estado HTTP:", response.status);
 
             if (!response.ok) {
                 const errorText = await response.text(); // Leer texto en caso de error
@@ -39,19 +38,16 @@ function Suscripciones() {
                 return;
             }
 
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                const data = await response.json();
-                console.log("Datos devueltos por el servidor:", data);
+            const data = await response.json();
+            
+            if (isMounted.current) {
                 setSubscriptions(data);
-            } else {
-                console.warn("Respuesta vacía o no es JSON.");
-                setSubscriptions([]); // Manejar respuesta vacía
+                setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban las suscripciones
             }
-        } catch (error) {
-            console.error("Error al conectar con el servidor:", error.message);
-            alert("Ocurrió un error al conectar con el servidor.");
-        }
+            } catch (error) {
+                console.error('Error fetching suscripciones:', error);
+                setLoading(false); // En caso de error, también se cambia el estado de carga
+            }         
     };
 
     useEffect(() => {
@@ -66,79 +62,77 @@ function Suscripciones() {
     const handleAddSubscription = async (e) => {
         e.preventDefault();
 
-        const token = localStorage.getItem('tokenFinanciaE');
-        console.log("Token enviado para agregar suscripción:", token);
-
-        if (!token) {
-            alert("Token no disponible. Redirigiendo a la página de inicio de sesión...");
-            window.location.href = '/login';
-            return;
-        }
-
         try {
-            const response = await fetch('https://effective-train-7vpj6676q742x9jg-3000.app.github.dev/suscripcion', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Cache-Control': 'no-cache'
-                },
-                body: JSON.stringify({
-                    nombre: modalData.nombre,
-                    costo: parseFloat(modalData.costo),
-                    frecuencia: modalData.frecuencia,
-                    fecha_inicio: modalData.fecha_inicio
-                })
+            const url = `${process.env.BACKEND_URL}/api/suscripciones/suscripcion`;
+            console.log(url)
+      
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+              },
+              body: JSON.stringify({
+                ...modalData,
+              }),
+            });
+      
+            if (!response.ok) {
+              alert("Error al guardar la suscripcioon.");
+              return;
+            }
+      
+            const data = await response.json();
+      
+            Swal.fire({
+              title: "Suscripcion  Guardado Correctamente",
+              icon: "success",
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert(`Error: ${errorData.error || 'No se pudo crear la suscripción'}`);
-                return;
-            }
-
-            const responseData = await response.json();
-            setSubscriptions([...subscriptions, responseData.suscripcion]);
+            setSubscriptions([...subscriptions, data.suscripcion]);
             setModalData({ nombre: '', costo: '', frecuencia: 'mensual', fecha_inicio: '' });
             setIsModalOpen(false);
-            alert("Suscripción creada exitosamente.");
-        } catch (error) {
-            console.error("Error al crear la suscripción:", error);
-            alert("Ocurrió un error al conectar con el servidor.");
-        }
+      
+          } catch (error) {
+            console.error('Error guardando la suscripcion:', error);
+            alert('Error al guardar la suscripcion.');
+          }
+
     };
 
     const handleDeleteSubscription = async (id) => {
-        const token = localStorage.getItem('tokenFinanciaE');
-
-        if (!token) {
-            alert("Token no disponible. Redirigiendo a la página de inicio de sesión...");
-            window.location.href = '/login';
-            return;
-        }
-
+        setLoading(true); // Asegurarse de que el estado de carga sea verdadero mientras se realiza la eliminación
+    
         try {
-            const response = await fetch(`https://effective-train-7vpj6676q742x9jg-3000.app.github.dev/suscripcion/${id}`, {
-                method: 'DELETE',
+            const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
+                method: "DELETE",
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Cache-Control': 'no-cache'
-                }
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                },
+                body: JSON.stringify({ id }),
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert(`Error: ${errorData.error || 'No se pudo eliminar la suscripción'}`);
-                return;
+    
+            if (response.ok) {
+                Swal.fire("Deleted!", "Tu Suscripción ha sido eliminada.", "success");
+    
+                // Actualizar el estado de las suscripciones de manera segura usando la función de actualización basada en el estado anterior
+                setSubscriptions((prevSubscriptions) => 
+                    prevSubscriptions.filter(sub => sub.id !== id)
+                );
+                setIsModalOpen(false);
+            } else {
+                setError("Error al eliminar la suscripción.");
+                Swal.fire("Error", "No se pudo eliminar la suscripción.", "error");
             }
-
-            alert("Suscripción eliminada exitosamente.");
-            setSubscriptions(subscriptions.filter(sub => sub.id !== id));
-        } catch (error) {
-            console.error("Error al eliminar la suscripción:", error);
-            alert("Ocurrió un error al conectar con el servidor.");
+        } catch (err) {
+            setError("Hubo un error al intentar eliminar la suscripción.");
+            Swal.fire("Error", "Hubo un problema al eliminar la suscripción.", "error");
+        } finally {
+            setLoading(false); // Asegurarse de que el estado de carga se actualice independientemente del resultado
         }
     };
+    
 
     return (
         <div className="suscripciones-container">

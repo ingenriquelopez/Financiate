@@ -6,9 +6,10 @@ from datetime import date
 # Crear el Blueprint para las rutas de suscripciones
 suscripciones_bp = Blueprint('suscripciones', __name__)
 
+
 # ------------------------------------------------------
 # Ruta para obtener todas las suscripciones de un usuario
-@suscripciones_bp.route('/suscripciones', methods=['GET'])
+@suscripciones_bp.route('/suscripcion', methods=['GET'])
 @token_required
 def obtener_suscripciones(payload):
     usuario_id = payload.get('id')
@@ -29,13 +30,11 @@ def obtener_suscripciones(payload):
 @token_required
 def crear_suscripcion(payload):
     usuario_id = payload.get('id')
-    print(f"[POST] Usuario ID: {usuario_id}")
 
     if not usuario_id:
         return jsonify({"error": "Usuario no autenticado"}), 401
 
     data = request.get_json()
-    print(f"Datos recibidos: {data}")
 
     # Validar campos requeridos
     required_fields = ['nombre', 'costo', 'frecuencia', 'fecha_inicio']
@@ -53,9 +52,9 @@ def crear_suscripcion(payload):
 
         nueva_suscripcion = Suscripcion(
             nombre=data['nombre'],
-            costo=costo,
+            costo=data['costo'],
             frecuencia=data['frecuencia'],
-            fecha_inicio=fecha_inicio,
+            fecha_inicio=data['fecha_inicio'],
             usuario_id=usuario_id
         )
 
@@ -83,7 +82,6 @@ def crear_suscripcion(payload):
 @token_required
 def actualizar_suscripcion(payload, id):
     usuario_id = payload.get('id')
-    print(f"[PUT] Usuario ID: {usuario_id}, Suscripción ID: {id}")
 
     if not usuario_id:
         return jsonify({"error": "Usuario no autenticado"}), 401
@@ -107,21 +105,22 @@ def actualizar_suscripcion(payload, id):
             return jsonify({"error": "Formato de fecha inválido. Debe ser YYYY-MM-DD"}), 400
 
     db.session.commit()
-    print(f"Suscripción actualizada: {suscripcion.to_dict()}")
     return jsonify({'msg': 'Suscripción actualizada exitosamente', 'suscripcion': suscripcion.to_dict()}), 200
 
 # ------------------------------------------------------
 # Ruta para eliminar una suscripción existente
-@suscripciones_bp.route('/suscripcion/<int:id>', methods=['DELETE'])
+@suscripciones_bp.route('/suscripcion', methods=['DELETE'])
 @token_required
-def eliminar_suscripcion(payload, id):
+def eliminar_suscripcion(payload):
     usuario_id = payload.get('id')
-    print(f"[DELETE] Usuario ID: {usuario_id}, Suscripción ID: {id}")
-
+    
     if not usuario_id:
         return jsonify({"error": "Usuario no autenticado"}), 401
+    
+    data = request.get_json()  # Aquí obtenemos todo el cuerpo de la solicitud en formato JSON
+    idS = data.get('id')  # Extraemos el 'id' del JSON
 
-    suscripcion = Suscripcion.query.get_or_404(id)
+    suscripcion = Suscripcion.query.get_or_404(idS)
 
     if suscripcion.usuario_id != usuario_id:
         return jsonify({"error": "No tienes permiso para eliminar esta suscripción"}), 403

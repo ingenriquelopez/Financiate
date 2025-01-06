@@ -5,12 +5,14 @@ import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
 
 const Sidebar = () => {
-  const { store } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const location = useLocation();
   const navigate = useNavigate();  // Usamos el hook useNavigate
 
   const handleLogout = () => {
-    // Aquí redirigimos al LandingPage (ruta "/")
+    //aqui inicializamos el localstorage con la funcion que ya teniamos creada para ello. solo se invoca.
+    actions.logout();
+
     navigate('/');  // Redirige a la página de inicio (LandingPage)
   };
 

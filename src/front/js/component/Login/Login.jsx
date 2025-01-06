@@ -40,15 +40,12 @@ const Login = () => {
 		const fetchCategorias = async () => {
 		  try {
 	
-			if (!localStorage.getItem('tokenFinanciaE')) {
-				throw new Error("Token no disponible");
-			  }
+
 			// Aquí cambiamos la URL a la ruta de la API 'categorias/default'
 			const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/default`, {
 			  method: 'POST', // Usamos el método POST como en la API
 			  headers: {
 				'Content-Type': 'application/json', // Aseguramos que enviamos el tipo de contenido adecuado
-				'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`, 
 			  },
 			});
 	
