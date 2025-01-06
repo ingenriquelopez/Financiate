@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logoFinanciaUrlBlue from "../../../img/Financiate_blue.png";
 import CerditoVacasImg from "../../../img/Cerdito_Vacas.png";
 import LpMan from "../../../img/man-holding.png";
-
+import './LandingPage.css';
 const LandingPage = () => {
     return (
-        <div>
-            <div className="container mt-5">
+        <div className='bg-custom'>
+            <div className="container mt-0">
                 <div className="row align-items-center">
                     <div className="col-12 col-md-6 ">
                         <div className="header text-justify">Tus ingresos y egresos a un solo click</div>
@@ -51,7 +51,7 @@ const LandingPage = () => {
                 </div>
             </div>
             {/* Footer copyrights*/}
-            <footer className="bg-body-secondary py-3 mt-5">
+            <footer className="bg-body-secondary py-3">
                 <div className="container d-flex justify-content-center align-items-center">
                     <p className="mb-0 text-center pb-4">
                         Copyrights 2025 | Developed and designed in 4Geeks Academy

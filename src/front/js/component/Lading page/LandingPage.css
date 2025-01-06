@@ -1,9 +1,7 @@
-/* body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #d0e7ff, #a2c9f7) no-repeat cover; */
- 
+
+  .bg-custom2 {
+    background-color: #a2c9f7;
+  }
 
 /* Navbar */
 .navbar {
