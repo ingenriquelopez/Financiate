@@ -1,32 +1,121 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Suscripciones.css';
 
 function Suscripciones() {
   const [subscriptions, setSubscriptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
-    name: '',
-    type: '',
-    value: '',
-    date: '',
-    periodicidad: 'mensual'
+    nombre: '',         
+    costo: '',          
+    frecuencia: 'mensual', 
+    fecha_inicio: ''    
   });
+
+  useEffect(() => {
+    fetchSubscriptions();
+  }, []);
+
+  const fetchSubscriptions = async () => {
+    const token = localStorage.getItem('token'); // token se almacena en localStorage
+    if (!token) {
+      alert("Token no disponible, por favor inicia sesión nuevamente.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/suscripciones', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error || 'No se pudieron obtener las suscripciones'}`);
+        return;
+      }
+
+      const data = await response.json();
+      setSubscriptions(data); // datos recibidos del backend
+    } catch (error) {
+      console.error("Error al obtener las suscripciones:", error);
+      alert("Ocurrió un error al conectar con el servidor.");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setModalData({ ...modalData, [name]: value });
   };
 
-  const handleAddSubscription = (e) => {
+  const handleAddSubscription = async (e) => {
     e.preventDefault();
-    // setSubscriptions([...subscriptions, modalData]);
-    // setModalData({ name: '', type: '', value: '', date: '', periodicidad: 'mensual' });
-    setIsModalOpen(false);
+
+    const token = localStorage.getItem('token'); // token guardado
+    if (!token) {
+      alert("Token no disponible, por favor inicia sesión nuevamente.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/suscripcion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: modalData.nombre,
+          costo: parseFloat(modalData.costo),
+          frecuencia: modalData.frecuencia,
+          fecha_inicio: modalData.fecha_inicio
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error || 'No se pudo crear la suscripción'}`);
+        return;
+      }
+
+      const responseData = await response.json();
+      setSubscriptions([...subscriptions, responseData.suscripcion]);
+      setModalData({ nombre: '', costo: '', frecuencia: 'mensual', fecha_inicio: '' });
+      setIsModalOpen(false);
+      alert("Suscripción creada exitosamente.");
+    } catch (error) {
+      console.error("Error al crear la suscripción:", error);
+      alert("Ocurrió un error al conectar con el servidor.");
+    }
   };
 
-  const handleDeleteSubscription = (index) => {
-    const updatedSubscriptions = subscriptions.filter((_, i) => i !== index);
-    setSubscriptions(updatedSubscriptions);
+  const handleDeleteSubscription = async (id) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Token no disponible, por favor inicia sesión nuevamente.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/suscripcion/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error || 'No se pudo eliminar la suscripción'}`);
+        return;
+      }
+
+      alert("Suscripción eliminada exitosamente.");
+      setSubscriptions(subscriptions.filter((sub) => sub.id !== id));
+    } catch (error) {
+      console.error("Error al eliminar la suscripción:", error);
+      alert("Ocurrió un error al conectar con el servidor.");
+    }
   };
 
   return (
@@ -42,78 +131,60 @@ function Suscripciones() {
             <h3>Registrar Suscripción o Pago</h3>
             <form onSubmit={handleAddSubscription}>
               
-              {/* Nombre ocupa todo el ancho */}
               <div className="form-field full-width">
-                <label htmlFor="name">Nombre:</label>
+                <label htmlFor="nombre">Nombre:</label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={modalData.name}
+                  id="nombre"
+                  name="nombre"
+                  value={modalData.nombre}
                   onChange={handleInputChange}
                   placeholder="Nombre de la suscripción"
                   required
                 />
               </div>
 
-              {/* Filas para agrupar los campos en columnas */}
               <div className="form-row">
                 <div className="form-column">
                   <div className="form-field">
-                    <label htmlFor="type">Tipo:</label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={modalData.type}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="">Seleccionar tipo</option>
-                      <option value="Suscripción en línea">Suscripción en línea</option>
-                      <option value="Servicios">Servicios</option>
-                      <option value="Tarjetas">Tarjetas</option>
-                    </select>
-                  </div>
-
-                  <div className="form-field">
-                    <label htmlFor="value">Valor:</label>
+                    <label htmlFor="costo">Costo:</label>
                     <input
                       type="number"
-                      id="value"
-                      name="value"
-                      value={modalData.value}
+                      id="costo"
+                      name="costo"
+                      value={modalData.costo}
                       onChange={handleInputChange}
                       placeholder="Monto"
                       required
                     />
                   </div>
-                </div>
-
-                <div className="form-column">
-                  <div className="form-field">
-                    <label htmlFor="date">Fecha de cobro:</label>
-                    <input
-                      type="date"
-                      id="date"
-                      name="date"
-                      value={modalData.date}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
 
                   <div className="form-field">
-                    <label htmlFor="periodicidad">Periodicidad:</label>
+                    <label htmlFor="frecuencia">Frecuencia:</label>
                     <select
-                      id="periodicidad"
-                      name="periodicidad"
-                      value={modalData.periodicidad}
+                      id="frecuencia"
+                      name="frecuencia"
+                      value={modalData.frecuencia}
                       onChange={handleInputChange}
                       required
                     >
                       <option value="mensual">Mensual</option>
                       <option value="anual">Anual</option>
                     </select>
+                  </div>
+                </div>
+
+                <div className="form-column">
+                  <div className="form-field">
+                    <label htmlFor="fecha_inicio">Fecha de inicio:</label>
+                    <input
+                      type="date"
+                      id="fecha_inicio"
+                      name="fecha_inicio"
+                      value={modalData.fecha_inicio}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                 </div>
               </div>
@@ -134,18 +205,17 @@ function Suscripciones() {
       )}
 
       <div className="subscriptions-list">
-        {subscriptions.map((sub, index) => (
-          <div key={index} className="subscription-card">
+        {subscriptions.map((sub) => (
+          <div key={sub.id} className="subscription-card">
             <div className="card-left">
-              <h4>{sub.name}</h4>
-              <p>Tipo: {sub.type}</p>
-              <p>Valor: ${sub.value}</p>
-              <p>Fecha: {sub.date}</p>
-              <p>Periodicidad: {sub.periodicidad === 'mensual' ? 'Mensual' : 'Anual'}</p>
+              <h4>{sub.nombre}</h4>
+              <p>Valor: ${sub.costo}</p>
+              <p>Frecuencia: {sub.frecuencia === 'mensual' ? 'Mensual' : 'Anual'}</p>
+              <p>Fecha de inicio: {new Date(sub.fecha_inicio).toLocaleDateString()}</p>
             </div>
             <button
               className="delete-button"
-              onClick={() => handleDeleteSubscription(index)}
+              onClick={() => handleDeleteSubscription(sub.id)}
             >
               Eliminar
             </button>
