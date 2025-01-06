@@ -115,6 +115,7 @@ const PlanDeAhorro = () => {
         ) : (
           plans.map(plan => (
             <div className="col-md-4" key={`${plan.id}-${Date.now()}`}>
+              
               <div className="card cardplan">
                 <div className="card-body">
                   <h5 className="card-title small-title">{plan.nombre_plan}</h5>

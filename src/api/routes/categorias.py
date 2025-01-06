@@ -24,7 +24,8 @@ def listar_categorias(payload):
     return jsonify([{
         'id': e.id,
         'nombre': e.nombre,
-        'icono':e.icono
+        'icono':e.icono,
+        'is_default': e.is_default,
     } for e in sorted_categories]), 200
 
 
@@ -104,20 +105,23 @@ def eliminar_categoria(payload):
 @token_required
 def eliminar_todas_las_categorias(payload):
     try:
-        # Obtener todas las categorías
-        categorias = Categoria.query.all()
+        # Obtener todas las categorías no predeterminadas (is_default=False)
+        categorias = Categoria.query.filter_by(is_default=False).all()
 
         if not categorias:
-            return jsonify({"error": "No hay categorías para eliminar."}), 404
+            return jsonify({"message": "No hay categorías para eliminar."}), 200
 
+        print("aqaui")
         # Filtrar las categorías no comprometidas
         categorias_no_comprometidas = []
         categorias_comprometidas = []
 
         for categoria in categorias:
+            # Verificar si la categoría tiene ingresos o egresos relacionados
             ingresos_relacionados = Ingreso.query.filter_by(categoria_id=categoria.id).count()
             egresos_relacionados = Egreso.query.filter_by(categoria_id=categoria.id).count()
 
+            # Si no tiene ingresos ni egresos, se agrega a las categorías no comprometidas
             if ingresos_relacionados == 0 and egresos_relacionados == 0:
                 categorias_no_comprometidas.append(categoria)
             else:
@@ -128,31 +132,33 @@ def eliminar_todas_las_categorias(payload):
                     "egresos_relacionados": egresos_relacionados
                 })
 
-        # Eliminar las categorías no comprometidas
-        for categoria in categorias_no_comprometidas:
-            db.session.delete(categoria)
+        # Solo eliminar las categorías que no son predeterminadas y que no tienen ingresos ni egresos relacionados
+        if categorias_no_comprometidas:
+            for categoria in categorias_no_comprometidas:
+                db.session.delete(categoria)
 
-        db.session.commit()
-
-        # Verificar si la tabla está vacía
-        categorias_count = db.session.execute('SELECT COUNT(*) FROM categorias').scalar()
-        if categorias_count == 0:
-            # Resetear el contador de ID para la secuencia en PostgreSQL
-            db.session.execute('ALTER SEQUENCE categorias_id_seq RESTART WITH 1;')
             db.session.commit()
 
-        return jsonify({
-            "message": f"{len(categorias_no_comprometidas)} categorías eliminadas correctamente.",
-            "comprometidas": categorias_comprometidas
-        }), 200
+            # Verificar si la tabla está vacía
+            categorias_count = db.session.execute('SELECT COUNT(*) FROM categorias').scalar()
+            if categorias_count == 0:
+                db.session.execute('ALTER SEQUENCE categorias_id_seq RESTART WITH 1;')
+                db.session.commit()
+
+            print("llegue aqui")
+            return jsonify({
+                "message": f"{len(categorias_no_comprometidas)} categorías eliminadas correctamente.",
+                "comprometidas": categorias_comprometidas
+            }), 200
+        else:
+            return jsonify({"message": "No hay categorías no comprometidas para eliminar."}), 200
 
     except Exception as e:
         return jsonify({"error": "Error interno del servidor", "details": str(e)}), 500
 
 #---------------------------------------------------
 @categorias_bp.route('/default', methods=['POST'])
-@token_required
-def insertar_categorias_por_defecto(payload):
+def insertar_categorias_por_defecto():
     # Verificar si la tabla 'Categoria' está vacía
     if db.session.query(Categoria).count() == 0:
         # Insertar las categorías en la base de datos

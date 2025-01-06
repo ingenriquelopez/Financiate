@@ -69,6 +69,16 @@ class Categoria(db.Model):
     egresos = relationship('Egreso', backref='categoria', lazy=True)
     ingresos = relationship('Ingreso', backref='categoria', lazy=True)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'icono': self.icono,
+            'is_default': self.is_default,
+            'usuario_id': self.user_id,
+        }
+
+
 # Modelo de Ingreso  UV J
 class Ingreso(db.Model):
     __tablename__ = 'ingresos'
@@ -180,7 +190,7 @@ class Suscripcion(db.Model):
             'fecha_inicio': self.fecha_inicio.isoformat(),
             'usuario_id': self.usuario_id
         }
-
+    
 # Modelo de Alerta
 class Alerta(db.Model):
     __tablename__ = 'alertas'
