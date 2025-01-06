@@ -190,7 +190,7 @@ class Suscripcion(db.Model):
             'fecha_inicio': self.fecha_inicio.isoformat(),
             'usuario_id': self.usuario_id
         }
-
+    
 # Modelo de Alerta
 class Alerta(db.Model):
     __tablename__ = 'alertas'
