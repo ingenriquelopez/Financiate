@@ -37,7 +37,6 @@ const Layout = () => {
 
 const LayoutContent = () => {
   const location = useLocation();
-  // Asegúrate de incluir '/signup' como una ruta que oculta la sidebar
   const hideSidebar = location.pathname === '/' || 
                       location.pathname === '/login' || 
                       location.pathname === '/signup' || 
