@@ -15,7 +15,7 @@ const Navbar = () => {
                     </a>
                     <div className="navbar-nav">
                         {/* Link "Home" */}
-                        <Link className="fw-bold fs-5 nav-link" to="/">Home</Link>
+                        <Link className="fw-bold fs-5 nav-link" to="/"><i class="fa-solid fa-house"></i></Link>
                         <Link className="fw-bold fs-5 nav-link" to="/sobre-nosotros">Sobre nosotros</Link>
                     </div>
                     <div className="ms-auto">
