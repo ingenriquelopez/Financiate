@@ -164,13 +164,13 @@ const RegistrarAhorro = ({ plan, onClose }) => {
                   <div className="row justify-content-center mt-3">
                     <div className="col-auto text-center">
                       <label className="form-label">Fecha del Ahorro</label>
-                      <Flatpickr
+                      <Flatpickr 
                         value={fecha}
                         onChange={([date]) => setFecha(formatToDDMMYYYY(date))}
                         options={{
                           dateFormat: "d-m-Y"
                         }}
-                        className="form-control"
+                        className="form-control text-center"
                       />
                     </div>
                   </div>
