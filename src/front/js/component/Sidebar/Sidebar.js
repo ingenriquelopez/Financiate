@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useLocation, useNavigate } from 'react-router-dom';  // Importamos useNavigate
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Importamos useNavigate
 import { Context } from "../../store/appContext";
 import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
@@ -7,15 +7,17 @@ import Logo from '../../../img/LogoFinancia.png';
 const Sidebar = () => {
   const { store, actions } = useContext(Context);
   const location = useLocation();
-  const navigate = useNavigate();  // Usamos el hook useNavigate
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    //aqui inicializamos el localstorage con la funcion que ya teniamos creada para ello. solo se invoca.
+    // Borra la información del localStorage usando la acción del contexto
     actions.logout();
 
-    navigate('/');  // Redirige a la página de inicio (LandingPage)
+    // Redirige a la página de inicio sin recargar la página
+    navigate('/'); 
   };
 
+  // Condición para ocultar la barra lateral en páginas específicas
   if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup') {
     return null;
   }

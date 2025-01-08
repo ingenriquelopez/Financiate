@@ -26,6 +26,10 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
 
   const [isChecked, setIsChecked] = useState(true); 
   const [isSaveDisabled, setIsSaveDisabled] = useState(true); 
+  const [errors, setErrors] = useState({
+    monto_inicial: '',
+    monto_objetivo: '',
+  });
 
   const formatToDDMMYYYY = (dateString) => {
     const date = new Date(dateString);
@@ -75,11 +79,47 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+  
+    // Convertir el valor a un número para asegurar que se está comparando correctamente
+    const numericValue = parseFloat(value);
+  
+    // Validar si el valor de monto_inicial (permitir >= 0, pero no < 0)
+    if (name === 'monto_inicial') {
+      if (isNaN(numericValue) || numericValue < 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: 'El monto debe ser mayor o igual que 0',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: '',
+        }));
+      }
+    }
+  
+    // Validar si el valor de monto_objetivo (permitir > 0, pero no <= 0)
+    if (name === 'monto_objetivo') {
+      if (isNaN(numericValue) || numericValue <= 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: 'El monto debe ser mayor que 0',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: '',
+        }));
+      }
+    }
+  
+    // Actualizar el estado con el valor del campo
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+  
 
   const handleSave = async () => {
     if (!formData.nombre_plan || !formData.monto_inicial || !formData.fecha_inicio || !formData.monto_objetivo || !formData.fecha_objetivo) {
@@ -190,6 +230,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     value={formData.monto_inicial}
                     onChange={handleChange}
                   />
+                  {errors.monto_inicial && <small className="text-danger">{errors.monto_inicial}</small>}
                 </div>
                 <div className="col-md-6 mb-3">
                   <label htmlFor="fecha_inicio" className="form-label">Fecha de Inicio</label>
@@ -218,6 +259,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     value={formData.monto_objetivo}
                     onChange={handleChange}
                   />
+                  {errors.monto_objetivo && <small className="text-danger">{errors.monto_objetivo}</small>}
                 </div>
                 <div className="col-md-6 mb-3">
                   <label htmlFor="fecha_objetivo" className="form-label">Fecha de Objetivo</label>
