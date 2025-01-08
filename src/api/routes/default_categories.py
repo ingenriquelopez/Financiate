@@ -14,6 +14,7 @@ default_categories = [
     {'nombre': 'Salario', 'icono': '💼', 'color': '#4CAF50'},
     {'nombre': 'Salud', 'icono': '🩺', 'color': '#4CAF50'},
     {'nombre': 'Seguros', 'icono': '🛡️', 'color': '#607D8B'},
+    {'nombre': 'Suscripciones', 'icono': '🔁', 'color': '#607DFB'},
     {'nombre': 'Transporte', 'icono': '🚗', 'color': '#00BCD4'},
     {'nombre': 'Ventas / Comercio', 'icono': '🛒', 'color': '#FF5722'},
     {'nombre': 'Venta de Productos', 'icono': '🛍️', 'color': '#3F51B5'},

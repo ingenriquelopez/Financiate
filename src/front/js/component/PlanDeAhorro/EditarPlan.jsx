@@ -14,7 +14,6 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
   const [formData, setFormData] = useState({
     nombre_plan: '',
     fecha_inicio: '',
-    monto_inicial: '',
     fecha_objetivo: '',
     monto_objetivo: ''
   });
@@ -35,7 +34,6 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
       setFormData({
         nombre_plan: plan.nombre_plan || '',
         fecha_inicio: plan.fecha_inicio ? formatToDDMMYYYY(plan.fecha_inicio) : getCurrentDate(),
-        monto_inicial: plan.monto_inicial || '',
         fecha_objetivo: plan.fecha_objetivo ? formatToDDMMYYYY(plan.fecha_objetivo) : getCurrentDate(),
         monto_objetivo: plan.monto_objetivo || '',
       });
@@ -43,7 +41,6 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
       setFormData({
         nombre_plan: '',
         fecha_inicio: getCurrentDate(),
-        monto_inicial: '',
         fecha_objetivo: getCurrentDate(),
         monto_objetivo: '',
       });
@@ -121,35 +118,21 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
                   />
                 </div>
 
-                <div className="col-md-6 mb-3 text-center d-flex flex-column justify-content-center align-items-center" style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.3)", padding: "15px", borderRadius: "8px" }}>
-                  <div className="mb-3 me-3 text-center">
-                    <label htmlFor="monto_inicial" className="form-label">Monto Inicial</label>
-                    <input
-                      type="number"
-                      id="monto_inicial"
-                      name="monto_inicial"
-                      className="form-control input-smaller"
-                      value={formData.monto_inicial}
-                      onChange={handleChange}
-                    />
-                  </div>
+                <div className="col-md-6 mb-3 d-flex  flex-column justify-content-center align-items-center"  style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.3)", padding: "15px", borderRadius: "8px" }}>
                   <div className="mb-3 text-center">
-                    <label htmlFor="fecha_inicio" className="form-label">Fecha de Inicio</label>
-                    <Flatpickr
-                      value={formData.fecha_inicio}
-                      onChange={([date]) => setFormData({
-                        ...formData,
-                        fecha_inicio: formatToDDMMYYYY(date) // Convertimos a DD-MM-YYYY
-                      })}
-                      options={{
-                        dateFormat: "d-m-Y"
-                      }}
-                      className="form-control"
-                    />
+                      <label htmlFor="fecha_inicio" className="form-label">Fecha de Inicio</label>
+                      <Flatpickr
+                        value={formData.fecha_inicio}
+                        onChange={([date]) => setFecha({
+                          ...fecha,
+                          fecha: formatToDDMMYYYY(date) // Convertimos a DD-MM-YYYY
+                        })}
+                        options={{
+                          dateFormat: "d-m-Y"
+                        }}
+                        className="form-control"
+                      />
                   </div>
-                </div>
-
-                <div className="col-md-6 mb-3" style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.3)", padding: "15px", borderRadius: "8px" }}>
                   <div className="mb-3 text-center">
                     <label htmlFor="monto_objetivo" className="form-label">Monto Objetivo</label>
                     <input

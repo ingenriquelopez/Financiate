@@ -34,7 +34,7 @@ const PlanDeAhorro = () => {
 
 
       if (isMounted.current) {
-        setPlans(data);
+        setPlans(data.planes);
         setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban los planes
       }
     } catch (error) {

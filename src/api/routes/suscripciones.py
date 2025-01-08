@@ -89,6 +89,8 @@ def pagar_suscripcion(payload):
     data = request.get_json()
     suscripcion_id = data.get('id')
 
+    
+
     suscripcion = Suscripcion.query.get(suscripcion_id)
     if not suscripcion or suscripcion.usuario_id != usuario_id:
         return jsonify({"error": "Suscripción no encontrada o no autorizada"}), 404

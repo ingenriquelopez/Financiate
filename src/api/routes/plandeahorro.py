@@ -21,7 +21,6 @@ def agregar_plan_ahorro(payload):
 
     # Obtener los datos del nuevo plan desde el body de la solicitud
     data = request.get_json()
-    print(data)
 
     # Verificar que los campos requeridos estén presentes (campos que yo decido son indispensables)
     required_fields = ['nombre_plan', 'monto_objetivo', 'fecha_inicio', 'monto_inicial', 'fecha_objetivo']
@@ -49,6 +48,8 @@ def agregar_plan_ahorro(payload):
     if monto_inicial < 0 or monto_objetivo <= 0:
         return jsonify({"error": "El monto inicial no puede ser negativo y el monto objetivo debe ser mayor que cero"}), 400
 
+    # Buscar la categoría "Plan de Ahorro"  
+    categoria_plan_ahorro = Categoria.query.filter_by(nombre="Plan de ahorro").first()
     # Crear el nuevo plan de ahorroñl
     nuevo_plan = PlanAhorro(
         nombre_plan=data['nombre_plan'],
@@ -61,6 +62,34 @@ def agregar_plan_ahorro(payload):
 
     # Guardar en la base de datos
     db.session.add(nuevo_plan)
+    db.session.commit()
+
+    # Ahora creamos el nuevo Egreso (registro de la primera transacción de ahorro)
+
+    
+    nuevo_egreso = Egreso(
+        usuario_id=usuario_id,
+        monto=monto_inicial,  # El monto inicial es el primer egreso
+        descripcion="Depósito inicial al plan de ahorro",
+        fecha=fecha_inicio,  # Usamos la fecha de inicio del plan
+        categoria_id=categoria_plan_ahorro.id,  
+        plan_ahorro_id=nuevo_plan.id  # Asociamos el egreso con el plan de ahorro recién creado
+    )
+    # Guardamos el egreso
+    db.session.add(nuevo_egreso)
+    # Actualizamos el monto acumulado en el plan de ahorro
+    nuevo_plan.monto_acumulado += monto_inicial
+
+    db.session.commit()
+
+
+    # Obtener el usuario para actualizar su capital_actual
+    usuario = Usuario.query.get(usuario_id)
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+    
+    # Actualizar el capital_actual restando el monto del depósito
+    usuario.capital_actual -= monto_inicial
     db.session.commit()
     
       # Devolver toda la información del nuevo plan para actualizar la UI
@@ -106,8 +135,6 @@ def editar_plan_ahorro(payload):
 
     if 'nombre_plan' in data:
         plan.nombre_plan = data['nombre_plan']
-    if 'monto_inicial' in data:
-        plan.monto_inicial = data['monto_inicial']
     if 'fecha_inicio' in data:
         plan.fecha_inicio = data['fecha_inicio']
     if 'monto_objetivo' in data:
@@ -205,9 +232,15 @@ def obtener_planes_ahorro(payload):
     # Serializar los planes de ahorro filtrados por usuario según token
     planes_serializados = [p.to_dict() for p in planes]
 
-    # Retornar la respuesta con los planes serializados
-    return jsonify(planes_serializados), 200
+    usuario = Usuario.query.get(usuario_id)
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
 
+    # Añadir el capital actual del usuario a la respuesta
+    return jsonify({
+        "capital_actual": usuario.capital_actual,
+        "planes": planes_serializados
+    }), 200
 
 #---------------------------------------------------------
 @plandeahorro_bp.route('/depositar', methods=['POST'])
