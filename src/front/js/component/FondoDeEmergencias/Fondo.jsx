@@ -119,7 +119,6 @@ const Fondo = () => {
                 console.log(respuesta.status);
                 console.log(respuesta);
 
-
                 if (respuesta.ok) {
                     setFondoGuardado(null);
                     Swal.fire({
@@ -201,7 +200,3 @@ const Fondo = () => {
 };
 
 export default Fondo;
-
-
-
-
