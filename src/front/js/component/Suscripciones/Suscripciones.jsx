@@ -7,11 +7,8 @@ import 'flatpickr/dist/themes/material_green.css'; // Importa el estilo de flatp
 function Suscripciones() {
     const [subscriptions, setSubscriptions] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loading, setLoading] = useState(true); // Estado de carga
     const isMounted = useRef(true);
-    const [error, setError] = useState(false);
-    
-    
+
     const [modalData, setModalData] = useState({
         nombre: '',
         costo: '',
@@ -19,39 +16,39 @@ function Suscripciones() {
         fecha_inicio: ''
     });
 
-            
+    // Obtener todas las suscripciones
     const fetchSubscriptions = async () => {
         try {
             const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
                 method: 'GET',
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
                 },
-              });
-
+            });
 
             if (!response.ok) {
-                const errorText = await response.text(); // Leer texto en caso de error
+                const errorText = await response.text();
                 console.error("Error del servidor:", errorText);
-                alert("Error: No se pudieron obtener las suscripciones. Verifica los datos.");
+                Swal.fire("Error", "No se pudieron obtener las suscripciones.", "error");
                 return;
             }
 
             const data = await response.json();
-            
             if (isMounted.current) {
                 setSubscriptions(data);
-                setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban las suscripciones
             }
-            } catch (error) {
-                console.error('Error fetching suscripciones:', error);
-                setLoading(false); // En caso de error, también se cambia el estado de carga
-            }         
+        } catch (error) {
+            console.error('Error al obtener las suscripciones:', error);
+            Swal.fire("Error", "Hubo un problema al conectar con el servidor.", "error");
+        }
     };
 
     useEffect(() => {
         fetchSubscriptions();
+        return () => {
+            isMounted.current = false;
+        };
     }, []);
 
     const handleInputChange = (e) => {
@@ -59,80 +56,92 @@ function Suscripciones() {
         setModalData({ ...modalData, [name]: value });
     };
 
+    // Agregar una nueva suscripción
     const handleAddSubscription = async (e) => {
         e.preventDefault();
 
         try {
-            const url = `${process.env.BACKEND_URL}/api/suscripciones/suscripcion`;
-            console.log(url)
-      
-            const response = await fetch(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
-              },
-              body: JSON.stringify({
-                ...modalData,
-              }),
-            });
-      
-            if (!response.ok) {
-              alert("Error al guardar la suscripcioon.");
-              return;
-            }
-      
-            const data = await response.json();
-      
-            Swal.fire({
-              title: "Suscripcion  Guardado Correctamente",
-              icon: "success",
+            const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                },
+                body: JSON.stringify(modalData),
             });
 
+            if (!response.ok) {
+                Swal.fire("Error", "No se pudo guardar la suscripción.", "error");
+                return;
+            }
+
+            const data = await response.json();
+            Swal.fire("Éxito", "Suscripción guardada correctamente.", "success");
             setSubscriptions([...subscriptions, data.suscripcion]);
             setModalData({ nombre: '', costo: '', frecuencia: 'mensual', fecha_inicio: '' });
             setIsModalOpen(false);
-      
-          } catch (error) {
-            console.error('Error guardando la suscripcion:', error);
-            alert('Error al guardar la suscripcion.');
-          }
-
+        } catch (error) {
+            console.error('Error al guardar la suscripción:', error);
+            Swal.fire("Error", "Hubo un problema al guardar la suscripción.", "error");
+        }
     };
 
+    // Eliminar una suscripción
     const handleDeleteSubscription = async (id) => {
-        setLoading(true); // Asegurarse de que el estado de carga sea verdadero mientras se realiza la eliminación
-    
         try {
             const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
-                method: "DELETE",
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
                 },
                 body: JSON.stringify({ id }),
             });
-    
+
             if (response.ok) {
-                Swal.fire("Deleted!", "Tu Suscripción ha sido eliminada.", "success");
-    
-                // Actualizar el estado de las suscripciones de manera segura usando la función de actualización basada en el estado anterior
-                setSubscriptions((prevSubscriptions) => 
-                    prevSubscriptions.filter(sub => sub.id !== id)
-                );
-                setIsModalOpen(false);
+                Swal.fire("Eliminado", "La suscripción ha sido eliminada.", "success");
+                setSubscriptions((prev) => prev.filter((sub) => sub.id !== id));
             } else {
-                setError("Error al eliminar la suscripción.");
+                const errorText = await response.text();
+                console.error("Error al eliminar la suscripción:", errorText);
                 Swal.fire("Error", "No se pudo eliminar la suscripción.", "error");
             }
-        } catch (err) {
-            setError("Hubo un error al intentar eliminar la suscripción.");
+        } catch (error) {
+            console.error("Error al eliminar la suscripción:", error);
             Swal.fire("Error", "Hubo un problema al eliminar la suscripción.", "error");
-        } finally {
-            setLoading(false); // Asegurarse de que el estado de carga se actualice independientemente del resultado
         }
     };
-    
+
+    // Registrar el pago de una suscripción como egreso
+    const handleMarkAsPaid = async (subscription) => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion/pagar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                },
+                body: JSON.stringify({
+                    id: subscription.id,
+                    fecha: new Date().toISOString().split('T')[0], // Fecha en formato YYYY-MM-DD
+                }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Error al registrar el pago:", errorText);
+                Swal.fire("Error", "No se pudo registrar el pago.", "error");
+                return;
+            }
+
+            Swal.fire("Éxito", "Pago registrado correctamente.", "success");
+
+            fetchSubscriptions();
+        } catch (error) {
+            console.error("Error al registrar el pago:", error);
+            Swal.fire("Error", "Hubo un problema al registrar el pago.", "error");
+        }
+    };
 
     return (
         <div className="suscripciones-container">
@@ -208,7 +217,7 @@ function Suscripciones() {
             )}
 
             <div className="subscriptions-list">
-                {subscriptions.map(sub => (
+                {subscriptions.map((sub) => (
                     <div key={sub.id} className="subscription-card">
                         <div className="card-left">
                             <h4>{sub.nombre}</h4>
@@ -216,12 +225,20 @@ function Suscripciones() {
                             <p>Frecuencia: {sub.frecuencia}</p>
                             <p>Fecha de Inicio: {sub.fecha_inicio}</p>
                         </div>
-                        <button
-                            className="delete-button"
-                            onClick={() => handleDeleteSubscription(sub.id)}
-                        >
-                            Eliminar
-                        </button>
+                        <div className="card-actions">
+                            <button
+                                className="delete-button"
+                                onClick={() => handleDeleteSubscription(sub.id)}
+                            >
+                                Eliminar
+                            </button>
+                            <button
+                                className="paid-button"
+                                onClick={() => handleMarkAsPaid(sub)}
+                            >
+                                Pagado
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -230,4 +247,3 @@ function Suscripciones() {
 }
 
 export default Suscripciones;
-

@@ -101,7 +101,7 @@ const Signup = () => {
           </Form>
           <div className="text-center mt-4">
             ¿Ya tienes una cuenta?
-            <NavLink to="/" className="btn btn-link">
+            <NavLink to="/login" className="btn btn-link">
                Login
             </NavLink>
             

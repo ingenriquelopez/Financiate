@@ -14,7 +14,7 @@ const Reportes = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/reportes?usuario_id=${usuario_id}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/reportes`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -24,7 +24,6 @@ const Reportes = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         setReportes(data);
       } else {
         console.error("Error al obtener reportes");
@@ -34,11 +33,10 @@ const Reportes = () => {
     }
   };
 
+ // Este efecto solo se ejecuta una vez cuando el componente se monta o cuando el usuario_id cambia
   useEffect(() => {
     fetchReportes();
-    const interval = setInterval(fetchReportes, 5000);
-    return () => clearInterval(interval);
-  }, [usuario_id]);
+  }, [usuario_id]);  // Solo se ejecuta cuando usuario_id cambie
 
   return (
     <div>

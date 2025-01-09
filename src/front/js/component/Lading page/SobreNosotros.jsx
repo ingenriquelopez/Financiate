@@ -4,15 +4,16 @@ import RadovanImg from "../../../img/Radovan.png";
 import PabloImg from "../../../img/Pablo.png";
 import EnriqueImg from "../../../img/Enrique.png";
 import CerditoImg from "../../../img/Cerdito.png";
-
+import './Sobrenosotros.css';
 const SobreNosotros = () => {
     return (
         <div>
-            <div className="mt-5">
-                <div className="fw-bold fs-1 mb-5">Sobre Nosotros</div>
+            <div className="mt-0">
+
 
                 {/* DESCRIPCION DE APP */}
-                <div className="row py-5">
+                <div className="row p-5 bg-custom2">
+                    <div className="fw-bold fs-1">Sobre Nosotros</div>
                     <div className="col-8">
                         <p className="text-justify">FINÁNCIA+E es la app definitiva para gestionar tu economía personal de manera sencilla y efectiva. Organiza tus gastos con categorías personalizadas, recibe alertas de tus suscripciones y planifica tus ahorros. Todo esto y mucho más, al alcance de tu mouse o celular. ¡Toma el control de tus finanzas hoy mismo!</p>
                     </div>
@@ -22,10 +23,10 @@ const SobreNosotros = () => {
                 </div>
 
                 {/* Descripción Enrique */}
-                <div className="row p-5 align-items-center bg-primary">
+                <div className="row p-5 align-items-center bg-custom">
                     <div className="col-4 d-flex justify-content-center flex-column align-items-center">
                         <img src={EnriqueImg} alt="Enrique" className="img-fluid" />
-                        <p className="fw-bold text-center mt-2">Enrique López</p> {/* Nombre debajo de la imagen */}
+                        <p className="fw-bold text-center mt-2">Enrique López</p>
                     </div>
                     <div className="col-8">
                         <p className="text-justify">Web Developer Full Stack
@@ -44,7 +45,7 @@ const SobreNosotros = () => {
                 </div>
 
                 {/* Descripción Vadhir */}
-                <div className="row py-5 align-items-center">
+                <div className="row p-5 align-items-center bg-custom2">
                     <div className="col-8">
                         <p className="text-justify">Licenciado en Docencia de Idiomas con más de ocho años de experiencia en el ámbito educativo. Durante su trayectoria, observó cómo la tecnología puede transformar y enriquecer el proceso de enseñanza-aprendizaje, inspirándolo a explorar nuevas formas de integrar herramientas digitales en la educación. Esto lo llevó a iniciar su formación como Full Stack Developer, donde desarrolló habilidades en tecnologías como HTML, CSS, JavaScript, React, Python, SQL, entre otras. Su objetivo ahora es combinar la experiencia pedagógica con los conocimientos en programación para crear soluciones innovadoras que impulsen el aprendizaje y la accesibilidad en la educación.</p>
                     </div>
@@ -55,7 +56,7 @@ const SobreNosotros = () => {
                 </div>
 
                 {/* Descripción Radovan */}
-                <div className="row py-5 align-items-center">
+                <div className="row p-5 align-items-center bg-custom">
                     <div className="col-4 d-flex justify-content-center flex-column align-items-center">
                         <img src={RadovanImg} alt="Radovan" className="img-fluid" />
                         <p className="fw-bold text-center mt-2">Radovan Halir</p>
@@ -67,7 +68,7 @@ const SobreNosotros = () => {
                 </div>
 
                 {/* Descripción Pablo */}
-                <div className="row py-5 align-items-center">
+                <div className="row p-5 align-items-center bg-custom2">
                     <div className="col-8">
                         <p className="text-justify">Ingeniero Industrial y Magíster en Seguridad y Salud Ocupacional, con especialidad en Administración y Gerencia de Instituciones de Salud. Con más de 12 años de experiencia liderando proyectos en diversos sectores, he descubierto que la tecnología es el puente hacia el futuro, capaz de transformar tanto a las empresas como a las personas.
 
@@ -82,7 +83,7 @@ const SobreNosotros = () => {
                 </div>
 
             </div>
-            <footer className="bg-body-secondary py-3 mt-5">
+            <footer className="bg-body-secondary p-3">
                 <div className="container d-flex justify-content-center align-items-center">
                     <p className="mb-0 text-center pb-4">
                         Copyrights 2025 | Developed and designed in 4Geeks Academy

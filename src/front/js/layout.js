@@ -38,7 +38,11 @@ const Layout = () => {
 
 const LayoutContent = () => {
   const location = useLocation();
-  const hideSidebar = location.pathname === '/' || location.pathname === '/login'  || location.pathname === '/lp' || location.pathname === '/sobre-nosotros';
+  const hideSidebar = location.pathname === '/' || 
+                      location.pathname === '/login' || 
+                      location.pathname === '/signup' || 
+                      location.pathname === '/lp' || 
+                      location.pathname === '/sobre-nosotros';
 
   return (
     <div style={{ display: 'flex', flexDirection: hideSidebar ? "column":"row" , minHeight: '100vh' }}>
@@ -53,7 +57,6 @@ const LayoutContent = () => {
       >
         <Routes>
           {/* Rutas principales */}
-          
           <Route element={<SobreNosotros />} path="/sobre-nosotros" />
           <Route element={<LandingPage />} path="/" />
           <Route element={<Login />} path="/login" />
