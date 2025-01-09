@@ -5,6 +5,9 @@ import { BackendURL } from "./component/backendURL";
 import { Home } from "./pages/home";
 import injectContext from "./store/appContext";
 
+// Importar los componentes
+import LandingPage from '../js/component/Lading page/LandingPage.jsx';  // Importar la LandingPage
+import SobreNosotros from '../js/component/Lading page/SobreNosotros.jsx';
 import Sidebar from '../js/component/Sidebar/Sidebar.js';
 import Login from './component/Login/Login.jsx';
 import Signup from "./component/Signup/Signup.jsx";
@@ -15,6 +18,7 @@ import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
 import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx"; 
 import Reportes from "./component/Reportes/Reportes.jsx"; 
 import Fondo from "./component/FondoDeEmergencias/Fondo.jsx";
+import Navbar from "./component/Lading page/Navbar.jsx";
 
 const Layout = () => {
   const basename = process.env.BASENAME || "";
@@ -34,11 +38,12 @@ const Layout = () => {
 
 const LayoutContent = () => {
   const location = useLocation();
-  const hideSidebar = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup';
+  const hideSidebar = location.pathname === '/' || location.pathname === '/login'  || location.pathname === '/lp' || location.pathname === '/sobre-nosotros';
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: hideSidebar ? "column":"row" , minHeight: '100vh' }}>
       {!hideSidebar && <Sidebar />}
+      {hideSidebar && <Navbar />}
       <div
         style={{
           marginLeft: hideSidebar ? '0' : '250px',
@@ -47,13 +52,16 @@ const LayoutContent = () => {
         }}
       >
         <Routes>
-          <Route element={<Login />} path="/" />
+          {/* Rutas principales */}
+          
+          <Route element={<SobreNosotros />} path="/sobre-nosotros" />
+          <Route element={<LandingPage />} path="/" />
           <Route element={<Login />} path="/login" />
           <Route element={<Signup />} path="/signup" />
           <Route element={<Home />} path="/Home" />
           <Route element={<Egresos />} path="/egresos" />
           <Route element={<Ingresos />} path="/Ingresos" />
-          <Route element={<Categorias/>} path="/categorias"/>
+          <Route element={<Categorias />} path="/categorias" />
           <Route element={<Suscripciones />} path="/Suscripciones" />
           <Route element={<PlanDeAhorro />} path="/plandeahorro" />
           <Route element={<Reportes />} path="/reportes" />

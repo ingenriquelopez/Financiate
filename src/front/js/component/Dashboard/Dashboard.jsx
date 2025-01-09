@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Context } from "../../store/appContext";
 import {
     BarChart,
@@ -28,8 +28,11 @@ const Dashboard = () => {
     const [totales, setTotales] = useState([]);
     const [capitales, setCapitales] = useState([]);
     const [datosMensuales, setDatosMensuales] = useState([]);
+    const [planes, setPlanes] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const isMounted = useRef(true);
+
 
     // LLAMADA A LA API PARA GRAFICO DE DONA
     useEffect(() => {
@@ -43,12 +46,12 @@ const Dashboard = () => {
 
 
                 const response = await fetch(
-                    `${process.env.BACKEND_URL}/api/usuarios/totales`,{
-                        headers: {
-                            'Content-Type': 'application/json', // Aseguramos que enviamos el tipo de contenido adecuado
-                            'Authorization': `Bearer ${store.token}`,
-                          },
-                        });            
+                    `${process.env.BACKEND_URL}/api/usuarios/totales`, {
+                    headers: {
+                        'Content-Type': 'application/json', // Aseguramos que enviamos el tipo de contenido adecuado
+                        'Authorization': `Bearer ${store.token}`,
+                    },
+                });
 
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -87,13 +90,14 @@ const Dashboard = () => {
                     throw new Error("ID del usuario requerido");
                 }
                 const response = await fetch(process.env.BACKEND_URL + '/api/usuarios/datosmensuales', {
-                    method: "POST", 
-                    headers: { "Content-Type": "application/json",
-                                'Authorization': `Bearer ${store.token
-                              }`,
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': `Bearer ${store.token
+                            }`,
                     },
                     body: JSON.stringify({
-                        meses: ['Enero', 'Febrero', 'Marzo', 'Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+                        meses: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                     }),
                 });
                 if (!response.ok) {
@@ -117,6 +121,37 @@ const Dashboard = () => {
         };
 
         fetchTotalDatosMensuales();
+    }, []);
+
+    const fetchPlans = async () => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                },
+            });
+            const data = await response.json();
+            console.log(data)
+            if (isMounted.current) {
+                setPlanes(data);
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error('Error fetching plans:', error);
+            if (isMounted.current) {
+                setLoading(false);
+            }
+        }
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+        fetchPlans();
+        return () => {
+            isMounted.current = false;
+        };
     }, []);
 
     return (
@@ -178,7 +213,7 @@ const Dashboard = () => {
                         <div className="col-md-6 mb-4">
                             <h4 className="chart-title">Evolución Mensual de Ingresos y Egresos</h4>
                             <div className="line-chart-container">
-                                <ResponsiveContainer width={chartWidth} height={chartHeight}> 
+                                <ResponsiveContainer width={chartWidth} height={chartHeight}>
                                     <LineChart
                                         data={[...datosMensuales, { mes: null, ingresos: null, egresos: null }]} // Agregar punto final nulo
                                         margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
@@ -201,9 +236,24 @@ const Dashboard = () => {
                         </div>
 
                         {/* Barra de progreso */}
+
+
                         <div className="progress-container mt-5">
-                            <ProgressBar inicio={0} total={100000} current={20000} />
+                            {planes.length > 0 ? (
+                                planes.map((plan, index) => (
+                                    <ProgressBar
+                                        key={index} // Usar índice como clave si no hay un ID único
+                                        nombre_plan={plan.nombre_plan}
+                                        monto_inicial={plan.monto_inicial}
+                                        total={plan.monto_objetivo}
+                                        current={plan.monto_acumulado}
+                                    />
+                                ))
+                            ) : (
+                                <p>No hay planes disponibles</p> // Mensaje alternativo si no hay planes
+                            )}
                         </div>
+
 
                     </div>
                 </div>

@@ -1,0 +1,34 @@
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+
+/* Estilo para la leyenda y el input */
+.checkbox-label {
+    font-size: 0.9rem;       /* Tamaño de fuente más pequeño */
+    font-weight: normal;     /* Sin negrita */
+    white-space: normal;     /* Permite que el texto se divida en varias líneas */
+    word-wrap: break-word;   /* Hace que el texto se ajuste y rompa en palabras */
+    line-height: 1.4;        /* Espaciado entre líneas para mejor legibilidad */
+    overflow-wrap: break-word; /* Asegura que las palabras largas también se ajusten */
+    display: inline-block;    /* Asegura que el texto esté en línea con el checkbox */
+    text-align: left;        /* Alinea la leyenda a la izquierda */
+    margin-left: 5px;        /* Espacio mínimo entre el checkbox y la leyenda */
+  }
+  
+  .form-check {
+    display: flex;
+    justify-content: center; /* Centra el contenido en la fila */
+    align-items: center;     /* Alinea verticalmente el contenido */
+    width: 100%;             /* Asegura que ocupe el 100% de la fila */
+    background-color: #fff7d1; /* Fondo amarillo tenue */
+    padding: 5px;            /* Un pequeño padding para no pegar los elementos al borde */
+    border-radius: 4px;      /* Bordes redondeados para el contenedor */
+  }
+  
+  .form-check-input {
+    margin-right: 5px;       /* Espacio entre el checkbox y la leyenda */
+  }
+  

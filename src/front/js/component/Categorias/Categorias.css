@@ -1,3 +1,59 @@
+
+.predeterminadas {
+  font-size: 12px;
+  margin:0;
+  padding:0;
+  margin-bottom: 0px;
+  text-align: left;
+}
+
+/* Estilo del contenedor del botón */
+.btn-tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Estilo del tooltip */
+.tooltip {
+  visibility: hidden;
+  width: 220px; /* Ajusta el tamaño del tooltip */
+  background-color: #e5ff0098; /* Fondo amarillo */
+  color: #000; /* Letra de color negro */
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Ajuste de la posición del tooltip */
+  left: 50%;
+  margin-left: -110px; /* Centrar el tooltip */
+  opacity: 0;
+  font-size: 12px; /* Tamaño de la letra 2px más pequeña */
+  transition: opacity 0.3s;
+}
+
+/* Flecha del tooltip */
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #ffcc00 transparent transparent transparent; /* Flecha amarilla */
+}
+
+/* Mostrar el tooltip cuando el botón está deshabilitado */
+.btn-tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+
+
 /* Asegura que todos los botones tengan el mismo ancho */
 .boton-modal {
   width: 32%; /* O cualquier valor que te guste, asegurando que todos los botones tengan el mismo tamaño */
@@ -113,4 +169,17 @@
   cursor: pointer;
   width: 20% !important;
   height: 2.5rem !important;
+}
+
+/* Resaltar toda la fila cuando el mouse pasa sobre ella */
+.table tbody tr:hover {
+  background-color: #f0f8ff; /* Fondo suave (azul claro) para toda la fila */
+  cursor: pointer; /* Cambia el cursor a una mano cuando pasa sobre la fila */
+  transition: background-color 0.3s ease; /* Transición suave */
+}
+
+/* Resaltar el fondo de cada celda dentro de la fila cuando se pasa el ratón */
+.table tbody tr:hover td {
+  background-color: #f0f8ff; /* El mismo color de fondo para cada celda */
+  color: #333; /* Cambiar el color del texto para mejorar el contraste */
 }

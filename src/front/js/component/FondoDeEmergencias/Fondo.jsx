@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../../store/appContext";
 import Swal from "sweetalert2";
 import "./Fondo.css";
@@ -7,6 +7,34 @@ const Fondo = () => {
     const { actions } = useContext(Context);
     const [monto, setMonto] = useState("");
     const [razon, setRazon] = useState("");
+    const [fondoGuardado, setFondoGuardado] = useState(null);
+
+    useEffect(() => {
+        const obtenerFondo = async () => {
+            try {
+                const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia/activo`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("tokenFinanciaE")}`,
+                    },
+                });
+
+                const resultado = await respuesta.json();
+                console.log(resultado.id)
+                if (respuesta.ok) {
+                    setFondoGuardado({
+                        id: resultado.id,
+                        monto: resultado.monto,
+                        razon: resultado.razon,
+                    });
+                }
+            } catch (error) {
+                console.error("Error al obtener el fondo", error);
+            }
+        };
+
+        obtenerFondo();
+    }, []);
 
     const manejarEnvio = async (e) => {
         e.preventDefault();
@@ -19,15 +47,13 @@ const Fondo = () => {
             });
             return;
         }
-        const token = localStorage.getItem("token");
-        console.log("Token enviado:", token);  // Verificar que el token esté correcto
 
         try {
-            const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia`, {
+            const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem("tokenFinanciaE")}`,
                 },
                 body: JSON.stringify({
                     monto: parseFloat(monto),
@@ -38,6 +64,7 @@ const Fondo = () => {
             const resultado = await respuesta.json();
 
             if (respuesta.ok) {
+                setFondoGuardado({ id: resultado.id, monto: parseFloat(monto), razon });
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
@@ -64,44 +91,117 @@ const Fondo = () => {
         setRazon("");
     };
 
+    const manejarEliminar = async () => {
+        const confirmacion = await Swal.fire({
+            title: "¿Está seguro de querer eliminar este fondo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, deseo borrarlo",
+            cancelButtonText: "No, lo pensaré un poco más",
+        });
+
+        if (confirmacion.isConfirmed) {
+            console.log(fondoGuardado.id)
+            try {
+                // const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia/${fondoGuardado.id}`, {
+                const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("tokenFinanciaE")}`,
+                    },
+                    body: JSON.stringify({
+                        "id": fondoGuardado.id,
+                    })
+                });
+                console.log(`${process.env.BACKEND_URL}/api/fondos_emergencia/${fondoGuardado.id}`);
+                console.log(await respuesta.text());
+                console.log(respuesta.status);
+                console.log(respuesta);
+
+
+                if (respuesta.ok) {
+                    setFondoGuardado(null);
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "El fondo de emergencia ha sido eliminado.",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "No se pudo eliminar el fondo. Intente nuevamente.",
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Hubo un problema con la conexión al servidor. Intenta más tarde.",
+                });
+            }
+        }
+    };
+
     return (
         <div className="fondo-container">
             <h2 className="titulo">Fondo de Emergencia</h2>
-            <form className="fondo-form" onSubmit={manejarEnvio}>
-                <div className="form-group">
-                    <label htmlFor="monto" className="form-label">
-                        Ingresa el monto deseado como fondo de emergencia
-                    </label>
-                    <input
-                        type="number"
-                        id="monto"
-                        className="form-input"
-                        value={monto}
-                        onChange={(e) => setMonto(e.target.value)}
-                        placeholder="Ejemplo: 10000"
-                    />
-                </div>
 
-                <div className="form-group">
-                    <label htmlFor="razon" className="form-label">
-                        Razón del fondo
-                    </label>
-                    <input
-                        type="text"
-                        id="razon"
-                        className="form-input"
-                        value={razon}
-                        onChange={(e) => setRazon(e.target.value)}
-                        placeholder="Ejemplo: Gastos médicos"
-                    />
-                </div>
+            {!fondoGuardado ? (
+                <form className="fondo-form" onSubmit={manejarEnvio}>
+                    <div className="form-group">
+                        <label htmlFor="monto" className="form-label">
+                            Ingresa el monto deseado como fondo de emergencia
+                        </label>
+                        <input
+                            type="number"
+                            id="monto"
+                            className="form-input"
+                            value={monto}
+                            onChange={(e) => setMonto(e.target.value)}
+                            placeholder="Ejemplo: 10000"
+                        />
+                    </div>
 
-                <button type="submit" className="btn-guardar">
-                    Guardar Fondo
-                </button>
-            </form>
+                    <div className="form-group">
+                        <label htmlFor="razon" className="form-label">
+                            Razón del fondo
+                        </label>
+                        <input
+                            type="text"
+                            id="razon"
+                            className="form-input"
+                            value={razon}
+                            onChange={(e) => setRazon(e.target.value)}
+                            placeholder="Ejemplo: Gastos médicos"
+                        />
+                    </div>
+
+                    <button type="submit" className="btn-guardar">
+                        Guardar Fondo
+                    </button>
+                </form>
+            ) : (
+                <div className="fondo-card">
+                    <h3>Fondo Guardado</h3>
+                    <p><strong>Monto:</strong> ${fondoGuardado.monto.toFixed(2)}</p>
+                    <p><strong>Razón:</strong> {fondoGuardado.razon}</p>
+                    <div className="card-buttons">
+                        <button className="btn-eliminar" onClick={manejarEliminar}>
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 export default Fondo;
+
+
+
+

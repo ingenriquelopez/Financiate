@@ -1,15 +1,19 @@
 import React, { useContext } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';  // Importamos useNavigate
 import { Context } from "../../store/appContext";
 import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
 
 const Sidebar = () => {
-  const { store } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const location = useLocation();
+  const navigate = useNavigate();  // Usamos el hook useNavigate
 
   const handleLogout = () => {
-    window.location.href = '/login';
+    //aqui inicializamos el localstorage con la funcion que ya teniamos creada para ello. solo se invoca.
+    actions.logout();
+
+    navigate('/');  // Redirige a la página de inicio (LandingPage)
   };
 
   if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup') {
@@ -19,8 +23,16 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <img src={Logo} alt="Logo Financia" />
+        {/* Fecha y hora */}
+        <div className="date-time">
+          {new Date().toLocaleString('es-ES', { dateStyle: 'long', timeStyle: 'short' })}
+        </div>
+        {/* Contenedor del logo con fondo azul */}
+        <div className="logo-container">
+          <img src={Logo} alt="Logo Financia" />
+        </div>
       </div>
+
       <div className="sidebar-body">
         <nav className="nav flex-column">
           <Link className="nav-link" to="/Home">
@@ -41,8 +53,12 @@ const Sidebar = () => {
           <Link className="nav-link" to="/Suscripciones">
             <i className="fa-solid fa-list"></i> Suscripciones
           </Link>
+          <Link className="nav-link" to="/plandeahorro">
+            <i className="fa-solid fa-piggy-bank"></i> Plan de Ahorro
+          </Link>
         </nav>
       </div>
+
       <div className="sidebar-footer">
         <div className="user-info">
           <span><i className="fa-solid fa-user"></i> {store.nombreUsuario}</span>

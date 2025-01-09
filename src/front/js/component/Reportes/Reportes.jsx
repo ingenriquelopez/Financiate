@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { format } from 'date-fns';
 import { Context } from '../../store/appContext';
 
 const Reportes = () => {
@@ -23,6 +24,7 @@ const Reportes = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data)
         setReportes(data);
       } else {
         console.error("Error al obtener reportes");

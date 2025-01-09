@@ -37,6 +37,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				localStorage.removeItem("nombreUsuario"); // Elimina el nombreUsuario del localStorage
 				setStore({ nombreUsuario: null }); // Limpia el nombreUsuario en el store global
+
+				localStorage.removeItem("usuario_id"); // Elimina el nombreUsuario del localStorage
+				setStore({ usuario_id: null }); // Limpia el nombreUsuario en el store global
 			},
 		}
 	};
