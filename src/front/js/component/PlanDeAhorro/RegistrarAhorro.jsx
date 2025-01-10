@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './RegistrarAhorro.css';
 import Swal from 'sweetalert2';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/material_green.css';
@@ -123,7 +124,7 @@ const RegistrarAhorro = ({ plan, onClose }) => {
   };
 
   return (
-    <div className="modal fade show" style={{ display: 'block' }} aria-labelledby="registerDepositModal" aria-hidden="false">
+    <div className="modalRegistrarAhorro modal fade show" style={{ display: 'block' }} aria-labelledby="registerDepositModal" aria-hidden="false">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -185,7 +186,7 @@ const RegistrarAhorro = ({ plan, onClose }) => {
                   />
                 </div>
                 <div className="d-flex justify-content-between">
-                  <button type="button" className="btn btn-secondary" onClick={onClose}>Cerrar</button>
+                  <button type="button" className="btn btn-danger" onClick={onClose}>Cerrar</button>
                   <button type="submit" className="btn btn-success" disabled={isButtonDisabled}>Registrar</button>
                 </div>
               </form>

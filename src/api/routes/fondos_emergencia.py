@@ -15,8 +15,7 @@ def obtener_fondo_emergencia_activo(payload):
     fondo = FondoEmergencia.query.filter_by(usuario_id=usuario_id).first()
 
     if not fondo:
-        print(fondo)
-        return jsonify({'msg': 'No se encontró un fondo de emergencia para este usuario.'}), 404
+        return jsonify({'msg': 'No se encontró un fondo de emergencia para este usuario.'}), 200
 
     return jsonify({
         'id': fondo.id,

@@ -8,7 +8,7 @@ const ProgressBar = ({ nombre_plan, monto_inicial, total, current }) => {
     const valuePosition = `calc(${percentage}% - 30px)`; // Centrado según el porcentaje
 
     // Usamos la misma posición para el porcentaje fuera de la barra
-    const percentagePosition = `calc(${percentage}% - 30px)`; // Mismo valor de left para que se alinee
+    const percentagePosition = `calc(${percentage}% + 30px)`; // Mismo valor de left para que se alinee
 
     // Formateo de los valores monetarios
     const formattedCurrent = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(current);

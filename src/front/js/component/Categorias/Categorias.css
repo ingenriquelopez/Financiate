@@ -1,9 +1,7 @@
-
 .predeterminadas {
   font-size: 12px;
-  margin:0;
-  padding:0;
-  margin-bottom: 0px;
+  margin: 0;
+  padding: 0;
   text-align: left;
 }
 
@@ -16,19 +14,19 @@
 /* Estilo del tooltip */
 .tooltip {
   visibility: hidden;
-  width: 220px; /* Ajusta el tamaño del tooltip */
+  width: 220px;
   background-color: #e5ff0098; /* Fondo amarillo */
-  color: #000; /* Letra de color negro */
+  color: #000;
   text-align: center;
   border-radius: 5px;
   padding: 5px;
   position: absolute;
   z-index: 1;
-  bottom: 125%; /* Ajuste de la posición del tooltip */
+  bottom: 125%;
   left: 50%;
   margin-left: -110px; /* Centrar el tooltip */
   opacity: 0;
-  font-size: 12px; /* Tamaño de la letra 2px más pequeña */
+  font-size: 12px;
   transition: opacity 0.3s;
 }
 
@@ -50,31 +48,24 @@
   opacity: 1;
 }
 
-
-
-
-
-/* Asegura que todos los botones tengan el mismo ancho */
+/* Botones - Modal */
 .boton-modal {
-  width: 32%; /* O cualquier valor que te guste, asegurando que todos los botones tengan el mismo tamaño */
+  width: 48%; /* Ajusta el ancho de todos los botones */
   padding: 10px 20px;
-  white-space: nowrap; /* Asegura que el texto no se divida en dos filas */
+  white-space: nowrap;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #3498db; /* Azul por defecto */
-  color: white;
 }
 
-/* Hover para todos los botones */
 .boton-modal:hover {
   background-color: #2980b9; /* Azul más oscuro */
 }
 
-/* Botón Cerrar (estilo Secondary) */
+/* Botón de tipo secundario */
 .boton-modal.btn-secondary {
-  background-color: #6c757d; /* Gris */
+  background-color: #6c757d;
   border-color: #6c757d;
 }
 
@@ -82,9 +73,36 @@
   background-color: #5a6268; /* Gris más oscuro */
 }
 
-/* Título de la tabla con fondo gris claro */
+/* Estilo de los botones en el modal */
+.modal-Contenido button {
+  width: auto; /* Los botones en el modal no deben tener un ancho fijo */
+}
+
+.modal-Contenido button:nth-child(1) {
+  background-color: #007BFF; /* Azul */
+}
+
+.modal-Contenido button:nth-child(1):hover {
+  background-color: #0056b3; /* Azul más oscuro */
+}
+
+.modal-Contenido button:nth-child(2) {
+  background-color: #e74c3c; /* Rojo */
+}
+
+.modal-Contenido button:nth-child(2):hover {
+  background-color: #c0392b; /* Rojo más oscuro */
+}
+
+/* Estilo para las filas de la tabla */
 .table th {
-  background-color: #f8f9fa; /* Gris claro */
+  background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+  background-color: #f0f8ff; /* Fondo suave (azul claro) para toda la fila */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 /* Modal */
@@ -100,7 +118,6 @@
   align-items: center;
 }
 
-/* Contenido del modal */
 .modal-contenido {
   background-color: white;
   padding: 20px;
@@ -125,61 +142,48 @@
   border-radius: 4px;
 }
 
-/* Botones dentro del modal */
-.modal-Contenido button:nth-child(1) {
-  background-color: #007BFF; /* Verde */
-}
-
-.modal-contenido button:nth-child(1):hover {
-  background-color: #007BFF; /* Verde más oscuro */
-}
-
-/* Botón de eliminación (rojo) */
-.modal-contenido button:nth-child(2) {
-  background-color: #e74c3c; /* Rojo */
-}
-
-.modal-contenido button:nth-child(2):hover {
-  background-color: #c0392b; /* Rojo más oscuro */
-}
-
-/* Ajustamos el espacio entre los botones */
 .d-flex {
   display: flex;
-  justify-content: space-between; /* Alineación entre los botones */
-  gap: 20px; /* Añadimos espacio entre los botones */
+  justify-content: space-between;
+  gap: 20px;
 }
 
-/* Aseguramos que los botones ocupen el mismo ancho */
-.boton-modal {
-  width: 48%; /* Ambos botones tienen casi el mismo ancho */
-  padding: 10px 20px;
-  white-space: nowrap;
-}
-
-/* Estilo de los botones en el modal (opcional) */
 .d-flex .boton-modal {
-  flex: none; /* Evita que los botones se expandan igual */
-  width: auto; /* Usamos el ancho automático */
-}
-/* Botón Registrar */
-.misbotones {
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 20% !important;
-  height: 2.5rem !important;
+  flex: none;
 }
 
-/* Resaltar toda la fila cuando el mouse pasa sobre ella */
-.table tbody tr:hover {
-  background-color: #f0f8ff; /* Fondo suave (azul claro) para toda la fila */
-  cursor: pointer; /* Cambia el cursor a una mano cuando pasa sobre la fila */
-  transition: background-color 0.3s ease; /* Transición suave */
+/* Ajustes para el modal cuando está visible */
+/* .modal.show {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 80%;
+  max-width: 500px;
+} */
+
+.modal.show {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Esto lo centra en el medio */
+  z-index: 1050; /* Asegúrate de que está por encima de otros elementos */
+  width: 80%; /* Ajusta el tamaño si es necesario */
+  max-width: 500px; /* Limita el tamaño máximo */
+  max-height: 400px;
+  padding: 20px; /* Opcional, si deseas un pequeño espaciado */
+  box-sizing: border-box; /* Asegura que el padding no desajuste el tamaño del modal */
 }
 
-/* Resaltar el fondo de cada celda dentro de la fila cuando se pasa el ratón */
-.table tbody tr:hover td {
-  background-color: #f0f8ff; /* El mismo color de fondo para cada celda */
-  color: #333; /* Cambiar el color del texto para mejorar el contraste */
+.modal-dialog {
+  background-color: red;
+}
+
+@media (max-width: 840px) {
+  .misbotones {
+    height: 60px;
+  }
 }

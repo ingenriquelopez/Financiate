@@ -20,7 +20,7 @@ const Fondo = () => {
                 });
 
                 const resultado = await respuesta.json();
-                if (respuesta.ok) {
+                if (respuesta.ok && resultado.id) {
                     setFondoGuardado({
                         id: resultado.id,
                         monto: resultado.monto,

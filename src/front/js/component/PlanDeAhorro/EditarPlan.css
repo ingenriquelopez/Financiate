@@ -2,6 +2,7 @@
 .modal-content {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para el modal */
     border-radius: 1rem; /* Bordes redondeados */
+    
   }
   
   /* Estilos para el título del modal */
@@ -75,3 +76,7 @@
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Sombra más intensa al enfocar */
   }
   
+  .modalEditarPlan {
+    max-width: 700px !important; /* Limita el tamaño máximo */
+    max-height: 700px !important;
+  }
