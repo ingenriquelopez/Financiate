@@ -135,7 +135,7 @@ const Dashboard = () => {
             const data = await response.json();
             console.log(data)
             if (isMounted.current) {
-                setPlanes(data);
+                setPlanes(data.planes);
                 setLoading(false);
             }
         } catch (error) {
