@@ -296,8 +296,6 @@ const Dashboard = () => {
                         </div>
 
                         {/* Barra de progreso */}
-
-
                         <div className="progress-container mt-5">
                             {planes.length > 0 ? (
                                 planes.map((plan, index) => (
