@@ -131,7 +131,7 @@
 }
 
 .modal-contenido button:nth-child(1):hover {
-  background-color: #27ae60; /* Verde más oscuro */
+  background-color: #007BFF; /* Verde más oscuro */
 }
 
 /* Botón de eliminación (rojo) */
