@@ -1,5 +1,5 @@
 default_categories = [
-    {'nombre': 'Alquiler', 'icono': '🏠', 'color': '#FFC107'},
+    {'nombre': 'Alquiler', 'icono': '🏠', 'color': '#FFC106'},
     {'nombre': 'Comida', 'icono': '🍽️', 'color': '#FF9800'},
     {'nombre': 'Consultoría', 'icono': '📊', 'color': '#00BCD4'},
     {'nombre': 'Cuidado Personal', 'icono': '💅', 'color': '#795548'},
