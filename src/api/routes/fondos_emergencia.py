@@ -29,7 +29,7 @@ def obtener_fondos_emergencia(payload):
 @token_required
 def obtener_fondo_emergencia_activo(payload):
     usuario_id = payload.get('id')
-    print(usuario_id)
+
 
     fondo = FondoEmergencia.query.filter_by(usuario_id=usuario_id).first()
 
@@ -53,7 +53,6 @@ def crear_fondo_emergencia(payload):
     datos = request.get_json()
     monto = datos.get('monto')
     razon = datos.get('razon')
-    print(datos)
 
     if not monto or not razon:
         return jsonify({'msg': 'Faltan datos requeridos (monto, razon).'}), 400
@@ -76,7 +75,6 @@ def crear_fondo_emergencia(payload):
 @token_required
 def eliminar_fondo_emergencia(payload):
     usuario_id = payload.get('id')
-    print(usuario_id)
     datos = request.get_json()
     id_emergencia = datos["id"]
     fondo = FondoEmergencia.query.filter_by(id=id_emergencia, usuario_id=usuario_id).first()

@@ -6,6 +6,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			correo: localStorage.getItem("correo") || null,
 			usuario_id: localStorage.getItem("usuario_id") || null,
 			message: null,
+			alert: null,
 		},
 		actions: {
 			setToken: (token) => {
@@ -41,6 +42,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("usuario_id"); // Elimina el nombreUsuario del localStorage
 				setStore({ usuario_id: null }); // Limpia el nombreUsuario en el store global
 			},
+
 		}
 	};
   };
