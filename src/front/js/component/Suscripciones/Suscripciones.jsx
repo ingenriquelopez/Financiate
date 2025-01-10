@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/material_green.css'; // Importa el estilo de flatpickr
 
+
 function Suscripciones() {
     const [subscriptions, setSubscriptions] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
