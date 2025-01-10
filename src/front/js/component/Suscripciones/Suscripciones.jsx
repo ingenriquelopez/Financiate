@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Suscripciones.css';
 import Swal from 'sweetalert2';
 import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/material_green.css'; // Importa el estilo de flatpickr
-
+import 'flatpickr/dist/themes/material_green.css'; 
 
 function Suscripciones() {
     const [subscriptions, setSubscriptions] = useState([]);
@@ -89,58 +88,83 @@ function Suscripciones() {
 
     // Eliminar una suscripción
     const handleDeleteSubscription = async (id) => {
-        try {
-            const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
-                },
-                body: JSON.stringify({ id }),
-            });
+        const result = await Swal.fire({
+            title: "¿Está seguro?",
+            text: "¿Desea eliminar esta suscripción?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#007bff", 
+            cancelButtonColor: "#dc3545", 
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "No, cancelar",
+        });
 
-            if (response.ok) {
-                Swal.fire("Eliminado", "La suscripción ha sido eliminada.", "success");
-                setSubscriptions((prev) => prev.filter((sub) => sub.id !== id));
-            } else {
-                const errorText = await response.text();
-                console.error("Error al eliminar la suscripción:", errorText);
-                Swal.fire("Error", "No se pudo eliminar la suscripción.", "error");
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                    },
+                    body: JSON.stringify({ id }),
+                });
+
+                if (response.ok) {
+                    Swal.fire("Eliminado", "La suscripción ha sido eliminada.", "success");
+                    setSubscriptions((prev) => prev.filter((sub) => sub.id !== id));
+                } else {
+                    const errorText = await response.text();
+                    console.error("Error al eliminar la suscripción:", errorText);
+                    Swal.fire("Error", "No se pudo eliminar la suscripción.", "error");
+                }
+            } catch (error) {
+                console.error("Error al eliminar la suscripción:", error);
+                Swal.fire("Error", "Hubo un problema al eliminar la suscripción.", "error");
             }
-        } catch (error) {
-            console.error("Error al eliminar la suscripción:", error);
-            Swal.fire("Error", "Hubo un problema al eliminar la suscripción.", "error");
         }
     };
 
     // Registrar el pago de una suscripción como egreso
     const handleMarkAsPaid = async (subscription) => {
-        try {
-            const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion/pagar`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
-                },
-                body: JSON.stringify({
-                    id: subscription.id,
-                    fecha: new Date().toISOString().split('T')[0], // Fecha en formato YYYY-MM-DD
-                }),
-            });
+        const result = await Swal.fire({
+            title: "¿Está seguro?",
+            text: "¿Desea marcar esta suscripción como pagada?",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#007bff", 
+            cancelButtonColor: "#dc3545", 
+            confirmButtonText: "Sí, marcar",
+            cancelButtonText: "No, cancelar",
+        });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Error al registrar el pago:", errorText);
-                Swal.fire("Error", "No se pudo registrar el pago.", "error");
-                return;
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`${process.env.BACKEND_URL}/api/suscripciones/suscripcion/pagar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                    },
+                    body: JSON.stringify({
+                        id: subscription.id,
+                        fecha: new Date().toISOString().split('T')[0], // Fecha en formato YYYY-MM-DD
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Error al registrar el pago:", errorText);
+                    Swal.fire("Error", "No se pudo registrar el pago.", "error");
+                    return;
+                }
+
+                Swal.fire("Éxito", "Pago registrado correctamente.", "success");
+                fetchSubscriptions();
+            } catch (error) {
+                console.error("Error al registrar el pago:", error);
+                Swal.fire("Error", "Hubo un problema al registrar el pago.", "error");
             }
-
-            Swal.fire("Éxito", "Pago registrado correctamente.", "success");
-
-            fetchSubscriptions();
-        } catch (error) {
-            console.error("Error al registrar el pago:", error);
-            Swal.fire("Error", "Hubo un problema al registrar el pago.", "error");
         }
     };
 
