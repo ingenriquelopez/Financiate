@@ -25,8 +25,10 @@ const colores = ["#4caf50", "#ff0058"]; // Colores para ingresos y egresos
 
 const Dashboard = () => {
     const { store } = useContext(Context);
+    const [showAlert, setShowAlert] = useState(false)
     const [totales, setTotales] = useState([]);
     const [capitales, setCapitales] = useState([]);
+    const [fondosEmergencia, setFondosEmergencia] = useState(null)
     const [datosMensuales, setDatosMensuales] = useState([]);
     const [planes, setPlanes] = useState([]);
     const [error, setError] = useState(null);
@@ -79,6 +81,58 @@ const Dashboard = () => {
 
         fetchTotales();
     }, []);
+
+    // ALERTA DEL FONDO Y EL CAPITAL ACTUAL
+    useEffect(() => {
+        const fetchFondoEmergenciaActivo = async () => {
+            try {
+                const response = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia/activo`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${store.token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log("No se encontró un fondo de emergencia activo.");
+                        return;
+                    }
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                setFondosEmergencia(data);
+
+                const capitalActual = capitales.capital_actual;
+                const montoFondoEmergencia = data.monto;
+                const diferencia = capitalActual - montoFondoEmergencia;
+
+                if (diferencia <= 0) {
+                    setShowAlert({
+                        show: true,
+                        message: "¡Cuidado! Has excedido tu Fondo de Emergencia."
+                    });
+                } else if (diferencia <= 1000) {
+                    setShowAlert({
+                        show: true,
+                        message: "¡Alerta! El capital actual está a punto de igualar el fondo de emergencia."
+                    });
+                } else {
+                    setShowAlert({ show: false });
+                }
+
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        if (store.usuario_id) {
+            fetchFondoEmergenciaActivo();
+        }
+    }, [store.usuario_id, capitales.capital_actual]);
+
+
 
     // LLAMADA A LA API PARA GRAFICO DE LINEAS
     useEffect(() => {
@@ -135,7 +189,7 @@ const Dashboard = () => {
             const data = await response.json();
             console.log(data)
             if (isMounted.current) {
-                setPlanes(data);
+                setPlanes(data.planes);
                 setLoading(false);
             }
         } catch (error) {
@@ -156,7 +210,14 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
+
             <h3 className="main-title">Dashboard Fináncia+E</h3>
+            {showAlert.show && (
+                <div className="custom-alert">
+                    <p>{showAlert.message}</p>
+                    <button onClick={() => setShowAlert({ show: false })}>Cerrar</button>
+                </div>
+            )}
 
             {loading ? (
                 <p className="loading-text">Cargando datos...</p>
