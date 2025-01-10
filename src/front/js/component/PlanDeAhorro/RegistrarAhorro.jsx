@@ -170,7 +170,7 @@ const RegistrarAhorro = ({ plan, onClose }) => {
                         options={{
                           dateFormat: "d-m-Y"
                         }}
-                        className="form-control text-center"
+                        className="form-control text-center w-100"
                       />
                     </div>
                   </div>

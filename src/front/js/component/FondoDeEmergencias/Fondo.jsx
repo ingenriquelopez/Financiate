@@ -20,7 +20,6 @@ const Fondo = () => {
                 });
 
                 const resultado = await respuesta.json();
-                console.log(resultado.id)
                 if (respuesta.ok) {
                     setFondoGuardado({
                         id: resultado.id,
@@ -101,9 +100,7 @@ const Fondo = () => {
         });
 
         if (confirmacion.isConfirmed) {
-            console.log(fondoGuardado.id)
             try {
-                // const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia/${fondoGuardado.id}`, {
                 const respuesta = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia`, {
                     method: "DELETE",
                     headers: {
@@ -115,9 +112,6 @@ const Fondo = () => {
                     })
                 });
                 console.log(`${process.env.BACKEND_URL}/api/fondos_emergencia/${fondoGuardado.id}`);
-                console.log(await respuesta.text());
-                console.log(respuesta.status);
-                console.log(respuesta);
 
                 if (respuesta.ok) {
                     setFondoGuardado(null);

@@ -18,7 +18,7 @@ const PlanDeAhorro = () => {
   const [planToEdit, setPlanToEdit] = useState(null);
   const [loading, setLoading] = useState(true); // Estado de carga
   const isMounted = useRef(true);
-
+  
   // Función para obtener los planes de la API
   const fetchPlans = async () => {
     try {
@@ -82,6 +82,7 @@ const PlanDeAhorro = () => {
     setPlanToEdit(null);
   };
 
+  
   return (
     <div className="container text-center">
       <h2>Gestión de Planes de Ahorro</h2>

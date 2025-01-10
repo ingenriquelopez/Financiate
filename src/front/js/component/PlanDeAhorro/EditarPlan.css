@@ -66,3 +66,12 @@
     border: none;
   }
   
+  .input-shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra elegante */
+    transition: box-shadow 0.3s ease; /* Animación suave al enfocar */
+  }
+  
+  .input-shadow:focus {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Sombra más intensa al enfocar */
+  }
+  
