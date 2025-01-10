@@ -12,7 +12,7 @@ const formatNumber = (number) => {
   }).format(number);
 };
 
-const Detalles = ({ plan, onClose, updatePlans }) => {
+const Detalles = ({ plan, onClose, updatePlans}) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false);
   const [loading, setLoading] = useState(false);  
@@ -32,6 +32,7 @@ const Detalles = ({ plan, onClose, updatePlans }) => {
 
   const handleCloseRegistrarAhorro = () => {
     setShowRegistrarAhorroModal(false);
+    onCloseAll();
   };
 
   // Función para obtener los planes de la API
@@ -148,7 +149,7 @@ const Detalles = ({ plan, onClose, updatePlans }) => {
         />
       )}
 
-      {showRegistrarAhorroModal && (
+      {onCloseAll && showRegistrarAhorroModal && (
         <RegistrarAhorro
           plan={plan}
           onClose={handleCloseRegistrarAhorro}

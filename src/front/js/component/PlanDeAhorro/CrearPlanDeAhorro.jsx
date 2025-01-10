@@ -88,7 +88,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
       if (isNaN(numericValue) || numericValue < 0) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          [name]: 'El monto debe ser mayor o igual que 0',
+          [name]: 'El monto debe ser mayor/igual que 0',
         }));
       } else {
         setErrors((prevErrors) => ({
@@ -203,7 +203,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header bg-primary text-white text-center">
-            <h5 className="modal-title" id="planModalLabel">{planToEdit ? 'Editar Plan' : 'Agregar Plan'}</h5>
+            <h5 className="modal-title fw-bold text-shadow text-light" id="planModalLabel">Agregar Plan</h5>
             <button type="button" className="btn-close" onClick={handleCloseModal} aria-label="Close"></button>
           </div>
           <div className="modal-body">
@@ -216,7 +216,12 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                   id="nombre_plan"
                   name="nombre_plan"
                   value={formData.nombre_plan}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange({
+                    target: { 
+                      name: e.target.name, 
+                      value: e.target.value.toUpperCase() // Convierte el texto a mayúsculas
+                    }
+                  })}
                 />
               </div>
               <div className="row">
@@ -244,7 +249,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                       dateFormat: "d-m-Y",
                       minDate: "today" // Evitar fechas pasadas
                     }}
-                    className="form-control"
+                    className="form-control w-100 text-center"
                   />
                 </div>
               </div>
@@ -272,7 +277,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     options={{
                       dateFormat: "d-m-Y"
                     }}
-                    className="form-control"
+                    className="form-control w-100 text-center"
                   />
                 </div>
               </div>

@@ -96,7 +96,7 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
     <div className="modal fade show bodyContainer" tabIndex="-1" style={{ display: "block" }} aria-labelledby="editarPlanLabel" aria-hidden="false">
       <div className="modal-dialog modal-lg">
         <div className="modal-content shadow-lg rounded-3">
-          <div className="modal-header border-bottom-0">
+          <div className="modal-header bg-light border-bottom-0">
             <h5 className="modal-title text-primary" id="editarPlanLabel">Editar Plan de Ahorro</h5>
             <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
           </div>
@@ -123,7 +123,7 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
                         value={formData.fecha_inicio}
                         onChange={([date]) => setFormData({ ...formData, fecha_inicio: formatToDDMMYYYY(date) })}
                         options={{ dateFormat: "d-m-Y" }}
-                        className="form-control form-control-lg shadow-sm rounded-2 mx-auto flatpickr-input"
+                        className="form-control form-control-lg text-center shadow-sm rounded-2 mx-auto flatpickr-input input-shadow"
                       />
                     </div>
 
@@ -133,7 +133,7 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
                         type="number"
                         id="monto_objetivo"
                         name="monto_objetivo"
-                        className="form-control form-control-lg border-0 shadow-sm rounded-2 mx-auto inputGray"
+                        className="form-control form-control-lg text-center border-0 shadow-sm rounded-2 mx-auto inputGray"
                         style={{ width: "40%" }}
                         value={formData.monto_objetivo}
                         onChange={handleChange}
@@ -146,7 +146,7 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
                         value={formData.fecha_objetivo}
                         onChange={([date]) => setFormData({ ...formData, fecha_objetivo: formatToDDMMYYYY(date) })}
                         options={{ dateFormat: "d-m-Y" }}
-                        className="form-control form-control-lg shadow-sm rounded-2 mx-auto flatpickr-input"
+                        className="form-control form-control-lg text-center shadow-sm rounded-2 mx-auto flatpickr-input"
                       />
                     </div>
                   </div>
