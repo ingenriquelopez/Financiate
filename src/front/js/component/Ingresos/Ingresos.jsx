@@ -32,7 +32,7 @@ function Ingresos() {
             'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
           },
         });
-    
+
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -58,8 +58,9 @@ function Ingresos() {
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/ingresos/ingreso`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" ,
-        'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`, 
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
         body: JSON.stringify({
           monto: accountMoney,

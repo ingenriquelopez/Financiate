@@ -7,32 +7,12 @@ fondos_emergencia_bp = Blueprint('fondos_emergencia', __name__)
 #--------------------------------------------------------------
 
 # CRUD para FondoEmergencia
-@fondos_emergencia_bp.route('/fondos_emergencia', methods=['GET'])
-@token_required
-def obtener_fondos_emergencia(payload):
-    usuario_id = payload.get('id')
-
-    fondos = FondoEmergencia.query.filter_by(usuario_id=usuario_id).all()
-
-    if not fondos:
-        return jsonify({'msg': 'No se encontraron fondos de emergencia para este usuario.'}), 404
-
-    return jsonify([{
-        'id': f.id,
-        'monto': f.monto,
-        'monto_actual': f.monto_actual,
-        'razon': f.razon,
-        'usuario_id': f.usuario_id
-    } for f in fondos]), 200
-
 @fondos_emergencia_bp.route('/fondos_emergencia/activo', methods=['GET'])
 @token_required
 def obtener_fondo_emergencia_activo(payload):
     usuario_id = payload.get('id')
 
-
     fondo = FondoEmergencia.query.filter_by(usuario_id=usuario_id).first()
-
 
     if not fondo:
         print(fondo)

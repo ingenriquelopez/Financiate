@@ -7,7 +7,7 @@ import moment from 'moment'; // Importamos moment.js para trabajar con fechas
 const RegistrarAhorro = ({ plan, onClose }) => {
   const [monto_ahorro, setMonto_ahorro] = useState('');
   const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10)); // Fecha actual por defecto
-  const [descripcion, setDescripcion] = useState('Deposito al plan de ahorro'); // Describe el ahorro
+  const [descripcion, setDescripcion] = useState('Depósito al plan de ahorro.'); // Describe el ahorro
   const [error, setError] = useState(''); // Error general
   const [errorMonto, setErrorMonto] = useState(''); // Error para monto a ahorrar
   const [capitalActual, setCapitalActual] = useState(0); // Estado para el capital actual
@@ -29,7 +29,7 @@ const RegistrarAhorro = ({ plan, onClose }) => {
     return moment(dateString, 'DD-MM-YYYY').format('YYYY-MM-DD');
   };
 
- 
+
   useEffect(() => {
     setFecha(getCurrentDate());
     // Aquí, debes hacer una llamada para obtener el capital actual del usuario
@@ -164,7 +164,7 @@ const RegistrarAhorro = ({ plan, onClose }) => {
                   <div className="row justify-content-center mt-3">
                     <div className="col-auto text-center">
                       <label className="form-label">Fecha del Ahorro</label>
-                      <Flatpickr 
+                      <Flatpickr
                         value={fecha}
                         onChange={([date]) => setFecha(formatToDDMMYYYY(date))}
                         options={{
