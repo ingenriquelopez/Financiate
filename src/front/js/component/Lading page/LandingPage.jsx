@@ -58,7 +58,7 @@ const LandingPage = () => {
 
                             {/* Descripción */}
                             <p className='text-justify'>
-                                Con nuestra función de suscripciones podrás recordar hasta 5 dias previos el pago mensual de tu plan de internet o el de tu streaming favorito. Si eres de los que le cuesta recordarse del día y el monto de las suscripciones, FINÁNCIA+E te da la solución inmediata.
+                                Con nuestra función de suscripciones podrás recordar el pago mensual de tu plan de internet o el de tu streaming favorito. Si eres de los que le cuesta recordarse del día y el monto de las suscripciones, FINÁNCIA+E te da la solución inmediata.
                             </p>
                         </div>
 
