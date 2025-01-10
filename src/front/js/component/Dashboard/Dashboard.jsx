@@ -20,7 +20,7 @@ import "./Dashboard.css"; // Importar los estilos
 import ProgressBar from "./ProgressBar.jsx"; // Importación de ProgressBar
 
 const chartWidth = "100%";
-const chartHeight = 200;
+const chartHeight = 250;
 const colores = ["#4caf50", "#ff0058"]; // Colores para ingresos y egresos
 
 const Dashboard = () => {
@@ -187,7 +187,6 @@ const Dashboard = () => {
                 },
             });
             const data = await response.json();
-            console.log(data)
             if (isMounted.current) {
                 setPlanes(data);
                 setLoading(false);

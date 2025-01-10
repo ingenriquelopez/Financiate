@@ -111,7 +111,6 @@ const Fondo = () => {
                         "id": fondoGuardado.id,
                     })
                 });
-                console.log(`${process.env.BACKEND_URL}/api/fondos_emergencia/${fondoGuardado.id}`);
 
                 if (respuesta.ok) {
                     setFondoGuardado(null);
