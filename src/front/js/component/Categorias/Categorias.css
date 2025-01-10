@@ -126,8 +126,8 @@
 }
 
 /* Botones dentro del modal */
-.modal-contenido button:nth-child(1) {
-  background-color: #2ecc71; /* Verde */
+.modal-Contenido button:nth-child(1) {
+  background-color: #007BFF; /* Verde */
 }
 
 .modal-contenido button:nth-child(1):hover {
