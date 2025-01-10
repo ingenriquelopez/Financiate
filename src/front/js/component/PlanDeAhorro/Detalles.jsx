@@ -149,7 +149,7 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
         />
       )}
 
-      {onCloseAll && showRegistrarAhorroModal && (
+      {showRegistrarAhorroModal && (
         <RegistrarAhorro
           plan={plan}
           onClose={handleCloseRegistrarAhorro}
