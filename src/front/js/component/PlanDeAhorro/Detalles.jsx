@@ -33,7 +33,7 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
 
   const handleCloseRegistrarAhorro = () => {
     setShowRegistrarAhorroModal(false);
-    onCloseAll();
+    onClose();
   };
 
   // Función para obtener los planes de la API
