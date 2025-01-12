@@ -34,6 +34,7 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const isMounted = useRef(true);
+    const [leyendaSinDatos,setLeyendaSinDatos] = useState('');
 
 
     // LLAMADA A LA API PARA GRAFICO DE DONA
@@ -66,6 +67,11 @@ const Dashboard = () => {
                     { name: "Egresos", value: data.total_egresos },
                 ];
                 setTotales(formattedData);
+                if (data.total_ingresos == 0 && data.total_egresos==0) {
+                    setLeyendaSinDatos('(Aun no hay egresos o egresos por graficar)')
+                } else {
+                    setLeyendaSinDatos('');
+                }
 
                 setCapitales({
                     "capital_inicial": data.capital_inicial,
@@ -236,6 +242,7 @@ const Dashboard = () => {
                                     </p>
                                 </div>
                                 <ResponsiveContainer width={chartWidth} height={chartHeight}>
+                                {leyendaSinDatos && <p className="mt-3 text-secondary"> {leyendaSinDatos} </p> }
                                     <PieChart>
                                         <Pie
                                             data={totales}
@@ -259,7 +266,9 @@ const Dashboard = () => {
                                                 />
                                             ))}
                                         </Pie>
+                                        
                                     </PieChart>
+                                    
                                 </ResponsiveContainer>
                                 <div className="legend-container">
                                     <p className="legend-text capital-actual">

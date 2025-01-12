@@ -4,7 +4,7 @@ import RadovanImg from "../../../img/Radovan.png";
 import PabloImg from "../../../img/Pablo.png";
 import EnriqueImg from "../../../img/Enrique.png";
 import CerditoImg from "../../../img/Cerdito.png";
-import './Sobrenosotros.css';
+import './SobreNosotros.css';
 const SobreNosotros = () => {
     return (
         <div>
