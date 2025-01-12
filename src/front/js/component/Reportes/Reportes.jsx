@@ -5,7 +5,7 @@ import { Context } from '../../store/appContext';
 const Reportes = () => {
   const [reportes, setReportes] = useState([]);
   const { store, actions } = useContext(Context);
-  const usuario_id = store.usuario_id
+  const usuario_id = store.usuario_id;
 
   const fetchReportes = async () => {
     if (!usuario_id) {
@@ -33,46 +33,49 @@ const Reportes = () => {
     }
   };
 
- // Este efecto solo se ejecuta una vez cuando el componente se monta o cuando el usuario_id cambia
   useEffect(() => {
     fetchReportes();
-  }, [usuario_id]);  // Solo se ejecuta cuando usuario_id cambie
+  }, [usuario_id]);
 
   return (
-    <div>
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Reportes</h2>
-      <ul style={{ listStyleType: "none", padding: "0" }}>
-        {reportes
-          .slice()
-          .sort((a, b) => {
-            const fechaA = new Date(a.fecha);
-            const fechaB = new Date(b.fecha);
-            return fechaB - fechaA;
-          })
-          .map((reporte) => (
-            <li
-              key={`${reporte.tipo}-${reporte.id}`}
-              style={{
-                backgroundColor: "white",
-                border: `2px solid ${reporte.tipo === "ingreso" ? "green" : "red"}`,
-                padding: "10px",
-                margin: "5px 0",
-                borderRadius: "5px",
-              }}
-            >
-              <p style={{ textAlign: "left", fontWeight: "bold", marginBottom: "10px" }}>
-                {reporte.tipo.toUpperCase()}
-              </p>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
-                <span>Monto: ${reporte.monto.toFixed(2)}</span>
-                <span>Descripción: {reporte.descripcion}</span>
-                <span>Fecha: {new Date(reporte.fecha).toISOString().split('T')[0]}</span>
-              </div>
-            </li>
-          ))}
-      </ul>
+    <div className="container text-center">
+      <h2 style={{ marginBottom: "20px" }}>Reportes</h2>
+
+      <div className="table-responsive" style={{ width: '100%', maxHeight: '400px', overflowY: 'auto' }}>
+        <table className="table table-striped table-bordered mx-auto" style={{ width: '80%' }}>
+          <thead>
+            <tr>
+              <th>Ingreso/Egreso</th>
+              <th>Monto</th>
+              <th>Descripción</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reportes
+              .slice()
+              .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+              .map((reporte) => (
+                <tr
+                  key={`${reporte.tipo}-${reporte.id}`}
+                  style={{
+                    backgroundColor: "white",
+                    borderLeft: `5px solid ${reporte.tipo === "ingreso" ? "green" : "red"}`,
+                  }}
+                >
+                  <td>{reporte.tipo.toUpperCase()}</td>
+                  <td>${reporte.monto.toFixed(2)}</td>
+                  <td>{reporte.descripcion}</td>
+                  <td>{new Date(reporte.fecha).toISOString().split('T')[0]}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
 export default Reportes;
+
+

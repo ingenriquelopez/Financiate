@@ -7,22 +7,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
 
-.modal-contenido-egreso {
+.modal-contenido-egreso  {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 80%;
-  max-width: 900px;
+  width: 100%;
+  max-width: 500px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .modal-titulo-egreso {
   text-align: center;
-  font-size: 24px;
+  font-size: 24px; 
   margin-bottom: 20px;
 }
 
@@ -65,21 +66,6 @@ input, select {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-}
-
-/* Botón Registrar */
-.registrar-button {
-  padding: 10px 15px;
-  background-color: #28a745; /* Verde */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 48%; /* Para que ocupe un poco menos de la mitad */
-}
-
-.registrar-button:hover {
-  background-color: #218838; /* Verde más oscuro */
 }
 
 /* Botón Cerrar */

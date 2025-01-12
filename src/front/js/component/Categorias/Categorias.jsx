@@ -40,9 +40,9 @@ const Categorias = () => {
 
       const result = await response.json();
       const { id, nombre, icono } = result;
-      
+
       setCategorias((prevCategorias) => [...prevCategorias, { id, nombre, icono }]);
-      setNewCategory({ id:'', nombre: '', icono: '' });
+      setNewCategory({ id: '', nombre: '', icono: '' });
       setShowModal(false);
     } catch (error) {
       console.error('Error:', error.message);
@@ -116,11 +116,11 @@ const Categorias = () => {
           'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("No se pudieron eliminar las categorías:", errorData.error);
-  
+
         // Mostrar las categorías comprometidas que no pudieron ser eliminadas
         if (errorData.comprometidas && errorData.comprometidas.length > 0) {
           const compromitidasHtml = errorData.comprometidas.map((categoria) => {
@@ -130,7 +130,7 @@ const Categorias = () => {
               <p>Egresos relacionados: ${categoria.egresos_relacionados}</p>
             `;
           }).join("");
-  
+
           Swal.fire({
             icon: 'warning',
             title: 'No se pudieron eliminar algunas categorías',
@@ -144,11 +144,11 @@ const Categorias = () => {
       }
       // Después de eliminar todas las categorías, actualizar el estado para recargar las categorías
       setRefreshCategories(true);
-  
-  
+
+
       // Si todo fue bien, actualizar el estado y mostrar mensaje de éxito
       //setCategorias([]);
-      
+
       Swal.fire({
         icon: 'success',
         title: 'Categorías eliminadas',
@@ -156,7 +156,7 @@ const Categorias = () => {
       });
     } catch (error) {
       console.error('Error inesperado al eliminar las categorías:', error.message);
-  
+
       Swal.fire({
         icon: 'warning',
         title: 'Algo salió mal',
@@ -164,8 +164,8 @@ const Categorias = () => {
       });
     }
   };
-  
-  
+
+
   // Función para manejar el cambio en el formulario
   const handleInputChange = (event) => {
     event.persist(); // Esto permite que el evento sea accesible de manera asincrónica
@@ -183,7 +183,7 @@ const Categorias = () => {
         const token = localStorage.getItem('tokenFinanciaE');
         if (!token) {
           throw new Error("Token no disponible");
-          }
+        }
 
         const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/traertodas`, {
           method: 'GET',
@@ -214,7 +214,7 @@ const Categorias = () => {
 
       {/* Tabla de categorías */}
       <div className="table-responsive" style={{ width: 'calc(80%)', maxHeight: '400px', overflowY: 'auto' }}>
-      <p className = "predeterminadas">⭐ = Predeterminadas</p>
+        <p className="predeterminadas">⭐ = Predeterminadas</p>
         <table className="table table-striped table-bordered mt-0 mx-auto">
           <thead>
             <tr>
@@ -226,30 +226,30 @@ const Categorias = () => {
           <tbody>
             {categorias.map((categoria) => (
               <tr key={categoria.id}>
-                <td>{categoria.nombre}{categoria.is_default ? "⭐":""}</td>
+                <td>{categoria.nombre}{categoria.is_default ? "⭐" : ""}</td>
                 <td>
                   <span>{categoria.icono}</span>
                 </td>
                 <td>
-                <div className="btn-tooltip-container">
-                  <button
-                    className="btn btn-danger"
-                    aria-disabled={categoria.is_default ? 'true' : 'false'}                    
-                     disabled = {categoria.is_default}
-                    onClick={() => deleteCategory(categoria.id)}
-                  >
-                    <FaTrash />
-                  </button>
-                  {categoria.is_default && (
-                    <span className="tooltip">Imposible Eliminar Categorías Predeterminadas</span>
-                  )}
-                </div>
+                  <div className="btn-tooltip-container">
+                    <button
+                      className="btn btn-danger"
+                      aria-disabled={categoria.is_default ? 'true' : 'false'}
+                      disabled={categoria.is_default}
+                      onClick={() => deleteCategory(categoria.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                    {categoria.is_default && (
+                      <span className="tooltip">Imposible Eliminar Categorías Predeterminadas</span>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
-      </table>
-  </div>
+        </table>
+      </div>
 
 
       {/* Botones para Agregar Categoría y Cerrar alineados horizontalmente */}

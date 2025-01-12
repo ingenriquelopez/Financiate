@@ -178,9 +178,8 @@ const Fondo = () => {
                 </form>
             ) : (
                 <div className="fondo-card">
-                    <h3>Fondo Guardado</h3>
-                    <p><strong>Monto:</strong> ${fondoGuardado.monto.toFixed(2)}</p>
                     <p><strong>Razón:</strong> {fondoGuardado.razon}</p>
+                    <p><strong>Monto:</strong> ${fondoGuardado.monto.toFixed(2)}</p>
                     <div className="card-buttons">
                         <button className="btn-eliminar" onClick={manejarEliminar}>
                             Eliminar

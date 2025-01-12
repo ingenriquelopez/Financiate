@@ -90,7 +90,7 @@ function Ingresos() {
     <div>
       {isModalOpen && (
         <div className="modal-ingreso">
-          <div className="modal-contenido">
+          <div className="modal-contenido-ingreso">
             <h2 className="fw-bold modal-titulo">INGRESOS</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-field">
