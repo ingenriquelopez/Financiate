@@ -1,26 +1,35 @@
 import React from 'react';
 import VadhirImg from "../../../img/Vadhir.png";
-import RadovanImg from "../../../img/Radovan.png";
+import RadovanImg from "../../../img/Radovann.png";
 import PabloImg from "../../../img/Pablo.png";
 import EnriqueImg from "../../../img/Enrique.png";
 import CerditoImg from "../../../img/Cerdito.png";
+import TechlogosImg from "../../../img/Technologos.png";
 import './Sobrenosotros.css';
+
 const SobreNosotros = () => {
     return (
         <div>
             <div className="mt-0">
 
-
                 {/* DESCRIPCION DE APP */}
                 <div className="row p-5 bg-custom2">
                     <div className="fw-bold fs-1">Sobre Nosotros</div>
                     <div className="col-8">
-                        <p className="text-justify">FINÁNCIA+E es la app definitiva para gestionar tu economía personal de manera sencilla y efectiva. Organiza tus gastos con categorías personalizadas, recibe alertas de tus suscripciones y planifica tus ahorros. Todo esto y mucho más, al alcance de tu mouse o celular. ¡Toma el control de tus finanzas hoy mismo!</p>
+                        <p className="text-justify">FINÁNCIA+E es la app definitiva para gestionar tu economía personal de manera sencilla y efectiva. Organiza tus gastos con categorías personalizadas, recibe alertas de tus suscripciones y planifica tus ahorros. Todo esto y mucho más, al alcance de tu mouse o celular. ¡Toma el control de tus finanzas hoy mismo! <br /> <br />La aplicación financiera fue desarrollada en 4GEEKS ACADEMY bajo la tutela del Profesor Bryan García y de José Velásquez, con mucha empeño y dedicación implementamos tecnologías como Html,Css, Bootstrap, JavaScript, React, Python, Flask, SweetAlert2, Postgresql, Recharts y Flatpickr entre otras.  </p>
+                        {/* Imagen Techlogos dentro del mismo contenedor */}
+                        <div className="row p-5 bg-custom2">
+                            <div className="col-12 d-flex justify-content-center">
+                                <img src={TechlogosImg} alt="Technologos" className="img-fluid" />
+                            </div>
+                        </div>
                     </div>
                     <div className="col-4 d-flex align-items-center justify-content-center">
                         <img src={CerditoImg} alt="Cerdito" className="img-fluid" />
                     </div>
                 </div>
+
+
 
                 {/* Descripción Enrique */}
                 <div className="row p-5 align-items-center bg-custom">
