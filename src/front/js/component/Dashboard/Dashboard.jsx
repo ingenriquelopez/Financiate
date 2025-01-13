@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
+import {NavLink} from 'react-router-dom'
 import { Context } from "../../store/appContext";
 import {
     BarChart,
@@ -305,6 +306,10 @@ const Dashboard = () => {
                         </div>
 
                         {/* Barra de progreso */}
+                        <NavLink to='/plandeahorro'>
+                          <p className="navlink-text" style={{ fontFamily: "'Roboto Slab', serif", fontStyle: "italic", fontSize: "24px" }}>
+                            PLANES DE AHORRO</p>
+                        </NavLink>
                         <div className="progress-container mt-5">
                             {planes.length > 0 ? (
                                 planes.map((plan, index) => (

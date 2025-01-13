@@ -1,4 +1,4 @@
-.modalCrearPlan {
+.modalRegistrarAhorro {
   position: fixed;
   top: 0;
   left: 0;
@@ -18,6 +18,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
+  
 }
 
 .modalContent {
@@ -36,53 +37,22 @@
   align-items: center;
   background-color: #007bff;
   color: #fff;
+  height: 50px;
 }
 
-.modal-header .modal-title {
-  margin-right: 20px; /* Separar el título del botón de cerrar */
-  
-}
 .modalTitle {
+  margin-right: 20px; /* Separar el título del botón de cerrar */
   color: #fff !important;
+  padding-left: 0.5rem !important;
+
 }
 
 .modalFooter {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   width: 100%;
 }
 
-.form-label {
+.formLabel {
   font-size: 1.1rem;
-}
-
-/* Asegúrate de que el fondo de todos los inputs, incluyendo Flatpickr, sea blanco */
-.form-control {
-  background-color: #fff !important; /* Esto asegura que el fondo sea blanco */
-  color: #000 !important;  /* Para asegurarte que el texto sea oscuro y legible */
-  border-radius: 4px; /* Bordes redondeados como otros inputs */
-  padding: 10px; /* Espaciado interno para un mejor aspecto */
-  font-size: 1rem; /* Tamanño de fuente adecuado */
-  
-}
-
-
-
-
-
-.text-danger {
-  color: red;
-}
-
-.text-shadow {
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-.btn-danger {
-  width: 120px; /* Botón de cerrar con tamaño consistente */
-}
-
-.btn-success {
-  width: 120px; /* Botón de guardar con tamaño consistente */
 }

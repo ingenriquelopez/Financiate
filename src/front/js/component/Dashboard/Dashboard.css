@@ -56,7 +56,7 @@
 .capital-actual {
     font-family: 'Roboto', sans-serif; /* Fuente elegante y moderna */
     font-weight: 300; /* Delgado */
-    font-size: 12px; /* Tamaño del texto */
+    font-size: 13px; /* Tamaño del texto */
     color: #FF6F00;
     text-transform: uppercase; /* Texto en mayúsculas */
     letter-spacing: 1px; /* Espaciado entre letras */
@@ -106,3 +106,16 @@
     color: red; /* Establece el color de texto a rojo */
     font-weight: bold; /* (Opcional) Resalta el texto */
 }
+.navlink-text {
+    font-family: 'Roboto Slab', serif;
+    font-style: italic;
+    font-size: 24px;
+    color: #000;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .navlink-text:hover {
+    color: #0056b3; /* Azul oscuro */
+    transform: scale(1.1); /* Efecto de zoom */
+  }
+  

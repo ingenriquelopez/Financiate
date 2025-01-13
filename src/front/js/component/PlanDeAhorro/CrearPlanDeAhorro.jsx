@@ -193,7 +193,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
     <div className={`${styles.modalCrearPlan} modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="planModalLabel">
       <div className={`modal-dialog ${styles.modalDialog}`}>
         <div className={`modal-content ${styles.modalContent}`}>
-          <div className={`modal-header ${styles.modalHeader}`}>
+          <div className={`${styles.modalHeader} modal-header`}>
             <h5 className={`modal-title ${styles.modalTitle}`} id="planModalLabel">Agregar Plan</h5>
             <button type="button" className="btn-close" onClick={handleCloseModal} aria-label="Close"></button>
           </div>
@@ -225,6 +225,14 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     name="monto_inicial"
                     value={formData.monto_inicial}
                     onChange={handleChange}
+                    style={{
+                      backgroundColor: '#fff', // Fondo blanco
+                      color: '#000', // Texto negro
+                      borderRadius: '4px', // Bordes redondeados
+                      padding: '10px', // Espaciado interno
+                      fontSize: '1rem', // Tamaño de fuente adecuado
+                      height: '40px',
+                    }}
                   />
                   {errors.monto_inicial && <small className="text-danger">{errors.monto_inicial}</small>}
                 </div>
@@ -261,6 +269,14 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     name="monto_objetivo"
                     value={formData.monto_objetivo}
                     onChange={handleChange}
+                    style={{
+                      backgroundColor: '#fff', // Fondo blanco
+                      color: '#000', // Texto negro
+                      borderRadius: '4px', // Bordes redondeados
+                      padding: '10px', // Espaciado interno
+                      fontSize: '1rem', // Tamaño de fuente adecuado
+                      height: '40px',
+                    }}
                   
                   />
                   {errors.monto_objetivo && <small className="text-danger">{errors.monto_objetivo}</small>}
@@ -283,6 +299,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                       borderRadius: '4px', // Bordes redondeados
                       padding: '10px', // Espaciado interno
                       fontSize: '1rem', // Tamaño de fuente adecuado
+                      height: '40px',
                     }}
                   />
                 </div>
@@ -290,8 +307,8 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
             </form>
           </div>
           <div className={`modal-footer ${styles.modalFooter}`}>
-            <button type="button" className="btn btn-danger" onClick={handleCloseModal}>Cerrar</button>
-            <button type="button" className="btn btn-success" onClick={handleSave} disabled={isSaveDisabled}>Guardar</button>
+            <button type="button" className="btn btn-danger" style= {{width:'180px'}} onClick={handleCloseModal}>Cerrar</button>
+            <button type="button" className="btn btn-success" style= {{width:'180px'}} onClick={handleSave} disabled={isSaveDisabled}>Guardar</button>
           </div>
         </div>
       </div>
