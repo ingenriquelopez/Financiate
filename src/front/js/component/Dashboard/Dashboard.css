@@ -1,121 +1,157 @@
-/* Estilos para Dashboard */
+/* Estilos generales para el Dashboard */
 .dashboard-container {
-    background-color: #f4f7fc;
+    margin-top: 20px;
     padding: 20px;
-    border-radius: 8px;
-    width: 100%;
-    height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
 .main-title {
-    font-size: 2rem;
-    color: #333;
-    font-weight: 600;
-    margin-bottom: 20px;
     text-align: center;
-    letter-spacing: 0.5px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
 }
 
-.dashboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 30px;
-}
-.dona {
-    width: 100%;
-    height: 100%;
-}
-.donut-chart-container {
+/* Estilos para los gráficos */
+/* .donut-chart-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    height: 300px;
+} */
+.donut-chart-container {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
 }
 
 .legend-container {
+    margin-top: 15px;
     text-align: center;
-    margin-top: 0;
 }
 
 .legend-text {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 1rem;
     color: #333;
 }
-.capital-inicial {
-    font-family: 'Roboto', sans-serif; /* Fuente elegante y moderna */
-    font-weight: 300; /* Delgado */
-    font-size: 12px; /* Tamaño del texto */
-    color: #4A90E2; /* Azul claro sugerido */
-    text-transform: uppercase; /* Texto en mayúsculas */
-    letter-spacing: 1px; /* Espaciado entre letras */
-    margin: 10px 0; /* Margen para separación */
-}
 
-.capital-actual {
-    font-family: 'Roboto', sans-serif; /* Fuente elegante y moderna */
-    font-weight: 300; /* Delgado */
-    font-size: 13px; /* Tamaño del texto */
-    color: #FF6F00;
-    text-transform: uppercase; /* Texto en mayúsculas */
-    letter-spacing: 1px; /* Espaciado entre letras */
-    margin: 10px 0; /* Margen para separación */
-}
 
-.chart-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #4e4e4e;
-    margin-top: 10px; /* Ajusta el valor según lo necesites */
-    margin-bottom: 10px; /* Ya existe o puede ser agregado si es necesario */
-}
-
-.row {
-    width: 100%;
-    margin: 0;
-}
-
-.col-md-6 {
-    padding: 0;
-    margin-bottom: 50px;
-}
-
-.line-chart-container {
-    width: 100%;
-    height: 100%;
-    max-width: 100%; /* Evitar que el gráfico se estire más allá del contenedor */
-}
-
-@media (max-width: 768px) {
-    .line-chart-container {
-        height: 250px; /* Ajusta la altura en dispositivos más pequeños */
-    }
-}
-
-.progress-container {
-    margin-top: 30px;
+.donut-chart-container .legend-container {
     text-align: center;
+    margin-bottom: 10px;
+}
+
+.donut-chart-container .legend-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.donut-chart-container .legend-text.capital-inicial {
+    color: #4caf50;
+}
+
+.donut-chart-container .legend-text.capital-actual {
+    color: #ff0058;
+}
+
+.donut-chart-container .mt-3 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #777;
+}
+
+/* Estilos para el gráfico de líneas */
+.line-chart-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    height: 300px;
+}
+
+.line-chart-container .chart-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Estilos de los enlaces de navegación */
+.navlink-text {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 30px;
+}
+
+.navlink-text:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Estilos para el progress bar */
+.progress-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.custom-alert p {
-    color: red; /* Establece el color de texto a rojo */
-    font-weight: bold; /* (Opcional) Resalta el texto */
+.progress-bar {
+    width: 100%;
+    margin-bottom: 20px;
 }
-.navlink-text {
-    font-family: 'Roboto Slab', serif;
-    font-style: italic;
-    font-size: 24px;
-    color: #000;
-    transition: color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .navlink-text:hover {
-    color: #0056b3; /* Azul oscuro */
-    transform: scale(1.1); /* Efecto de zoom */
-  }
-  
+
+/* Estilo para alertas */
+.custom-alert {
+    background-color: #ffcccc;
+    color: #a60000;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.custom-alert button {
+    background-color: #a60000;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.custom-alert button:hover {
+    background-color: #d32f2f;
+}
+
+/* Estilos de carga */
+.loading-text {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #777;
+}
+
+/* Estilo de error */
+.error-text {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #a60000;
+}

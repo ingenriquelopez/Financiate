@@ -235,7 +235,7 @@ const Login = () => {
                   <div className="col-12 mb-4 d-flex flex-column justify-content-center align-items-center">
                     <label htmlFor="formMoneda" className="form-label">Moneda</label>
                     <select
-                      className="form-select"
+                      className={`form-select ${styles.selectMoneda}`}
                       id="formMoneda"
                       value={moneda}
                       onChange={(e) => setMoneda(e.target.value)}
@@ -250,7 +250,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="modal-footer m-2">
+                <div className="modal-footer m-2 d-flex justify-content-center align-items-center">
                   <button
                     type="button"
                     className="btn btn-secondary"

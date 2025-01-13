@@ -81,12 +81,47 @@
   gap: 15px;
 }
 
-/* Ajuste para el campo Capital Inicial */
 .inputCapitalInicial {
   width: 50%; /* Hace que el campo sea un 50% más pequeño */
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
+  border: 1px solid #ccc; /* Borde para una apariencia más definida */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra inicial */
+  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Animación suave */
 }
+
+.inputCapitalInicial:focus {
+  outline: none; /* Quita el contorno predeterminado */
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+  transform: scale(1.02); /* Efecto de leve aumento */
+}
+
+.selectMoneda {
+  width: 70%; /* Ajusta el ancho según sea necesario */
+  font-size: 1.2rem; /* Tamaño de fuente uniforme */
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc; /* Borde para mantener consistencia */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra inicial */
+  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Transiciones suaves */
+  padding: 0.5rem; /* Espaciado interno para mejorar el diseño */
+  appearance: none; /* Elimina el estilo nativo del navegador */
+  background: #fff; /* Fondo blanco */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath fill='%23000' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center; /* Ubicación de la flecha */
+  background-size: 10px 10px;
+  cursor: pointer; /* Indicador de clic */
+}
+
+.selectMoneda:focus {
+  outline: none; /* Quita el contorno predeterminado */
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+  transform: scale(1.02); /* Efecto de aumento */
+}
+
+
 
 /* Animación de entrada */
 @keyframes zoomIn {
