@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/material_green.css'; // Importa el estilo de flatpickr
-import './CrearPlanDeAhorro.css';
+import styles from './CrearPlanDeAhorro.module.css'; // Importamos el CSS module
 
 const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
-
   const getCurrentDate = () => {
     const today = new Date();
     today.setHours(today.getHours() - today.getHours());
@@ -24,8 +23,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
     monto_acumulado: '',
   });
 
-  const [isChecked, setIsChecked] = useState(true); 
-  const [isSaveDisabled, setIsSaveDisabled] = useState(true); 
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [errors, setErrors] = useState({
     monto_inicial: '',
     monto_objetivo: '',
@@ -43,7 +41,6 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
     const [day, month, year] = dateString.split('-');
     return `${year}-${month}-${day}`;
   };
-
 
   useEffect(() => {
     if (planToEdit) {
@@ -67,7 +64,6 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
     }
   }, [planToEdit]);
 
-
   useEffect(() => {
     const { nombre_plan, monto_inicial, monto_objetivo, fecha_objetivo, fecha_inicio } = formData;
     if (nombre_plan && monto_inicial && monto_objetivo && fecha_objetivo && fecha_inicio) {
@@ -79,11 +75,9 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
-    // Convertir el valor a un número para asegurar que se está comparando correctamente
+
     const numericValue = parseFloat(value);
-  
-    // Validar si el valor de monto_inicial (permitir >= 0, pero no < 0)
+
     if (name === 'monto_inicial') {
       if (isNaN(numericValue) || numericValue < 0) {
         setErrors((prevErrors) => ({
@@ -97,8 +91,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
         }));
       }
     }
-  
-    // Validar si el valor de monto_objetivo (permitir > 0, pero no <= 0)
+
     if (name === 'monto_objetivo') {
       if (isNaN(numericValue) || numericValue <= 0) {
         setErrors((prevErrors) => ({
@@ -112,14 +105,12 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
         }));
       }
     }
-  
-    // Actualizar el estado con el valor del campo
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  
 
   const handleSave = async () => {
     if (!formData.nombre_plan || !formData.monto_inicial || !formData.fecha_inicio || !formData.monto_objetivo || !formData.fecha_objetivo) {
@@ -169,7 +160,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
         icon: "success",
       });
 
-      updatePlans(data.nuevo_plan); 
+      updatePlans(data.nuevo_plan);
       setFormData({
         nombre_plan: '',
         fecha_inicio: '',
@@ -179,7 +170,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
         monto_acumulado: '',
       });
 
-      onClose(); 
+      onClose();
     } catch (error) {
       console.error('Error guardando el plan:', error);
       alert('Error al guardar el plan.');
@@ -195,15 +186,15 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
       monto_objetivo: '',
       monto_acumulado: '',
     });
-    onClose(); 
+    onClose();
   };
 
   return (
-    <div className={`modalCrearPlan modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="planModalLabel" >
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header bg-primary text-white text-center">
-            <h5 className="modal-title fw-bold text-shadow text-light" id="planModalLabel">Agregar Plan</h5>
+    <div className={`${styles.modalCrearPlan} modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="planModalLabel">
+      <div className={`modal-dialog ${styles.modalDialog}`}>
+        <div className={`modal-content ${styles.modalContent}`}>
+          <div className={`modal-header ${styles.modalHeader}`}>
+            <h5 className={`modal-title ${styles.modalTitle}`} id="planModalLabel">Agregar Plan</h5>
             <button type="button" className="btn-close" onClick={handleCloseModal} aria-label="Close"></button>
           </div>
           <div className="modal-body">
@@ -217,8 +208,8 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                   name="nombre_plan"
                   value={formData.nombre_plan}
                   onChange={(e) => handleChange({
-                    target: { 
-                      name: e.target.name, 
+                    target: {
+                      name: e.target.name,
                       value: e.target.value.toUpperCase() // Convierte el texto a mayúsculas
                     }
                   })}
@@ -229,7 +220,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                   <label htmlFor="monto_inicial" className="form-label">Monto Inicial</label>
                   <input
                     type="number"
-                    className="form-control"
+                    className={`form-control ${styles.formControl}`}  // Aplica la clase personalizada
                     id="monto_inicial"
                     name="monto_inicial"
                     value={formData.monto_inicial}
@@ -250,6 +241,13 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                       minDate: "today" // Evitar fechas pasadas
                     }}
                     className="form-control w-100 text-center"
+                    style={{
+                      backgroundColor: '#fff', // Fondo blanco
+                      color: '#000', // Texto negro
+                      borderRadius: '4px', // Bordes redondeados
+                      padding: '10px', // Espaciado interno
+                      fontSize: '1rem', // Tamaño de fuente adecuado
+                    }}
                   />
                 </div>
               </div>
@@ -263,6 +261,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     name="monto_objetivo"
                     value={formData.monto_objetivo}
                     onChange={handleChange}
+                  
                   />
                   {errors.monto_objetivo && <small className="text-danger">{errors.monto_objetivo}</small>}
                 </div>
@@ -277,15 +276,22 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
                     options={{
                       dateFormat: "d-m-Y"
                     }}
-                    className="form-control w-100 text-center"
+                    className="form-control w-100 text-center"  
+                    style={{
+                      backgroundColor: '#fff', // Fondo blanco
+                      color: '#000', // Texto negro
+                      borderRadius: '4px', // Bordes redondeados
+                      padding: '10px', // Espaciado interno
+                      fontSize: '1rem', // Tamaño de fuente adecuado
+                    }}
                   />
                 </div>
               </div>
             </form>
           </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cerrar</button>
-            <button type="button" className="btn btn-primary" onClick={handleSave} disabled={isSaveDisabled}>Guardar</button>
+          <div className={`modal-footer ${styles.modalFooter}`}>
+            <button type="button" className="btn btn-danger" onClick={handleCloseModal}>Cerrar</button>
+            <button type="button" className="btn btn-success" onClick={handleSave} disabled={isSaveDisabled}>Guardar</button>
           </div>
         </div>
       </div>

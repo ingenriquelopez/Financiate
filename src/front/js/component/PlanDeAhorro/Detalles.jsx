@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import './Detalles.css';
-import Swal from "sweetalert2"; 
+import React, { useState } from "react";
+import styles from './Detalles.module.css'; // Importa los estilos como un módulo
+import Swal from "sweetalert2";
 import EditarPlan from "./EditarPlan.jsx";
 import RegistrarAhorro from "./RegistrarAhorro.jsx";
 import moment from "moment"; // Importamos moment.js
@@ -13,10 +13,10 @@ const formatNumber = (number) => {
   }).format(number);
 };
 
-const Detalles = ({ plan, onClose, updatePlans}) => {
+const Detalles = ({ plan, onClose, updatePlans }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRegistrarAhorroModal, setShowRegistrarAhorroModal] = useState(false);
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const handleEdit = () => {
@@ -36,7 +36,6 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
     onClose();
   };
 
-  // Función para obtener los planes de la API
   const fetchPlans = async () => {
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
@@ -48,22 +47,20 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
       });
 
       const data = await response.json();
-      
-      // Aquí actualizamos el estado con el nuevo plan
       updatePlans(data); // Esto debería actualizar el estado en el componente principal
-      setLoading(false); // Cambiar el estado de carga a falso una vez que se reciban los planes
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching plans:', error);
-      setLoading(false); // En caso de error, también se cambia el estado de carga
+      setLoading(false);
     }
   };
 
   const handleEliminar = async () => {
-    if (!plan || !plan.id) return;  
+    if (!plan || !plan.id) return;
 
     setLoading(true);
-    setError("");  
-    
+    setError("");
+
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/eliminar_plan_ahorro`, {
         method: "DELETE",
@@ -76,34 +73,32 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
 
       if (response.ok) {
         fetchPlans();
-        onClose();  
-
-        Swal.fire("Deleted!", "Your plan has been deleted.", "success");  
+        onClose();
+        Swal.fire("Deleted!", "Your plan has been deleted.", "success");
       } else {
         setError("Error al eliminar el plan de ahorro.");
-        Swal.fire("Error", "No se pudo eliminar el plan.", "error");  
+        Swal.fire("Error", "No se pudo eliminar el plan.", "error");
       }
     } catch (err) {
       setError("Hubo un error al intentar eliminar el plan.");
-      Swal.fire("Error", "Hubo un problema al eliminar el plan.", "error");  
+      Swal.fire("Error", "Hubo un problema al eliminar el plan.", "error");
     } finally {
-      setLoading(false);  
+      setLoading(false);
     }
   };
 
   if (!plan) return null;
 
-  // Usamos moment para manipular las fechas sin cambiar la zona horaria
-  const validFechaInicio = plan.fecha_inicio ? moment(plan.fecha_inicio).format("DD/MM/YYYY") : null;  // Usamos moment.js para formatear
+  const validFechaInicio = plan.fecha_inicio ? moment(plan.fecha_inicio).format("DD/MM/YYYY") : null;
   const validFechaObjetivo = plan.fecha_objetivo ? moment(plan.fecha_objetivo).format("DD/MM/YYYY") : null;
 
   return (
     <div>
-      <div className="modalDetallesPlan modal fade show" tabIndex="-1" style={{ display: "block" }} aria-labelledby="detallesModalLabel" aria-hidden="false">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="detallesModalLabel">Detalles del Plan</h5>
+      <div className={`${styles.modalDetallesPlan} modal fade show`} tabIndex="-1" style={{ display: "block" }} aria-labelledby="detallesModalLabel" aria-hidden="false">
+        <div className={`${styles.modalDialog} modal-dialog`}>
+          <div className={`${styles.modalContent} modal-content`}>
+            <div className={`${styles.modalHeader} modal-header`}>
+              <h5 className={`${styles.modalTitle} modal-title`} id="detallesModalLabel">Detalles del Plan de ahorro</h5>
               <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
             </div>
             <div className="modal-body">
@@ -118,7 +113,7 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
                 </tbody>
               </table>
             </div>
-            <div className="modal-footer">
+            <div className={`${styles.modalFooter} modal-footer`}>
               <button type="button" className="btn btn-outline-danger" onClick={() => {
                 Swal.fire({
                   title: "Estas Seguro?",
@@ -137,7 +132,7 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
                 {loading ? "Eliminando..." : "🗑️ Eliminar"}
               </button>
               <button type="button" className="btn btn-outline-warning" onClick={handleEdit}>✏️ Editar</button>
-              <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Registrar Ahorro</button> 
+              <button type="button" className="btn btn-outline-success" onClick={handleRegistrarAhorro}>🐷 Ahorrar</button>
             </div>
           </div>
         </div>
