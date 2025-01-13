@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import './Detalles.css';
 import Swal from "sweetalert2"; 
 import EditarPlan from "./EditarPlan.jsx";
 import RegistrarAhorro from "./RegistrarAhorro.jsx";
@@ -32,7 +33,7 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
 
   const handleCloseRegistrarAhorro = () => {
     setShowRegistrarAhorroModal(false);
-    onCloseAll();
+    onClose();
   };
 
   // Función para obtener los planes de la API
@@ -98,7 +99,7 @@ const Detalles = ({ plan, onClose, updatePlans}) => {
 
   return (
     <div>
-      <div className="modal fade show" tabIndex="-1" style={{ display: "block" }} aria-labelledby="detallesModalLabel" aria-hidden="false">
+      <div className="modalDetallesPlan modal fade show" tabIndex="-1" style={{ display: "block" }} aria-labelledby="detallesModalLabel" aria-hidden="false">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

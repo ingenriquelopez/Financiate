@@ -93,7 +93,7 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
   };
 
   return (
-    <div className="modal fade show bodyContainer" tabIndex="-1" style={{ display: "block" }} aria-labelledby="editarPlanLabel" aria-hidden="false">
+    <div className="modalEditarPlan modal fade show bodyContainer" tabIndex="-1" style={{ display: "block" }} aria-labelledby="editarPlanLabel" aria-hidden="false">
       <div className="modal-dialog modal-lg">
         <div className="modal-content shadow-lg rounded-3">
           <div className="modal-header bg-light border-bottom-0">
@@ -155,7 +155,7 @@ const EditarPlan = ({ plan, onClose, updatePlans }) => {
             </div>
 
             <div className="modal-footer border-top-0 d-flex justify-content-between">
-              <button type="button" className="btn btn-secondary px-4" onClick={onClose}>Cerrar</button>
+              <button type="button" className="btn btn-danger px-4" onClick={onClose}>Cerrar</button>
               <button type="submit" className="btn btn-primary px-4">Guardar Cambios</button>
             </div>
           </form>

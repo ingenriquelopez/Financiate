@@ -33,7 +33,6 @@ function Egresos() {
           throw new Error("Error al obtener las categorías");
         }
         const data = await response.json();
-        console.log(data)
         setCategorias(data);
       } catch (error) {
         console.error("Error:", error);

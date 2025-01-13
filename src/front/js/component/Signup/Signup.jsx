@@ -21,7 +21,7 @@ const Signup = () => {
     return errors;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     //  const validationErrors = validateForm();
     //  if (Object.keys(validationErrors).length > 0) {
@@ -29,7 +29,7 @@ const Signup = () => {
     //    return;
     //  }
     // Lógica para el registro
-    
+
     const response = await fetch(process.env.BACKEND_URL + "/api/usuarios/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -37,29 +37,29 @@ const Signup = () => {
 
     });
     const data = await response.json()
-  
+
 
     if (response.ok) {
       navigate("/login"); // Redirigir a la página de inicio de sesión
     } else {
-        alert("Error al registrarse");
+      alert("Error al registrarse");
     }
-    
-    console.log('Registro exitoso:', { nombre_usuario, correo, contrasena });
+
+    console.log('Registro exitoso:');
   };
 
   return (
     <div className="bgGradient">
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="loginForm p-5 shadow-lg bg-white">
-            <div className="text-center mb-4 logoContainer">
-              <img 
-                src={logoFinanciaUrl} 
-                alt="Logo Financia" 
-                className="img-fluid"
-                style={{ maxHeight: '50px', width: '100%' }} 
-              />
-            </div>
+          <div className="text-center mb-4 logoContainer">
+            <img
+              src={logoFinanciaUrl}
+              alt="Logo Financia"
+              className="img-fluid"
+              style={{ maxHeight: '50px', width: '100%' }}
+            />
+          </div>
           <h2 className="text-center mb-5">Sign Up</h2>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicUsername" className="mb-4">
@@ -102,10 +102,10 @@ const Signup = () => {
           <div className="text-center mt-4">
             ¿Ya tienes una cuenta?
             <NavLink to="/login" className="btn btn-link">
-               Login
+              Login
             </NavLink>
-            
-            
+
+
           </div>
         </div>
       </Container>

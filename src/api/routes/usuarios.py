@@ -47,7 +47,7 @@ def login():
 
     payload = {
         'id': usuario.id,
-        'exp': datetime.now(timezone.utc) + timedelta(minutes=20)  # Expira en 10 minutos usando timezone
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=40)  # Expira en 40 minutos usando timezone
     }
     # Obtener el SECRET_KEY desde la configuración de la aplicación
     SECRET_KEY = current_app.config['SECRET_KEY']  # Esto se refiere a lo que cargaste en app.py

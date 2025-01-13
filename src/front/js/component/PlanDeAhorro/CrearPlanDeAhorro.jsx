@@ -199,7 +199,7 @@ const CrearPlanDeAhorro = ({ showModal, onClose, planToEdit, updatePlans }) => {
   };
 
   return (
-    <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="planModalLabel" aria-hidden={!showModal}>
+    <div className={`modalCrearPlan modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="planModalLabel" >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header bg-primary text-white text-center">

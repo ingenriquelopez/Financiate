@@ -20,7 +20,7 @@ const Fondo = () => {
                 });
 
                 const resultado = await respuesta.json();
-                if (respuesta.ok) {
+                if (respuesta.ok && resultado.id) {
                     setFondoGuardado({
                         id: resultado.id,
                         monto: resultado.monto,
@@ -111,7 +111,6 @@ const Fondo = () => {
                         "id": fondoGuardado.id,
                     })
                 });
-                console.log(`${process.env.BACKEND_URL}/api/fondos_emergencia/${fondoGuardado.id}`);
 
                 if (respuesta.ok) {
                     setFondoGuardado(null);
@@ -179,9 +178,8 @@ const Fondo = () => {
                 </form>
             ) : (
                 <div className="fondo-card">
-                    <h3>Fondo Guardado</h3>
-                    <p><strong>Monto:</strong> ${fondoGuardado.monto.toFixed(2)}</p>
                     <p><strong>Razón:</strong> {fondoGuardado.razon}</p>
+                    <p><strong>Monto:</strong> ${fondoGuardado.monto.toFixed(2)}</p>
                     <div className="card-buttons">
                         <button className="btn-eliminar" onClick={manejarEliminar}>
                             Eliminar

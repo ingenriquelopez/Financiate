@@ -40,9 +40,9 @@ const Categorias = () => {
 
       const result = await response.json();
       const { id, nombre, icono } = result;
-      
+
       setCategorias((prevCategorias) => [...prevCategorias, { id, nombre, icono }]);
-      setNewCategory({ id:'', nombre: '', icono: '' });
+      setNewCategory({ id: '', nombre: '', icono: '' });
       setShowModal(false);
     } catch (error) {
       console.error('Error:', error.message);
@@ -116,11 +116,11 @@ const Categorias = () => {
           'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
         },
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("No se pudieron eliminar las categorías:", errorData.error);
-  
+
         // Mostrar las categorías comprometidas que no pudieron ser eliminadas
         if (errorData.comprometidas && errorData.comprometidas.length > 0) {
           const compromitidasHtml = errorData.comprometidas.map((categoria) => {
@@ -130,7 +130,7 @@ const Categorias = () => {
               <p>Egresos relacionados: ${categoria.egresos_relacionados}</p>
             `;
           }).join("");
-  
+
           Swal.fire({
             icon: 'warning',
             title: 'No se pudieron eliminar algunas categorías',
@@ -144,11 +144,11 @@ const Categorias = () => {
       }
       // Después de eliminar todas las categorías, actualizar el estado para recargar las categorías
       setRefreshCategories(true);
-  
-  
+
+
       // Si todo fue bien, actualizar el estado y mostrar mensaje de éxito
       //setCategorias([]);
-      
+
       Swal.fire({
         icon: 'success',
         title: 'Categorías eliminadas',
@@ -156,7 +156,7 @@ const Categorias = () => {
       });
     } catch (error) {
       console.error('Error inesperado al eliminar las categorías:', error.message);
-  
+
       Swal.fire({
         icon: 'warning',
         title: 'Algo salió mal',
@@ -164,8 +164,8 @@ const Categorias = () => {
       });
     }
   };
-  
-  
+
+
   // Función para manejar el cambio en el formulario
   const handleInputChange = (event) => {
     event.persist(); // Esto permite que el evento sea accesible de manera asincrónica
@@ -183,7 +183,7 @@ const Categorias = () => {
         const token = localStorage.getItem('tokenFinanciaE');
         if (!token) {
           throw new Error("Token no disponible");
-          }
+        }
 
         const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/traertodas`, {
           method: 'GET',
@@ -214,7 +214,7 @@ const Categorias = () => {
 
       {/* Tabla de categorías */}
       <div className="table-responsive" style={{ width: 'calc(80%)', maxHeight: '400px', overflowY: 'auto' }}>
-      <p className = "predeterminadas">⭐ = Predeterminadas</p>
+        <p className="predeterminadas">⭐ = Predeterminadas</p>
         <table className="table table-striped table-bordered mt-0 mx-auto">
           <thead>
             <tr>
@@ -226,57 +226,65 @@ const Categorias = () => {
           <tbody>
             {categorias.map((categoria) => (
               <tr key={categoria.id}>
-                <td>{categoria.nombre}{categoria.is_default ? "⭐":""}</td>
+                <td>{categoria.nombre}{categoria.is_default ? "⭐" : ""}</td>
                 <td>
                   <span>{categoria.icono}</span>
                 </td>
                 <td>
-                <div className="btn-tooltip-container">
-                  <button
-                    className="btn btn-danger"
-                    aria-disabled={categoria.is_default ? 'true' : 'false'}                    
-                     disabled = {categoria.is_default}
-                    onClick={() => deleteCategory(categoria.id)}
-                  >
-                    <FaTrash />
-                  </button>
-                  {categoria.is_default && (
-                    <span className="tooltip">Imposible Eliminar Categorías Predeterminadas</span>
-                  )}
-                </div>
+                  <div className="btn-tooltip-container">
+                    <button
+                      className="btn btn-danger"
+                      aria-disabled={categoria.is_default ? 'true' : 'false'}
+                      disabled={categoria.is_default}
+                      onClick={() => deleteCategory(categoria.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                    {categoria.is_default && (
+                      <span className="tooltip">Imposible Eliminar Categorías Predeterminadas</span>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
-      </table>
-  </div>
+        </table>
+      </div>
 
 
       {/* Botones para Agregar Categoría y Cerrar alineados horizontalmente */}
-      <div className="d-flex justify-content-end mt-3 mb-3" style={{ width: 'calc(80%)'}}>
-        {/* Boton para eliminar todas las categorias */}
-      <button
-        className="btn btn-outline-danger misbotones"
-        onClick={deleteAllCategories}
-      >
-        Eliminar todas
-      </button>
+      <div className="container mt-3 mb-3">
+        <div className="row justify-content-center">
+          {/* Botón para eliminar todas las categorías */}
+          <div className="col-12 col-sm-4 mb-3">
+            <button
+              className="btn btn-outline-danger misbotones w-100"
+              onClick={deleteAllCategories}
+            >
+              Eliminar   todas
+            </button>
+          </div>
 
-        {/* Botón Agregar Categoría */}
-        <button
-          className="btn btn-outline-primary misbotones"
-          onClick={() => setShowModal(true)}
-        >
-          Agregar Categoría
-        </button>
+          {/* Botón Agregar Categoría */}
+          <div className="col-12 col-sm-4 mb-3">
+            <button
+              className="btn btn-outline-primary misbotones w-100"
+              onClick={() => setShowModal(true)}
+            >
+              Agregar Categoría
+            </button>
+          </div>
 
-        {/* Botón Cerrar */}
-          <button
-            className="btn btn-outline-dark misbotones"
-            onClick = {()=> navigate("/Home") }
-          >
-            Cerrar
-          </button>
+          {/* Botón Cerrar */}
+          <div className="col-12 col-sm-4 mb-3">
+            <button
+              className="btn btn-outline-dark misbotones w-100"
+              onClick={() => navigate("/Home")}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
       </div>
 
 
@@ -284,8 +292,8 @@ const Categorias = () => {
 
       {/* Modal para agregar categoría */}
       {showModal && (
-        <div className="modal show" style={{ display: 'block' }}>
-          <div className="modal-dialog">
+        <div className="modal show d-flex flex-column justify-content-center align-items-center" style={{ display: 'block' }}>
+          <div className="modal-dialog d-flex flex-column justify-content-center align-items-center">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Agregar Categoría</h5>
@@ -317,6 +325,7 @@ const Categorias = () => {
                     id="category-icon"
                     name="icono"
                     value={newCategory.icono}
+                    placeholder='pega aqui tu emoji 😊'
                     onChange={handleInputChange}
                   />
                 </div>
@@ -324,7 +333,7 @@ const Categorias = () => {
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-danger"
                   onClick={() => setShowModal(false)}
                 >
                   Cancelar
