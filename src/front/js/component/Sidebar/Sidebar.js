@@ -59,7 +59,7 @@ const Sidebar = () => {
             <i className="fa-solid fa-piggy-bank"></i> Plan de Ahorro
           </Link>
           {/* Sección nueva para fondos de emergencia */}
-          <Link className="nav-link" to="/fondo">
+          <Link className="nav-link nav-link-fondo" to="/fondo">
             <i className="fa-solid fa-heart"></i> Fondos de Emergencia
           </Link>
         </nav>
