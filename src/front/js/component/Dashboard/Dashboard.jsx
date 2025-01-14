@@ -5,7 +5,7 @@ import DonutChart from "./DonutChart.jsx"; // Importamos el gráfico de dona
 import PieChartComponent from './PieChartComponent.jsx'; // Importamos el gráfico de pastel
 import LineChartComponent from "./LineChartComponent.jsx"; // Importamos el gráfico de líneas
 import ProgressBar from "./ProgressBar.jsx";
-import "./Dashboard.css"; 
+import "./Dashboard.css";
 
 const Dashboard = () => {
     const { store } = useContext(Context);
@@ -79,7 +79,7 @@ const Dashboard = () => {
             try {
                 setLoading(true);
                 if (!store.usuario_id) throw new Error("ID del usuario requerido");
-                
+
                 const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/totales`, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -96,8 +96,8 @@ const Dashboard = () => {
                     { name: "Egresos", value: data.total_egresos },
                 ];
                 setTotales(formattedData);
-                setLeyendaSinDatos(data.total_ingresos === 0 && data.total_egresos === 0 
-                    ? '(Aún no hay ingresos o egresos por graficar)' 
+                setLeyendaSinDatos(data.total_ingresos === 0 && data.total_egresos === 0
+                    ? '(Aún no hay ingresos o egresos por graficar)'
                     : ''
                 );
                 setCapitales({
@@ -224,30 +224,30 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <h3 className="main-title">Dashboard Fináncia+E</h3>
-               {/* Contenedor de radio buttons */}
-               <div className="chart-type-container">
-                    <h5>Tipo de Gráfico</h5>
-                    <div className="radio-buttons">
-                        <label>
-                            <input 
-                                type="radio" 
-                                value="donut" 
-                                checked={selectedChart === 'donut'}
-                                onChange={handleChartChange}
-                            />
-                            Dona
-                        </label>
-                        <label>
-                            <input 
-                                type="radio" 
-                                value="pie" 
-                                checked={selectedChart === 'pie'}
-                                onChange={handleChartChange}
-                            />
-                            Pastel
-                        </label>
-                    </div>
+            {/* Contenedor de radio buttons */}
+            <div className="chart-type-container">
+                <h5>Tipo de Gráfico</h5>
+                <div className="radio-buttons">
+                    <label>
+                        <input
+                            type="radio"
+                            value="donut"
+                            checked={selectedChart === 'donut'}
+                            onChange={handleChartChange}
+                        />
+                        Dona
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="pie"
+                            checked={selectedChart === 'pie'}
+                            onChange={handleChartChange}
+                        />
+                        Pastel
+                    </label>
                 </div>
+            </div>
 
             {showAlert.show && (
                 <div className="custom-alert">
@@ -269,22 +269,22 @@ const Dashboard = () => {
                             <div className="chart-container">
                                 {selectedChart === 'donut' ? (
                                     <DonutChart
-                                        data={totales} 
-                                        leyendaSinDatos={leyendaSinDatos} 
-                                        capitalInicial={capitales.capital_inicial} 
-                                        capitalActual={capitales.capital_actual} 
+                                        data={totales}
+                                        leyendaSinDatos={leyendaSinDatos}
+                                        capitalInicial={capitales.capital_inicial}
+                                        capitalActual={capitales.capital_actual}
                                     />
                                 ) : (
                                     <PieChartComponent
-                                        data={totales} 
-                                        leyendaSinDatos={leyendaSinDatos} 
-                                        capitalInicial={capitales.capital_inicial} 
-                                        capitalActual={capitales.capital_actual} 
+                                        data={totales}
+                                        leyendaSinDatos={leyendaSinDatos}
+                                        capitalInicial={capitales.capital_inicial}
+                                        capitalActual={capitales.capital_actual}
                                     />
                                 )}
                             </div>
 
-                         
+
                         </div>
 
                         <div className="col-12">

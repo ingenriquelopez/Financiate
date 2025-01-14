@@ -94,7 +94,7 @@ function Ingresos() {
             <h2 className="fw-bold modal-titulo">INGRESOS</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-field">
-                <label htmlFor="notas">Notas:</label>
+                <label htmlFor="notas">Razón del ingreso:</label>
                 <input
                   type="text"
                   name="notas"

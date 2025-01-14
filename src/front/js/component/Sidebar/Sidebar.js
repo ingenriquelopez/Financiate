@@ -41,10 +41,10 @@ const Sidebar = () => {
             <i className="fa-solid fa-gauge-high"></i> Dashboard
           </Link>
           <Link className="nav-link" to="/Ingresos">
-            <i className="fa-solid fa-plus"></i> Ingresos
+            <i className="fa-solid fa-plus"></i> Registrar Ingresos
           </Link>
           <Link className="nav-link" to="/egresos">
-            <i className="fa-solid fa-minus"></i> Egresos
+            <i className="fa-solid fa-minus"></i> Registrar Egresos
           </Link>
           <Link className="nav-link" to="/categorias">
             <i className="fa-solid fa-tags"></i> Categorías
