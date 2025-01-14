@@ -1,4 +1,4 @@
-//INTENTO DE SOL1
+//INTENTO DE SOL1B
 import React from 'react';
 import VadhirImg from "../../../img/Vadhir.png";
 import RadovanImg from "../../../img/Radovann.png";
