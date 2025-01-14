@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { NavLink } from 'react-router-dom';
 import { Context } from "../../store/appContext";
 import DonutChart from "./DonutChart.jsx"; // Importamos el gráfico de dona
+import PieChartComponent from './PieChartComponent.jsx'; // Importamos el gráfico de pastel
 import LineChartComponent from "./LineChartComponent.jsx"; // Importamos el gráfico de líneas
 import ProgressBar from "./ProgressBar.jsx";
 import "./Dashboard.css"; 
@@ -18,9 +19,9 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const isMounted = useRef(true);
     const [leyendaSinDatos, setLeyendaSinDatos] = useState('');
+    const [selectedChart, setSelectedChart] = useState('donut'); // Estado para seleccionar el gráfico
 
     // LLAMADAS A LA API Y FETCHING DE DATOS
-
     useEffect(() => {
         const fetchTotales = async () => {
             try {
@@ -61,11 +62,16 @@ const Dashboard = () => {
         fetchTotales();
     }, [store.usuario_id, store.token]);
 
+    // LLAMADA A LA API PARA GRAFICO DE LINEAS
     useEffect(() => {
         const fetchTotalDatosMensuales = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${process.env.BACKEND_URL}/api/usuarios/datosmensuales`, {
+
+                if (!store.usuario_id) {
+                    throw new Error("ID del usuario requerido");
+                }
+                const response = await fetch(process.env.BACKEND_URL + '/api/usuarios/datosmensuales', {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -75,10 +81,12 @@ const Dashboard = () => {
                         meses: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                     }),
                 });
-
-                if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
 
                 const data = await response.json();
+
                 const formattedData = data.map(d => ({
                     mes: d.mes,
                     ingresos: d.ingresos,
@@ -86,7 +94,6 @@ const Dashboard = () => {
                 }));
 
                 setDatosMensuales(formattedData);
-
             } catch (err) {
                 setError("Error.....", err.message);
             } finally {
@@ -95,41 +102,100 @@ const Dashboard = () => {
         };
 
         fetchTotalDatosMensuales();
-    }, [store.token]);
+    }, []);
 
     const fetchPlans = async () => {
-            try {
-                const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
-                    },
-                });
-                const data = await response.json();
-                if (isMounted.current) {
-                    setPlanes(data.planes);
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error('Error fetching plans:', error);
-                if (isMounted.current) {
-                    setLoading(false);
-                }
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/plandeahorro/traerplan`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tokenFinanciaE')}`,
+                },
+            });
+            const data = await response.json();
+            if (isMounted.current) {
+                setPlanes(data.planes);
+                setLoading(false);
             }
+        } catch (error) {
+            console.error('Error fetching plans:', error);
+            if (isMounted.current) {
+                setLoading(false);
+            }
+        }
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+        fetchPlans();
+        return () => {
+            isMounted.current = false;
         };
-    
-        useEffect(() => {
-            isMounted.current = true;
-            fetchPlans();
-            return () => {
-                isMounted.current = false;
-            };
-        }, []);
-    
+    }, []);
+
+    const handleHideLeyenda = () => {
+        setLeyendaSinDatos('');
+    };
+
+    useEffect(() => {
+        const hideLeyendaHandler = () => {
+            handleHideLeyenda();
+        };
+
+        // Detectar movimiento del mouse
+        const handleMouseMove = () => {
+            hideLeyendaHandler();
+        };
+
+        // Detectar cualquier tecla presionada
+        const handleKeyPress = () => {
+            hideLeyendaHandler();
+        };
+
+        // Agregar event listeners
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('keydown', handleKeyPress);
+
+        // Limpiar event listeners
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
+
+    // Cambiar gráfico según la selección del radio button
+    const handleChartChange = (e) => {
+        setSelectedChart(e.target.value);
+    };
+
     return (
         <div className="dashboard-container">
             <h3 className="main-title">Dashboard Fináncia+E</h3>
+               {/* Contenedor de radio buttons */}
+               <div className="chart-type-container">
+                    <h5>Tipo de Gráfico</h5>
+                    <div className="radio-buttons">
+                        <label>
+                            <input 
+                                type="radio" 
+                                value="donut" 
+                                checked={selectedChart === 'donut'}
+                                onChange={handleChartChange}
+                            />
+                            Dona
+                        </label>
+                        <label>
+                            <input 
+                                type="radio" 
+                                value="pie" 
+                                checked={selectedChart === 'pie'}
+                                onChange={handleChartChange}
+                            />
+                            Pastel
+                        </label>
+                    </div>
+                </div>
 
             {showAlert.show && (
                 <div className="custom-alert">
@@ -145,15 +211,28 @@ const Dashboard = () => {
             ) : (
                 <div className="dashboard">
                     <div className="row justify-content-center mb-2">
-                        {/* Usamos los componentes importados */}
-                        <div className="col-md-6 mb-4">
-                            <h4 className="chart-title">Distribución de Ingresos vs Egresos</h4>
-                            <DonutChart 
-                                data={totales} 
-                                leyendaSinDatos={leyendaSinDatos} 
-                                capitalInicial={capitales.capital_inicial} 
-                                capitalActual={capitales.capital_actual} 
-                            />
+                        {/* Contenedor para los gráficos */}
+                        <div className="col-12 d-flex justify-content-between align-items-start">
+                            {/* Contenedor de gráficos */}
+                            <div className="chart-container">
+                                {selectedChart === 'donut' ? (
+                                    <DonutChart
+                                        data={totales} 
+                                        leyendaSinDatos={leyendaSinDatos} 
+                                        capitalInicial={capitales.capital_inicial} 
+                                        capitalActual={capitales.capital_actual} 
+                                    />
+                                ) : (
+                                    <PieChartComponent
+                                        data={totales} 
+                                        leyendaSinDatos={leyendaSinDatos} 
+                                        capitalInicial={capitales.capital_inicial} 
+                                        capitalActual={capitales.capital_actual} 
+                                    />
+                                )}
+                            </div>
+
+                         
                         </div>
 
                         <div className="col-12">
@@ -164,6 +243,16 @@ const Dashboard = () => {
                         <NavLink to='/plandeahorro'>
                             <p className="navlink-text">PLANES DE AHORRO</p>
                         </NavLink>
+
+                        {/* Leyenda de sin datos */}
+                        {leyendaSinDatos && (
+                            <>
+                                <div className="fondo-opaco"></div> {/* Fondo opaco */}
+                                <div className={`leyenda-sin-datos ${leyendaSinDatos ? 'show' : ''}`}>
+                                    {leyendaSinDatos}
+                                </div>
+                            </>
+                        )}
 
                         <div className="progress-container mt-5">
                             {planes.length > 0 ? (
