@@ -5,10 +5,10 @@ import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
 
 const Sidebar = () => {
-  const { store, actions } = useContext(Context);
+  const { store, actions } = useContext(Context); 
   const location = useLocation();
   const navigate = useNavigate();
-
+// Comentario para hacer un push
   const handleLogout = () => {
     // Borra la información del localStorage usando la acción del contexto
     actions.logout();
