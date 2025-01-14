@@ -21,6 +21,58 @@ const Dashboard = () => {
     const [leyendaSinDatos, setLeyendaSinDatos] = useState('');
     const [selectedChart, setSelectedChart] = useState('donut'); // Estado para seleccionar el gráfico
 
+    // ALERTA DEL FONDO Y EL CAPITAL ACTUAL
+        useEffect(() => {
+            const fetchFondoEmergenciaActivo = async () => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/fondos_emergencia/fondos_emergencia/activo`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${store.token}`,
+                        },
+                    });
+    
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            console.log("No se encontró un fondo de emergencia activo.");
+                            return;
+                        }
+                        throw new Error(`Error ${response.status}: ${response.statusText}`);
+                    }
+    
+                    const data = await response.json();
+                    setFondosEmergencia(data);
+    
+                    const capitalActual = capitales.capital_actual;
+                    const montoFondoEmergencia = data.monto;
+                    const diferencia = capitalActual - montoFondoEmergencia;
+    
+                    if (diferencia <= 0) {
+                        setShowAlert({
+                            show: true,
+                            message: "¡Cuidado! Has excedido tu Fondo de Emergencia."
+                        });
+                    } else if (diferencia <= 1000) {
+                        setShowAlert({
+                            show: true,
+                            message: "¡Alerta! El capital actual está a punto de igualar el fondo de emergencia."
+                        });
+                    } else {
+                        setShowAlert({ show: false });
+                    }
+    
+                } catch (err) {
+                    setError(err.message);
+                }
+            };
+    
+            if (store.usuario_id) {
+                fetchFondoEmergenciaActivo();
+            }
+        }, [store.usuario_id, capitales.capital_actual]);
+    
+    
+
     // LLAMADAS A LA API Y FETCHING DE DATOS
     useEffect(() => {
         const fetchTotales = async () => {
