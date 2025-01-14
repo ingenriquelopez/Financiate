@@ -1,28 +1,29 @@
-/* Login.jsx */
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../../store/appContext';
 import { Container, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Login.css';
+import styles from './Login.module.css';
+
 import logoFinanciaUrl from "../../../img/LogoFinancia.png";
 
 const iconoSignup =
   "https://png.pngtree.com/png-clipart/20230918/original/pngtree-flat-style-sign-up-icon-with-finger-cursor-on-white-vector-png-image_12377125.png";
 
-const monedas = [
-  ["USD", "Dólar estadounidense"],
-  ["CAD", "Dólar canadiense"],
-  ["MXN", "Peso mexicano"],
-  ["BRL", "Real brasileño"],
-  ["ARS", "Peso argentino"],
-  ["COP", "Peso colombiano"],
-  ["PEN", "Nuevo sol peruano"],
-  ["CLP", "Peso chileno"],
-  ["UYU", "Peso uruguayo"],
-  ["VES", "Soberano venezolano"]
-];
+
+  const monedas = [
+    ["USD", "Dólar estadounidense"],
+    ["CAD", "Dólar canadiense"],
+    ["MXN", "Peso mexicano"],
+    ["BRL", "Real brasileño"],
+    ["ARS", "Peso argentino"],
+    ["COP", "Peso colombiano"],
+    ["PEN", "Nuevo sol peruano"],
+    ["CLP", "Peso chileno"],
+    ["UYU", "Peso uruguayo"],
+    ["VES", "Soberano venezolano"]
+  ];
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -34,45 +35,38 @@ const Login = () => {
   const navigate = useNavigate();
   const { store, actions } = useContext(Context);
   const isMounted = useRef(true);
+  const [errors, setErrors] = useState({ capital_inicial: '' });
 
+  // UseEffect para desplazar hacia el top al cargar la página
+  useEffect(() => {
+    window.scrollTo(0, 0); // Desplaza la página hacia arriba
+  }, []); // Se ejecuta solo una vez cuando el componente se monta
 
   useEffect(() => {
-		const fetchCategorias = async () => {
-		  try {
-	
+    const fetchCategorias = async () => {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/default`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-			// Aquí cambiamos la URL a la ruta de la API 'categorias/default'
-			const response = await fetch(`${process.env.BACKEND_URL}/api/categorias/default`, {
-			  method: 'POST', // Usamos el método POST como en la API
-			  headers: {
-				'Content-Type': 'application/json', // Aseguramos que enviamos el tipo de contenido adecuado
-			  },
-			});
-	
-			// Verificamos si la respuesta es correcta
-			if (!response.ok) {
-				const errorText = await response.text();
-			  throw new Error('Error al obtener las categorías');
-			}
-	
-			// Convertimos la respuesta en formato JSON
-			const result = await response.json();
-	
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error('Error al obtener las categorías');
+        }
 
-		  } catch (error) {
-			console.error('Error:', error.message);
-			if (error.message.includes("Token")) {
-                actions.logout();
-            }
-		  }
-		};
-	
-		fetchCategorias();
-	  }, []); // Este efecto se ejecutará solo una vez al cargar el componente
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
+        const result = await response.json();
+      } catch (error) {
+        console.error('Error:', error.message);
+        if (error.message.includes("Token")) {
+          actions.logout();
+        }
+      }
     };
+
+    fetchCategorias();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -129,19 +123,39 @@ const Login = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const numericValue = parseFloat(value);
+
+    if (name === 'capital_inicial') {
+      setCapital_inicial(value);
+
+      if (isNaN(numericValue) || numericValue < 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: 'El monto debe ser mayor o igual que 0',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: '',
+        }));
+      }
+    }
+  };
+
   return (
-    <div className="bgGradient">
+    <div className={`${styles.bgGradient} pt-4 pb-4`}> {/* Agregando márgenes superiores e inferiores */}
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
-        <div className="loginForm p-5 shadow-lg animate__animated animate__zoomIn bg-white">
-          <div className="text-center mb-4 logoContainer">
+        <div className={`${styles.loginForm} p-5 shadow-lg animate__animated animate__zoomIn bg-white`}>
+          <div className={`${styles.logoContainer} text-center mb-4`}>
             <img
               src={logoFinanciaUrl}
               alt="Logo Financia"
-              className="img-fluid"
               style={{ maxHeight: '50px', width: '100%' }}
             />
           </div>
-          <h2 className="text-center mb-5">Login</h2>
+          <h2 className="text-center mb-3">Login</h2>
 
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicEmail" className="mb-4">
@@ -164,17 +178,20 @@ const Login = () => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100 animate__animated animate__pulse">Login</Button>
+            <Button variant="primary" type="submit" className="w-100 animate__animated animate__pulse">
+              Login
+            </Button>
           </Form>
 
           <div className="text-center mt-4">
             ¿Aún no tienes una cuenta?
             <NavLink to="/signup" className="btn btn-link">
-              <img src={iconoSignup} className="iconoSignup" alt="Signup" />
+              <img src={iconoSignup} className={styles.iconoSignup} alt="Signup" />
             </NavLink>
           </div>
         </div>
       </Container>
+      
 
       {/* Modal */}
       <div
@@ -185,13 +202,12 @@ const Login = () => {
         aria-labelledby="financialConfigModal"
         aria-hidden={!showModal}
       >
-        <div
-          className="modal-dialog modal-custom-width"
-          role="document"
-        >
+        <div className={`${styles.modalDialog}`} role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="financialConfigModal">Configuración Financiera Inicial</h5>
+              <h5 className="modal-title" id="financialConfigModal">
+                Configuración Financiera Inicial
+              </h5>
               <button
                 type="button"
                 className="btn-close"
@@ -201,22 +217,25 @@ const Login = () => {
             </div>
             <div className="modal-body">
               <form>
-                <div className="row mb-4">
-                  <div className="col-md-4">
+                <div className="row">
+                  <div className="col-12 mb-4 d-flex flex-column justify-content-center align-items-center">
                     <label htmlFor="formCapital" className="form-label">Capital Inicial</label>
                     <input
                       type="number"
-                      className="form-control"
+                      className={`form-control ${styles.inputCapitalInicial}`}  
                       id="formCapital"
-                      placeholder="tu capital inicial"
+                      name="capital_inicial"
+                      placeholder="$"
                       value={capital_inicial}
-                      onChange={(e) => setCapital_inicial(e.target.value)}
+                      onChange={handleChange}
                     />
+                    {errors.capital_inicial && <small className="text-danger">{errors.capital_inicial}</small>}
                   </div>
-                  <div className="col-md-8">
+
+                  <div className="col-12 mb-4 d-flex flex-column justify-content-center align-items-center">
                     <label htmlFor="formMoneda" className="form-label">Moneda</label>
                     <select
-                      className="form-select"
+                      className={`form-select ${styles.selectMoneda}`}
                       id="formMoneda"
                       value={moneda}
                       onChange={(e) => setMoneda(e.target.value)}
@@ -230,7 +249,8 @@ const Login = () => {
                     </select>
                   </div>
                 </div>
-                <div className="modal-footer">
+
+                <div className="modal-footer m-2 d-flex justify-content-center align-items-center">
                   <button
                     type="button"
                     className="btn btn-secondary"
@@ -251,7 +271,9 @@ const Login = () => {
           </div>
         </div>
       </div>
+       
     </div>
+    
   );
 };
 

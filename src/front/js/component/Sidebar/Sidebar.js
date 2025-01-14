@@ -5,10 +5,10 @@ import './Sidebar.css';
 import Logo from '../../../img/LogoFinancia.png';
 
 const Sidebar = () => {
-  const { store, actions } = useContext(Context);
+  const { store, actions } = useContext(Context); 
   const location = useLocation();
   const navigate = useNavigate();
-
+// Comentario para hacer un push
   const handleLogout = () => {
     // Borra la información del localStorage usando la acción del contexto
     actions.logout();
@@ -41,10 +41,10 @@ const Sidebar = () => {
             <i className="fa-solid fa-gauge-high"></i> Dashboard
           </Link>
           <Link className="nav-link" to="/Ingresos">
-            <i className="fa-solid fa-plus"></i> Ingresos
+            <i className="fa-solid fa-plus"></i> Registrar Ingresos
           </Link>
           <Link className="nav-link" to="/egresos">
-            <i className="fa-solid fa-minus"></i> Egresos
+            <i className="fa-solid fa-minus"></i> Registrar Egresos
           </Link>
           <Link className="nav-link" to="/categorias">
             <i className="fa-solid fa-tags"></i> Categorías
@@ -59,7 +59,7 @@ const Sidebar = () => {
             <i className="fa-solid fa-piggy-bank"></i> Plan de Ahorro
           </Link>
           {/* Sección nueva para fondos de emergencia */}
-          <Link className="nav-link" to="/fondo">
+          <Link className="nav-link nav-link-fondo" to="/fondo">
             <i className="fa-solid fa-heart"></i> Fondos de Emergencia
           </Link>
         </nav>

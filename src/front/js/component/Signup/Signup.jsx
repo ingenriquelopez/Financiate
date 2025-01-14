@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom'; // Importar NavLink
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logoFinanciaUrl from "../../../img/LogoFinancia.png";
-import './Signup.css';
+import agregarUsuario from "../../../img/agregarUsuario.gif";
+import styles from './Signup.module.css'; // Importar CSS como un módulo
 
 const Signup = () => {
   const [nombre_usuario, setNombre_usuario] = useState('');
@@ -12,6 +13,12 @@ const Signup = () => {
   const [contrasena, setContrasena] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+
+    // UseEffect para desplazar hacia el top al cargar la página
+    useEffect(() => {
+      window.scrollTo(0, 0); // Desplaza la página hacia arriba
+    }, []); // Se ejecuta solo una vez cuando el componente se monta
 
   const validateForm = () => {
     const errors = {};
@@ -23,21 +30,13 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //  const validationErrors = validateForm();
-    //  if (Object.keys(validationErrors).length > 0) {
-    //    setErrors(validationErrors);
-    //    return;
-    //  }
-    // Lógica para el registro
 
     const response = await fetch(process.env.BACKEND_URL + "/api/usuarios/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nombre_usuario, correo, contrasena }),
-
     });
-    const data = await response.json()
-
+    const data = await response.json();
 
     if (response.ok) {
       navigate("/login"); // Redirigir a la página de inicio de sesión
@@ -49,18 +48,26 @@ const Signup = () => {
   };
 
   return (
-    <div className="bgGradient">
+    <div className={styles.bgGradient}>
       <Container fluid className="d-flex justify-content-center align-items-center min-vh-100">
-        <div className="loginForm p-5 shadow-lg bg-white">
-          <div className="text-center mb-4 logoContainer">
+        <div className={`${styles.signUpForm} p-5 shadow-lg bg-white`}>
+          <div className={`text-center mb-4 ${styles.logoContainer}`}>
+            <div className ={styles.containerLogoF}>
+              <img
+                src={logoFinanciaUrl}
+                alt="Logo Financia"
+                className={styles.logoF}
+                style={{ maxHeight: '50px', width: '100%' }}
+              />
+            </div>
             <img
-              src={logoFinanciaUrl}
+              src={agregarUsuario}
               alt="Logo Financia"
-              className="img-fluid"
+              className={styles.logoU}
               style={{ maxHeight: '50px', width: '100%' }}
             />
           </div>
-          <h2 className="text-center mb-5">Sign Up</h2>
+          {/* <h2 className="text-center mb-5">Sign Up</h2> */}
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicUsername" className="mb-4">
               <Form.Label>Username</Form.Label>
@@ -104,8 +111,6 @@ const Signup = () => {
             <NavLink to="/login" className="btn btn-link">
               Login
             </NavLink>
-
-
           </div>
         </div>
       </Container>

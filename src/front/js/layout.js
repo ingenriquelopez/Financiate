@@ -6,8 +6,8 @@ import { Home } from "./pages/home";
 import injectContext from "./store/appContext";
 
 // Importar los componentes
-import LandingPage from '../js/component/Lading page/LandingPage.jsx';  // Importar la LandingPage
-import SobreNosotros from '../js/component/Lading page/SobreNosotros.jsx';
+import LandingPage from './component/LandingPage/LandingPage.jsx';  // Importar la LandingPage
+import SobreNosotros from './component/LandingPage/SobreNosotros.jsx';
 import Sidebar from '../js/component/Sidebar/Sidebar.js';
 import Login from './component/Login/Login.jsx';
 import Signup from "./component/Signup/Signup.jsx";
@@ -18,7 +18,7 @@ import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
 import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx"; 
 import Reportes from "./component/Reportes/Reportes.jsx"; 
 import Fondo from "./component/FondoDeEmergencias/Fondo.jsx";
-import Navbar from "./component/Lading page/Navbar.jsx";
+import Navbar from "./component/LandingPage/Navbar.jsx";
 
 const Layout = () => {
   const basename = process.env.BASENAME || "";

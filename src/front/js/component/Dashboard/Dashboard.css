@@ -1,108 +1,232 @@
-/* Estilos para Dashboard */
+/* Estilos generales para el Dashboard */
 .dashboard-container {
-    background-color: #f4f7fc;
+    margin-top: 20px;
     padding: 20px;
-    border-radius: 8px;
-    width: 100%;
-    height: 100%;
+    font-family: Arial, sans-serif;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .main-title {
-    font-size: 2rem;
-    color: #333;
-    font-weight: 600;
-    margin-bottom: 20px;
     text-align: center;
-    letter-spacing: 0.5px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+/* Estilos para la leyenda sin datos */
+.leyenda-sin-datos {
+    position: fixed; /* Fijar la leyenda en el centro */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px; /* Tamaño de la fuente más grande */
+    font-weight: bold;
+    color: #555; /* Texto más suave en color gris */
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con un poco de opacidad */
+    padding: 40px; /* Hacer el contenedor más grande */
+    border-radius: 15px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    opacity: 0; /* Inicialmente invisible */
+    visibility: hidden; /* Inicialmente invisible */
+    transform: translate(-50%, -100%); /* Inicialmente fuera de la pantalla (arriba) */
+    transition: opacity 1s ease, visibility 0s 1s, transform 1s ease; /* Suave deslizamiento y fade-in */
+    z-index: 9999; /* Asegura que esté por encima de otros elementos */
+    width: 60%; /* Contenedor de la leyenda ocupa un 60% del ancho de la pantalla (30% menos) */
 }
 
-.dashboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 30px;
+/* Mostrar la leyenda cuando debe aparecer (con el efecto de cortina) */
+.leyenda-sin-datos.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%); /* Centrada después de la animación */
+    transition: opacity 1s ease, visibility 0s 0s, transform 1s ease; /* Aparece suavemente y con deslizamiento */
 }
-.dona {
+
+/* Fondo opaco cuando la leyenda se muestra */
+.fondo-opaco {
+    position: fixed; /* Fijar el fondo */
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Opacidad de 50% */
+    z-index: 9998; /* Justo debajo de la leyenda */
+    transition: background-color 1s ease;
 }
-.donut-chart-container {
+.chart-container {
+    flex-grow: 1;
+    margin-right: 30px; /* Separación entre la gráfica y el contenedor de radio buttons */
+}
+
+.chart-type-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5%;
+    background-color: #f8f8f8;
+    width: 300px; /* Ajusta el tamaño según lo que necesites */
+    margin-left: 20px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    align-items: center; /* Alinea los elementos al centro */
+    justify-content: space-between; /* Espacio entre los elementos */
+}
+
+.chart-type-container h5 {
+    font-size: 1rem;
+    margin-right: 10px; /* Espacio entre el texto "Tipo de Gráfico" y los botones */
+    
+}
+
+.radio-buttons {
+    display: flex;
+    align-items: center; /* Alinea los elementos en el centro verticalmente */
+}
+
+.radio-buttons label {
+    display: inline-flex; /* Asegura que los radio button y el texto estén en la misma línea */
+    align-items: center; /* Alinea el texto con el radio button en una línea */
+    margin-right: 20px; /* Separación entre los radio buttons */
+    font-size: 0.9rem;
+}
+
+.radio-buttons input[type="radio"] {
+    margin-right: 5px; /* Espacio entre el radio button y el texto */
+}
+
+
+
+.donut-chart-container {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
 }
 
 .legend-container {
+    margin-top: 15px;
     text-align: center;
-    margin-top: 0;
 }
 
-.legend-text {
-    font-size: 16px;
-    font-weight: bold;
+
+.donut-chart-container .legend-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.donut-chart-container .legend-text {
+    font-size: 1.5rem;
+    font-weight: 600;
     color: #333;
 }
-.capital-inicial {
-    font-family: 'Roboto', sans-serif; /* Fuente elegante y moderna */
-    font-weight: 300; /* Delgado */
-    font-size: 12px; /* Tamaño del texto */
-    color: #4A90E2; /* Azul claro sugerido */
-    text-transform: uppercase; /* Texto en mayúsculas */
-    letter-spacing: 1px; /* Espaciado entre letras */
-    margin: 10px 0; /* Margen para separación */
+
+.donut-chart-container .legend-text.capital-inicial {
+    color: #1512d9;
 }
 
-.capital-actual {
-    font-family: 'Roboto', sans-serif; /* Fuente elegante y moderna */
-    font-weight: 300; /* Delgado */
-    font-size: 12px; /* Tamaño del texto */
-    color: #FF6F00;
-    text-transform: uppercase; /* Texto en mayúsculas */
-    letter-spacing: 1px; /* Espaciado entre letras */
-    margin: 10px 0; /* Margen para separación */
+.donut-chart-container .legend-text.capital-actual {
+    color: #1512d9;
 }
 
-.chart-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #4e4e4e;
-    margin-top: 10px; /* Ajusta el valor según lo necesites */
-    margin-bottom: 10px; /* Ya existe o puede ser agregado si es necesario */
+.donut-chart-container .mt-3 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #777;
+}
+.highlighted-number {
+    background-color: yellow;  /* Fondo amarillo */
+    padding: 2px 5px;          /* Espaciado alrededor del texto */
+    border-radius: 3px;        /* Bordes redondeados */
+    font-weight: bold;         /* Resaltar el texto en negrita */
 }
 
-.row {
-    width: 100%;
-    margin: 0;
-}
 
-.col-md-6 {
-    padding: 0;
-    margin-bottom: 50px;
-}
-
+/* Estilos para el gráfico de líneas */
 .line-chart-container {
-    width: 100%;
-    height: 100%;
-    max-width: 100%; /* Evitar que el gráfico se estire más allá del contenedor */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    height: 300px;
 }
 
-@media (max-width: 768px) {
-    .line-chart-container {
-        height: 250px; /* Ajusta la altura en dispositivos más pequeños */
-    }
+.line-chart-container .chart-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
 }
 
+.navlink-text {
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease; /* Transición suave en el color */
+    width: 20% !important;
+    border-radius: 25px;
+}
+
+
+/* Cambio de color cuando se hace hover */
+.navlink-text:hover {
+    COLOR:YELLOW;
+    background-color:rgba(0,0,255,0.8);
+    text-shadow: 5px 5px 15px rgba(0, 123, 255, 0.5); /* Sombra suave */
+}
+
+
+/* Estilos para el progress bar */
 .progress-container {
-    margin-top: 30px;
-    text-align: center;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.custom-alert p {
-    color: red; /* Establece el color de texto a rojo */
-    font-weight: bold; /* (Opcional) Resalta el texto */
+.progress-bar {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Estilo para alertas */
+.custom-alert {
+    background-color: #ffcccc;
+    color: #a60000;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.custom-alert button {
+    background-color: #a60000;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.custom-alert button:hover {
+    background-color: #d32f2f;
+}
+
+/* Estilos de carga */
+.loading-text {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #777;
+}
+
+/* Estilo de error */
+.error-text {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #a60000;
 }

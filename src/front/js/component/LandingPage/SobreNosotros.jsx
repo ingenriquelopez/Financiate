@@ -16,7 +16,11 @@ const SobreNosotros = () => {
                 <div className="row p-5 bg-custom2">
                     <div className="fw-bold fs-1">Sobre Nosotros</div>
                     <div className="col-8">
+<<<<<<< HEAD:src/front/js/component/Lading page/SobreNosotros.jsx
                         <p className="text-justify">FINÁNCIA+E es la app definitiva para gestionar tu economía personal de manera sencilla y efectiva. Organiza tus gastos con categorías personalizadas, recibe alertas de tus suscripciones y planifica tus ahorros. Todo esto y mucho más, al alcance de tu mouse o celular. ¡Toma el control de tus finanzas hoy mismo! <br /> <br />La aplicación financiera fue desarrollada en 4GEEKS ACADEMY bajo la tutela del Profesor Bryan García y de José Velásquez, con mucho empeño y dedicación implementamos tecnologías como Html, Css, Bootstrap, JavaScript, React, Python, Flask, SweetAlert2, Postgresql, Recharts y Flatpickr entre otras.  </p>
+=======
+                        <p className="text-justify">FINÁNCIA+E es la app definitiva para gestionar tu economía personal de manera sencilla y efectiva. Organiza tus gastos con categorías personalizadas, recibe alertas de tus suscripciones y planifica tus ahorros. Todo esto y mucho más, al alcance de tu mouse o celular. ¡Toma el control de tus finanzas hoy mismo! <br /> <br />La aplicación financiera fue desarrollada en 4GEEKS ACADEMY bajo la tutela de los profesores Bryan García y de José Velásquez, la cual utiliza tecnologías como HTML, CSS, Bootstrap, JavaScript, React, Python, Flask, SweetAlert2, PostgreSQL, Recharts y Flatpickr entre otras.  </p>
+>>>>>>> 8550bc4b8dbfad91ae35895a58f80bf1d4290bd9:src/front/js/component/LandingPage/SobreNosotros.jsx
                         {/* Imagen Techlogos dentro del mismo contenedor */}
                         <div className="row p-5 bg-custom2">
                             <div className="col-12 d-flex justify-content-center">
