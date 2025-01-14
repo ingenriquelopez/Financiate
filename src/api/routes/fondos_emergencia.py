@@ -1,3 +1,4 @@
+#PARA RADO
 from flask import Blueprint, request, jsonify
 from api.models import db, FondoEmergencia
 from api.token_required import token_required
