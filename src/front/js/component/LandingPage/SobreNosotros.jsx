@@ -7,6 +7,7 @@ import CerditoImg from "../../../img/Cerdito.png";
 import TechlogosImg from "../../../img/Technologos.png";
 import './Sobrenosotros.css';
 
+
 const SobreNosotros = () => {
     return (
         <div>
