@@ -4,13 +4,9 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
-from api.routes import api
-#from api.admin import setup_admin
+from api.routes import api_bp
 from api.commands import setup_commands
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-
-
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -32,29 +28,21 @@ db.init_app(app)
 CORS(app)
 
 # add the admin
-#setup_admin(app)
-
-# add the admin
 setup_commands(app)
-
-# Inicializa JWTManager con la aplicación Flask
-jwt = JWTManager(app)
 
 
 # Add all endpoints form the API with a "api" prefix
-app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(api_bp, url_prefix='/api')
 
 
 # Handle/serialize errors like a JSON object
-
-
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
+
+
 # generate sitemap with all your endpoints
-
-
 @app.route('/')
 def sitemap():
     if ENV == "development":

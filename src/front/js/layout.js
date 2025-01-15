@@ -1,46 +1,80 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
-
 import { Home } from "./pages/home";
 import injectContext from "./store/appContext";
 
-import { Footer } from "./component/footer";
-//-----------------------------------------------------
+// Importar los componentes
+import LandingPage from './component/LandingPage/LandingPage.jsx';  // Importar la LandingPage
+import SobreNosotros from './component/LandingPage/SobreNosotros.jsx';
+import Sidebar from '../js/component/Sidebar/Sidebar.js';
 import Login from './component/Login/Login.jsx';
 import Signup from "./component/Signup/Signup.jsx";
 import Egresos from "./component/Egresos/Egresos.jsx";
-//-----------------------------------------------------
+import Ingresos from "./component/Ingresos/Ingresos.jsx";
+import Categorias from "./component/Categorias/Categorias.jsx";
+import Suscripciones from "./component/Suscripciones/Suscripciones.jsx";
+import PlanDeAhorro from "./component/PlanDeAhorro/PlanDeAhorro.jsx"; 
+import Reportes from "./component/Reportes/Reportes.jsx"; 
+import Fondo from "./component/FondoDeEmergencias/Fondo.jsx";
+import Navbar from "./component/LandingPage/Navbar.jsx";
 
-//create your first component
 const Layout = () => {
-    //the basename is used when your project is published in a subdirectory and not in the root of the domain
-    // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
-    const basename = process.env.BASENAME || "";
+  const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+  if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
-    return (
-        <div>
-            <BrowserRouter basename={basename}>
-                <ScrollToTop>
-                    {/* <Navbar /> */}
-                    <Routes>
-                        <Route element={<Login/>} path="/" />
-                        <Route element={<Login/>} path="/login" />
-                        <Route element={<Signup/>} path="/signup" />
-                        <Route element={<Home />} path="/Home" />
-                        {/* <Route element={<Demo />} path="/demo" />
-                        <Route element={<Single />} path="/single/:theid" /> */}
-                        <Route element={<h1>Not found!</h1>} />
-                        <Route element={<Egresos/>} path="/egresos" /> 
-                    </Routes>
-                    <Footer />
-                </ScrollToTop>
-            </BrowserRouter>
-        </div>
-    );
+  return (
+    <div>
+      <BrowserRouter basename={basename}>
+        <ScrollToTop>
+          <LayoutContent />
+        </ScrollToTop>
+      </BrowserRouter>
+    </div>
+  );
+};
+
+const LayoutContent = () => {
+  const location = useLocation();
+  const hideSidebar = location.pathname === '/' || 
+                      location.pathname === '/login' || 
+                      location.pathname === '/signup' || 
+                      location.pathname === '/lp' || 
+                      location.pathname === '/sobre-nosotros';
+
+  return (
+    <div style={{ display: 'flex', flexDirection: hideSidebar ? "column":"row" , minHeight: '100vh' }}>
+      {!hideSidebar && <Sidebar />}
+      {hideSidebar && <Navbar />}
+      <div
+        style={{
+          marginLeft: hideSidebar ? '0' : '250px',
+          width: hideSidebar ? '100%' : 'calc(100% - 250px)',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        <Routes>
+          {/* Rutas principales */}
+          <Route element={<SobreNosotros />} path="/sobre-nosotros" />
+          <Route element={<LandingPage />} path="/" />
+          <Route element={<Login />} path="/login" />
+          <Route element={<Signup />} path="/signup" />
+          <Route element={<Home />} path="/Home" />
+          <Route element={<Egresos />} path="/egresos" />
+          <Route element={<Ingresos />} path="/Ingresos" />
+          <Route element={<Categorias />} path="/categorias" />
+          <Route element={<Suscripciones />} path="/Suscripciones" />
+          <Route element={<PlanDeAhorro />} path="/plandeahorro" />
+          <Route element={<Reportes />} path="/reportes" />
+          <Route element={<Fondo />} path="/fondo" />
+          <Route element={<h1>Not found!</h1>} />
+        </Routes>
+      </div>
+    </div>
+  );
 };
 
 export default injectContext(Layout);
+

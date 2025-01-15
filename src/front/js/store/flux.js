@@ -1,65 +1,50 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			token: localStorage.getItem("token") || undefined, // Recupera el token del localStorage al cargar la app
+			token: localStorage.getItem("tokenFinanciaE") || null, // Recupera el token del localStorage al cargar la app
+			nombreUsuario: localStorage.getItem("nombreUsuario") || null,
+			correo: localStorage.getItem("correo") || null,
+			usuario_id: localStorage.getItem("usuario_id") || null,
 			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			alert: null,
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
-				}
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
-			},
-			setToken: (token,correo) => {
-				console.log(token)
+			setToken: (token) => {
 				localStorage.setItem("tokenFinanciaE", token); // Guarda el token en localStorage
-				setStore({ token,correo }); // Guarda el token en el store global
+				setStore({ token }); // Guarda el token,correo y nombreUsuario en el store global
 			  },
+
+			setCorreo: (correo) => {
+			localStorage.setItem("correo", correo); // Guarda el correo en localStorage
+			setStore({ correo }); // Guarda el correo en el store global
+			},
+
+			setUsuarioId: (usuario_id) => {
+			localStorage.setItem("usuario_id", usuario_id); // Guarda el usuario_id
+			setStore({ usuario_id }); //Guarda el id de usuario en el store Global
+			},
+
+			setNombreUsuario: (nombreUsuario) => {
+			localStorage.setItem("nombreUsuario", nombreUsuario); 
+			setStore({ nombreUsuario }); // Guarda el nombre de usuairo en el store global
+			},
 
 			logout: () => {
 				localStorage.removeItem("tokenFinanciaE"); // Elimina el token del localStorage
-				setStore({ token: null, correo: null }); // Limpia el token y el email en el store global
+				setStore({ token: null }); // Limpia el token y el email en el store global
+
+				localStorage.removeItem("correo"); // Elimina el correo del localStorage
+				setStore({ correo: null }); // Limpia el correo en el store global
+
+				localStorage.removeItem("nombreUsuario"); // Elimina el nombreUsuario del localStorage
+				setStore({ nombreUsuario: null }); // Limpia el nombreUsuario en el store global
+
+				localStorage.removeItem("usuario_id"); // Elimina el nombreUsuario del localStorage
+				setStore({ usuario_id: null }); // Limpia el nombreUsuario en el store global
 			},
+
 		}
 	};
-};
-
-export default getState;
+  };
+  
+  export default getState;
