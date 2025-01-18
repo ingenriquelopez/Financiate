@@ -1,6 +1,5 @@
 # ignore all files starting with .
 .*
-
 # track this file .gitignore (i.e. do NOT ignore it)
 !.gitignore
 !.github
@@ -63,12 +62,12 @@ Thumbs.db
 # ignore node/grunt dependency directories
 node_modules/
 
-# webpack output
-dist/*
+# Permitir que los archivos dentro de dist/ y public/ sean rastreados
+!front/dist/*
 !public/
 !public/*
 
-# ignore the dist directory were our bundle files are going to be
+# Otros archivos importantes
 !.gitkeep
 !.htaccess
 !.eslintrc
@@ -81,3 +80,7 @@ database.database
 database.db
 diagram.png
 __pycache__/
+
+# Para asegurar que no se ignoren imágenes en public/
+!public/*.png
+!public/*.gif
