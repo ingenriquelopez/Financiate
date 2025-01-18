@@ -9,7 +9,6 @@ from api.commands import setup_commands
 from flask_cors import CORS
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
-static_file_dir = os.path.join(os.path.dirname())
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../dist/')
 
 app = Flask(__name__)
