@@ -15,11 +15,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 # database condiguration
-db_url = os.getenv("HEROKU_POSTGRESQL_SILVER_URL")
-if db_url is not None:
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
-        "postgres://", "postgresql://")
-
+db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
         "postgres://", "postgresql://")
